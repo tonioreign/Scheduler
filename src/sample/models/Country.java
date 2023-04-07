@@ -2,7 +2,7 @@ package sample.models;
 
 import java.time.LocalDateTime;
 
-public class Countries {
+public class Country {
     /**THE COUNTRIES ID*/
     int countryId;
     /**THE COUNTRIES NAME*/
@@ -16,7 +16,7 @@ public class Countries {
     /**WHO UPDATED COUNTRY*/
     String lastUpdatedBy;
 
-    public Countries(String name) {
+    public Country(String name) {
         this.country = name;
     }
 
