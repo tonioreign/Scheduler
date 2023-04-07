@@ -1,0 +1,69 @@
+package sample.controllers;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+/**
+ * Controller class that provides control logic for the login form of the application.
+ *
+ * @author Antonio Jenkins
+ */
+
+public class LoginController implements Initializable {
+    /**The login main plane*/
+    @FXML
+    private AnchorPane LoginAnchor;
+    /**The login user field*/
+    @FXML
+    private TextField UserField;
+    /**The login title*/
+    @FXML
+    private Label LoginLabel;
+    /**The login username label*/
+    @FXML
+    private Label UserLabel;
+    /**The login password field*/
+    @FXML
+    private TextField PassField;
+    /**The login password label*/
+    @FXML
+    private Label PassLabel;
+    /**The login button*/
+    @FXML
+    private Button LoginButton;
+    /**The login exit button*/
+    @FXML
+    private Button ExitButton;
+    /**The login time zone label*/
+    @FXML
+    private Label TimeLabel;
+    /**Setting the login time zone label*/
+    @FXML
+    private Label SetTimeLabel;
+
+    /**Button that exits the login form - closes the program*/
+    @FXML
+    void onExitButton(ActionEvent event) {
+        System.exit(0);
+    }
+
+    /**Button that opens " " form after confirmation of the login details*/
+    @FXML
+    void onLoginButton(ActionEvent event) {
+
+    }
+
+    /***/
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
+}
