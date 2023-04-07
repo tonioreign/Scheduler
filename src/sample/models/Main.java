@@ -1,10 +1,12 @@
-package sample;
+package sample.models;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sample.controllers.LoginController;
+import sample.utils.DBConnection;
 
 public class Main extends Application {
 
@@ -18,6 +20,13 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
+
+        DBConnection.openConnection();
+
+        //LoginController.createLog();
+
         launch(args);
+
+        DBConnection.closeConnection();
     }
 }
