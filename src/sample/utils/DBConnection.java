@@ -42,6 +42,10 @@ public class DBConnection {
         return conn;
     }
 
+    public static Connection getConnection(){
+        return conn;
+    }
+
     public static void closeConnection(){
         try{
             conn.close();
