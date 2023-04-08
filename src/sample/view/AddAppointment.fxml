@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="568.0" prefWidth="398.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.AddAppointmentController">
+   <children>
+      <Label layoutX="99.0" layoutY="22.0" text="Add A New Appointment">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField layoutX="121.0" layoutY="63.0" prefHeight="27.0" prefWidth="157.0" />
+      <TextField layoutX="121.0" layoutY="99.0" prefHeight="27.0" prefWidth="157.0" />
+      <TextField layoutX="121.0" layoutY="137.0" prefHeight="27.0" prefWidth="157.0" />
+      <TextField layoutX="121.0" layoutY="173.0" prefHeight="27.0" prefWidth="157.0" />
+      <TextField layoutX="121.0" layoutY="210.0" prefHeight="27.0" prefWidth="157.0" />
+      <Label layoutX="71.0" layoutY="64.0" text="Title">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="22.0" layoutY="100.0" text="Description">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="42.0" layoutY="138.0" text="Location">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="48.0" layoutY="174.0" text="Contact">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="69.0" layoutY="211.0" text="Type">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

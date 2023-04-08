@@ -3,69 +3,33 @@ package sample.models;
 import java.time.LocalDateTime;
 
 public class Country {
-    /**THE COUNTRIES ID*/
-    int countryId;
-    /**THE COUNTRIES NAME*/
-    String country;
-    /**CREATION DATE*/
-    LocalDateTime createDate;
-    /**WHO CREATED THE COUNTRY*/
-    String createdBy;
-    /**LAST TIME COUNTRY UPDATED*/
-    LocalDateTime lastUpdated;
-    /**WHO UPDATED COUNTRY*/
-    String lastUpdatedBy;
+    private int contryId;
+    private String countryName;
 
-    public Country(String name) {
-        this.country = name;
+    /**
+     *
+     * @param contryId
+     * @param countryName
+     */
+    public Country(int contryId, String countryName) {
+        this.contryId = contryId;
+        this.countryName = countryName;
     }
 
     /**GETTERS AND SETTERS*/
-    public int getCountryId() {
-        return countryId;
+    public int getCountryID() {
+        return contryId;
     }
 
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
+    public void setCountryID(int contryId) {
+        this.contryId = contryId;
     }
 
-    public String getCountry() {
-        return country;
+    public String getCountryName() {
+        return countryName;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public LocalDateTime getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(LocalDateTime lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
-    public String getLastUpdatedBy() {
-        return lastUpdatedBy;
-    }
-
-    public void setLastUpdatedBy(String lastUpdatedBy) {
-        this.lastUpdatedBy = lastUpdatedBy;
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
     }
 }
