@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="568.0" prefWidth="398.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.AddAppointmentController">
+<AnchorPane prefHeight="568.0" prefWidth="398.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.AddAppointmentController">
    <children>
       <Label layoutX="99.0" layoutY="22.0" text="Add A New Appointment">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField layoutX="121.0" layoutY="63.0" prefHeight="27.0" prefWidth="157.0" />
-      <TextField layoutX="121.0" layoutY="99.0" prefHeight="27.0" prefWidth="157.0" />
-      <TextField layoutX="121.0" layoutY="137.0" prefHeight="27.0" prefWidth="157.0" />
-      <TextField layoutX="121.0" layoutY="173.0" prefHeight="27.0" prefWidth="157.0" />
-      <TextField layoutX="121.0" layoutY="210.0" prefHeight="27.0" prefWidth="157.0" />
+      <TextField fx:id="titleField" layoutX="121.0" layoutY="63.0" prefHeight="27.0" prefWidth="157.0" />
+      <TextField fx:id="descField" layoutX="121.0" layoutY="99.0" prefHeight="27.0" prefWidth="157.0" />
+      <TextField fx:id="locationField" layoutX="121.0" layoutY="137.0" prefHeight="27.0" prefWidth="157.0" />
+      <TextField fx:id="contactField" layoutX="121.0" layoutY="173.0" prefHeight="27.0" prefWidth="157.0" />
+      <TextField fx:id="typeField" layoutX="121.0" layoutY="210.0" prefHeight="27.0" prefWidth="157.0" />
       <Label layoutX="71.0" layoutY="64.0" text="Title">
          <font>
             <Font size="16.0" />
@@ -39,6 +41,52 @@
          </font>
       </Label>
       <Label layoutX="69.0" layoutY="211.0" text="Type">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <DatePicker fx:id="startDatePicker" layoutX="121.0" layoutY="251.0" />
+      <SplitMenuButton fx:id="startTimeMenu" layoutX="121.0" layoutY="292.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" text="Current Time">
+         <items>
+            <MenuItem mnemonicParsing="false" text="Action 1" />
+            <MenuItem mnemonicParsing="false" text="Action 2" />
+         </items>
+      </SplitMenuButton>
+      <DatePicker fx:id="endDatePicker" layoutX="121.0" layoutY="334.0" />
+      <SplitMenuButton fx:id="endTimeMenu" layoutX="121.0" layoutY="375.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" text="Current Time">
+         <items>
+            <MenuItem mnemonicParsing="false" text="Action 1" />
+            <MenuItem mnemonicParsing="false" text="Action 2" />
+         </items>
+      </SplitMenuButton>
+      <Label layoutX="41.0" layoutY="255.0" text="Start Date">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="40.0" layoutY="296.0" text="Start Time">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="47.0" layoutY="338.0" text="End Date">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="45.0" layoutY="379.0" text="End Time">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <TextField fx:id="customerIdField" layoutX="121.0" layoutY="420.0" prefHeight="27.0" prefWidth="157.0" />
+      <TextField fx:id="userIdField" layoutX="121.0" layoutY="457.0" prefHeight="27.0" prefWidth="157.0" />
+      <Label layoutX="20.0" layoutY="424.0" text="Customer_ID">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="55.0" layoutY="461.0" text="User_ID">
          <font>
             <Font size="16.0" />
          </font>
