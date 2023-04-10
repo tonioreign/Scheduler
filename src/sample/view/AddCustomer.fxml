@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="addCustomerPanel" prefHeight="649.0" prefWidth="463.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.AddCustomerController">
+   <children>
+      <Label layoutX="156.0" layoutY="37.0" text="New Customer">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <TextField fx:id="customerIDField" editable="false" layoutX="121.0" layoutY="113.0" prefHeight="27.0" prefWidth="312.0" promptText="Automatically Generated" />
+      <TextField fx:id="customerNameField" layoutX="121.0" layoutY="160.0" prefHeight="27.0" prefWidth="312.0" />
+      <TextField fx:id="phoneNumberField" layoutX="121.0" layoutY="207.0" prefHeight="27.0" prefWidth="312.0" />
+      <TextField fx:id="addressField" layoutX="121.0" layoutY="254.0" prefHeight="27.0" prefWidth="312.0" />
+      <TextField fx:id="cityField" layoutX="121.0" layoutY="301.0" prefHeight="27.0" prefWidth="312.0" />
+      <TextField fx:id="zipField" layoutX="121.0" layoutY="348.0" prefHeight="27.0" prefWidth="312.0" />
+      <TextField fx:id="stateField" layoutX="121.0" layoutY="395.0" prefHeight="27.0" prefWidth="312.0" />
+      <SplitMenuButton fx:id="countryMenu" layoutX="121.0" layoutY="441.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="149.0" text="Pick a Country">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" text="Action 2" />
+        </items>
+      </SplitMenuButton>
+      <SplitMenuButton fx:id="divisionIDMenu" layoutX="121.0" layoutY="488.0" mnemonicParsing="false" text="Select Country first">
+         <items>
+            <MenuItem mnemonicParsing="false" text="Action 1" />
+            <MenuItem mnemonicParsing="false" text="Action 2" />
+         </items>
+      </SplitMenuButton>
+      <Button fx:id="cancelButton" layoutX="156.0" layoutY="571.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
+      <Button fx:id="saveButton" layoutX="220.0" layoutY="571.0" mnemonicParsing="false" onAction="#onSave" prefHeight="27.0" prefWidth="57.0" text="Save" />
+      <Label layoutX="23.0" layoutY="118.0" text="Customer ID">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="23.0" layoutY="212.0" text="Phone Number">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="23.0" layoutY="165.0" text="Name">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="23.0" layoutY="259.0" text="Street Address">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="23.0" layoutY="353.0" text="Zip Code">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="23.0" layoutY="306.0" text="City">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="23.0" layoutY="400.0" text="State/County">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="23.0" layoutY="446.0" text="Country">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="23.0" layoutY="493.0" text="Division ID">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
