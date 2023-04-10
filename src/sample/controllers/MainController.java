@@ -107,6 +107,26 @@ public class MainController implements Initializable {
         AccessMethod.changeScreen(event, "AddAppointment.fxml");
     }
 
+    @FXML
+    void onLogOut(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onModifyApmt(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onReports(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onViewCustomers(ActionEvent event) throws IOException {
+        AccessMethod.changeScreen(event, "ViewCustomers.fxml");
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

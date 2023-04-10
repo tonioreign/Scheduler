@@ -8,7 +8,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="appointmentPanel" prefHeight="490.0" prefWidth="905.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.MainController">
+<AnchorPane fx:id="appointmentPanel" prefHeight="490.0" prefWidth="905.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.MainController">
     <children>
         <Label layoutX="14.0" layoutY="30.0" text="Appointment Schedule" />
         <RadioButton fx:id="viewAllRadio" layoutX="213.0" layoutY="30.0" mnemonicParsing="false" text="View All" />
@@ -30,13 +30,13 @@
                 <TableColumn fx:id="apmtUserIdCol" prefWidth="75.0" text="User ID" />
             </columns>
         </TableView>
-        <Button fx:id="logoutButton" layoutX="828.0" layoutY="437.0" mnemonicParsing="false" text="Log Out" />
-        <Button fx:id="ReportButton" layoutX="15.0" layoutY="437.0" mnemonicParsing="false" text="Reports" />
-        <Button fx:id="modifyAppointmentButton" layoutX="608.0" layoutY="437.0" mnemonicParsing="false" text="Modify Appointment" />
+        <Button fx:id="logoutButton" layoutX="828.0" layoutY="437.0" mnemonicParsing="false" onAction="#onLogOut" text="Log Out" />
+        <Button fx:id="ReportButton" layoutX="15.0" layoutY="437.0" mnemonicParsing="false" onAction="#onReports" text="Reports" />
+        <Button fx:id="modifyAppointmentButton" layoutX="608.0" layoutY="437.0" mnemonicParsing="false" onAction="#onModifyApmt" text="Modify Appointment" />
         <Button fx:id="addAppointmentButton" layoutX="395.0" layoutY="437.0" mnemonicParsing="false" onAction="#onAddApmt" text="Add Appointment" />
         <DatePicker fx:id="apmtDatePicker" layoutX="697.0" layoutY="17.0" />
         <Label fx:id="timeLabel" layoutX="718.0" layoutY="47.0" text="Time Zone:" />
         <Label fx:id="setTimeLabel" layoutX="787.0" layoutY="47.0" text="America - Nevada" />
-      <Button fx:id="viewCustomersButton" layoutX="147.0" layoutY="437.0" mnemonicParsing="false" text="View and Edit Customers" />
+      <Button fx:id="viewCustomersButton" layoutX="147.0" layoutY="437.0" mnemonicParsing="false" onAction="#onViewCustomers" text="View and Edit Customers" />
     </children>
 </AnchorPane>
