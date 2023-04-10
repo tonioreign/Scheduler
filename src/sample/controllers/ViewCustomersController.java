@@ -64,8 +64,8 @@ public class ViewCustomersController implements Initializable {
     private Button deleteCustomerButton;
 
     @FXML
-    void onAddCustomer(ActionEvent event) {
-        System.out.println("Opening add customer");
+    void onAddCustomer(ActionEvent event) throws IOException {
+        AccessMethod.changeScreen(event, "AddCustomer.fxml");
 
     }
 
@@ -80,8 +80,8 @@ public class ViewCustomersController implements Initializable {
     }
 
     @FXML
-    void onModCustomer(ActionEvent event) {
-        System.out.println("Opening mod customer");
+    void onModCustomer(ActionEvent event) throws IOException {
+        AccessMethod.changeScreen(event, "ModCustomer.fxml");
     }
 
     @Override
