@@ -104,17 +104,17 @@ public class MainController implements Initializable {
 
     @FXML
     void onAddApmt(ActionEvent event) throws IOException {
-        AccessMethod.changeScreen(event, "AddAppointment.fxml");
+        AccessMethod.changeScreen(event, "AddAppointment.fxml", "Schedule Appointment");
     }
 
     @FXML
-    void onLogOut(ActionEvent event) {
-
+    void onLogOut(ActionEvent event) throws IOException {
+        AccessMethod.changeScreen(event, "login-form.fxml", "Scheduling Application");
     }
 
     @FXML
-    void onModifyApmt(ActionEvent event) {
-
+    void onModifyApmt(ActionEvent event) throws IOException {
+        AccessMethod.changeScreen(event, "UpdateAppointment.fxml", "Update Appointment");
     }
 
     @FXML
@@ -124,7 +124,7 @@ public class MainController implements Initializable {
 
     @FXML
     void onViewCustomers(ActionEvent event) throws IOException {
-        AccessMethod.changeScreen(event, "ViewCustomers.fxml");
+        AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
     }
 
     @Override

@@ -23,8 +23,6 @@ public class Main extends Application {
 
         DBConnection.openConnection();
 
-        //LoginController.createLog();
-
         launch(args);
 
         DBConnection.closeConnection();

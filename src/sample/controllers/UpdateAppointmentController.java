@@ -1,16 +1,16 @@
 package sample.controllers;
 
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.SplitMenuButton;
-import javafx.scene.control.TextField;
+        import javafx.fxml.FXML;
+        import javafx.fxml.Initializable;
+        import javafx.scene.control.DatePicker;
+        import javafx.scene.control.MenuButton;
+        import javafx.scene.control.SplitMenuButton;
+        import javafx.scene.control.TextField;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+        import java.net.URL;
+        import java.util.ResourceBundle;
 
-public class AddAppointmentController implements Initializable {
+public class UpdateAppointmentController implements Initializable {
 
     @FXML
     private TextField titleField;

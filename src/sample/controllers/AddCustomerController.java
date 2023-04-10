@@ -53,13 +53,13 @@ public class AddCustomerController implements Initializable {
 
     @FXML
     void onCancel(ActionEvent event) throws IOException {
-        AccessMethod.changeScreen(event, "ViewCustomers.fxml");
+        AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
     }
 
     @FXML
     void onSave(ActionEvent event) throws IOException {
 
-        AccessMethod.changeScreen(event, "ViewCustomers.fxml");
+        AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
     }
 
     @Override

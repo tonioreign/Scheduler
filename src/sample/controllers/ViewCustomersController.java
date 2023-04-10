@@ -65,7 +65,7 @@ public class ViewCustomersController implements Initializable {
 
     @FXML
     void onAddCustomer(ActionEvent event) throws IOException {
-        AccessMethod.changeScreen(event, "AddCustomer.fxml");
+        AccessMethod.changeScreen(event, "AddCustomer.fxml", "Add Customer");
 
     }
 
@@ -76,12 +76,12 @@ public class ViewCustomersController implements Initializable {
 
     @FXML
     void onMenu(ActionEvent event) throws IOException {
-        AccessMethod.changeScreen(event, "MainMenu.fxml");
+        AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
     }
 
     @FXML
     void onModCustomer(ActionEvent event) throws IOException {
-        AccessMethod.changeScreen(event, "ModCustomer.fxml");
+        AccessMethod.changeScreen(event, "ModCustomer.fxml", "Update Customer");
     }
 
     @Override

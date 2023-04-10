@@ -2,15 +2,15 @@
 
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="568.0" prefWidth="398.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.AddAppointmentController">
    <children>
-      <Label layoutX="99.0" layoutY="22.0" text="Add A New Appointment">
+      <Label layoutX="99.0" layoutY="22.0" text="Schedule Appointment">
          <font>
             <Font size="18.0" />
          </font>
@@ -46,19 +46,7 @@
          </font>
       </Label>
       <DatePicker fx:id="startDatePicker" layoutX="121.0" layoutY="251.0" />
-      <SplitMenuButton fx:id="startTimeMenu" layoutX="121.0" layoutY="292.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" text="Current Time">
-         <items>
-            <MenuItem mnemonicParsing="false" text="Action 1" />
-            <MenuItem mnemonicParsing="false" text="Action 2" />
-         </items>
-      </SplitMenuButton>
       <DatePicker fx:id="endDatePicker" layoutX="121.0" layoutY="334.0" />
-      <SplitMenuButton fx:id="endTimeMenu" layoutX="121.0" layoutY="375.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" text="Current Time">
-         <items>
-            <MenuItem mnemonicParsing="false" text="Action 1" />
-            <MenuItem mnemonicParsing="false" text="Action 2" />
-         </items>
-      </SplitMenuButton>
       <Label layoutX="41.0" layoutY="255.0" text="Start Date">
          <font>
             <Font size="16.0" />
@@ -79,8 +67,6 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="customerIdField" layoutX="121.0" layoutY="420.0" prefHeight="27.0" prefWidth="157.0" />
-      <TextField fx:id="userIdField" layoutX="121.0" layoutY="457.0" prefHeight="27.0" prefWidth="157.0" />
       <Label layoutX="20.0" layoutY="424.0" text="Customer_ID">
          <font>
             <Font size="16.0" />
@@ -91,5 +77,29 @@
             <Font size="16.0" />
          </font>
       </Label>
+      <MenuButton fx:id="customerIDMenu" layoutX="121.0" layoutY="421.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" text="Select Customer">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" text="Action 2" />
+        </items>
+      </MenuButton>
+      <MenuButton layoutX="121.0" layoutY="458.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" text="Select User">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" text="Action 2" />
+        </items>
+      </MenuButton>
+      <MenuButton fx:id="startTimeMenu" layoutX="121.0" layoutY="293.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" text="Current Time">
+         <items>
+            <MenuItem mnemonicParsing="false" text="Action 1" />
+            <MenuItem mnemonicParsing="false" text="Action 2" />
+         </items>
+      </MenuButton>
+      <MenuButton fx:id="endTimeMenu" layoutX="121.0" layoutY="376.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="157.0" text="Current Time">
+         <items>
+            <MenuItem mnemonicParsing="false" text="Action 1" />
+            <MenuItem mnemonicParsing="false" text="Action 2" />
+         </items>
+      </MenuButton>
    </children>
 </AnchorPane>

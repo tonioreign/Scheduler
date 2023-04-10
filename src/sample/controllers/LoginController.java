@@ -73,7 +73,7 @@ public class LoginController implements Initializable {
         String password = PassField.getText();
         int Id = DBUser.validateUser(userName, password);
         if(Id!=-1){
-            AccessMethod.changeScreen(event, "MainMenu.fxml");
+            AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
         }
     }
     /**Resets username and password field to empty*/

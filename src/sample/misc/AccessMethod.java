@@ -14,9 +14,10 @@ public abstract class AccessMethod {
     private static Stage stage;
     private static Scene scene;
 
-    public static void changeScreen(ActionEvent event, String newScene) throws IOException {
+    public static void changeScreen(ActionEvent event, String newScene, String title) throws IOException {
         Parent root = FXMLLoader.load(AccessMethod.class.getResource("../view/" + newScene));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setTitle(title);
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
