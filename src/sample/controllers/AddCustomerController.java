@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -40,10 +41,10 @@ public class AddCustomerController implements Initializable {
     private TextField stateField;
 
     @FXML
-    private SplitMenuButton countryMenu;
+    private MenuButton countryMenu;
 
     @FXML
-    private SplitMenuButton divisionIDMenu;
+    private MenuButton divisionIDMenu;
 
     @FXML
     private Button cancelButton;

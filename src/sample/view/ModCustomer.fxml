@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.MenuButton?>
 <AnchorPane fx:id="modCustomerPanel" prefHeight="649.0" prefWidth="463.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.ModCustomerController">
     <children>
         <Label layoutX="144.0" layoutY="38.0" text="Modify Customer">
@@ -22,18 +23,18 @@
         <TextField fx:id="cityField" layoutX="121.0" layoutY="301.0" prefHeight="27.0" prefWidth="312.0" />
         <TextField fx:id="zipField" layoutX="121.0" layoutY="348.0" prefHeight="27.0" prefWidth="312.0" />
         <TextField fx:id="stateField" layoutX="121.0" layoutY="395.0" prefHeight="27.0" prefWidth="312.0" />
-        <SplitMenuButton fx:id="countryMenu" layoutX="121.0" layoutY="441.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="149.0" text="Pick a Country">
+        <MenuButton fx:id="countryMenu" layoutX="121.0" layoutY="442.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="149.0" text="Pick a Country">
             <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
                 <MenuItem mnemonicParsing="false" text="Action 2" />
             </items>
-        </SplitMenuButton>
-        <SplitMenuButton fx:id="divisionIDMenu" layoutX="121.0" layoutY="488.0" mnemonicParsing="false" text="Select Country first">
+        </MenuButton>
+        <MenuButton fx:id="divisionIDMenu" layoutX="121.0" layoutY="489.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="149.0" text="Select Country first">
             <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
                 <MenuItem mnemonicParsing="false" text="Action 2" />
             </items>
-        </SplitMenuButton>
+        </MenuButton>
         <Button fx:id="cancelButton" layoutX="156.0" layoutY="571.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
         <Button fx:id="saveButton" layoutX="220.0" layoutY="571.0" mnemonicParsing="false" onAction="#onSave" prefHeight="27.0" prefWidth="57.0" text="Save" />
         <Label layoutX="23.0" layoutY="118.0" text="Customer ID">
