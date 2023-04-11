@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ResourceBundleManager">
+    <file url="file://$PROJECT_DIR$/src/sample/properties/login.properties" />
+    <file url="file://$PROJECT_DIR$/src/sample/properties/login_en.properties" />
+    <custom-resource-bundle>
+      <file value="file://$PROJECT_DIR$/src/sample/properties/login.properties" />
+      <file value="file://$PROJECT_DIR$/src/sample/properties/login_FR.properties" />
+      <file value="file://$PROJECT_DIR$/src/sample/properties/login_en.properties" />
+      <base-name>login</base-name>
+    </custom-resource-bundle>
+  </component>
+</project>
