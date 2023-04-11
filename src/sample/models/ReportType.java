@@ -1,33 +1,29 @@
 package sample.models;
 
 public class ReportType {
-    public String apmtType;
-    public int apmtTotal;
+    private String appointmentType;
+    private int appointmentTotal;
 
     /**
      *
-     * @param apmtTotal
-     * @param apmtType
+     * @param appointmentTotal
+     * @param appointmentType
      */
-    public ReportType(String apmtType, int apmtTotal) {
-        this.apmtType = apmtType;
-        this.apmtTotal = apmtTotal;
+    public ReportType(String appointmentType, int appointmentTotal) {
+        this.appointmentType = appointmentType;
+        this.appointmentTotal = appointmentTotal;
     }
 
-    /**GETTER AND SETTERS*/
-    public String getApmtType() {
-        return apmtType;
+    /**
+     * getters
+     */
+    public String getAppointmentType() {
+
+        return appointmentType;
     }
 
-    public void setApmtType(String apmtType) {
-        this.apmtType = apmtType;
-    }
+    public int getAppointmentTotal() {
 
-    public int getApmtTotal() {
-        return apmtTotal;
-    }
-
-    public void setApmtTotal(int apmtTotal) {
-        this.apmtTotal = apmtTotal;
+        return appointmentTotal;
     }
 }

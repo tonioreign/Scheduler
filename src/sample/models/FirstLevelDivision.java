@@ -1,44 +1,46 @@
 package sample.models;
 
 public class FirstLevelDivision {
-    private int divisionId;
+    private int divisionID;
     private String divisionName;
-    public int countryId;
+    public int country_ID;
 
     /**
      *
-     * @param divisionId
+     * @param divisionID
+     * @param country_ID
      * @param divisionName
-     * @param countryId
      */
-    public FirstLevelDivision(int divisionId, String divisionName, int countryId) {
-        this.divisionId = divisionId;
+    public FirstLevelDivision(int divisionID, String divisionName, int country_ID) {
+        this.divisionID = divisionID;
         this.divisionName = divisionName;
-        this.countryId = countryId;
+        this.country_ID = country_ID;
     }
 
-    /**GETTERS AND SETTERS*/
-    public int getDivisionId() {
-        return divisionId;
+    /**
+     *
+     * @return divisionID
+     */
+    public int getDivisionID() {
+
+        return divisionID;
     }
 
-    public void setDivisionId(int divisionId) {
-        this.divisionId = divisionId;
-    }
-
+    /**
+     *
+     * @return divisionName
+     */
     public String getDivisionName() {
+
         return divisionName;
     }
 
-    public void setDivisionName(String divisionName) {
-        this.divisionName = divisionName;
-    }
+    /**
+     *
+     * @return country_ID
+     */
+    public int getCountry_ID() {
 
-    public int getCountryId() {
-        return countryId;
-    }
-
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
+        return country_ID;
     }
 }

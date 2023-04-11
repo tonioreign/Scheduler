@@ -3,79 +3,129 @@ package sample.models;
 import java.time.LocalDateTime;
 
 public class Customer {
-    /**THE CUSTOMERS ID*/
-    private int customerId;
-    /**THE CUSTOMERS NAME*/
+    private String divisionName;
+    private int customerID;
     private String customerName;
-    /**THE CUSTOMERS ADDRESS*/
-    private int addressId;
-    /**THE CUSTOMERS CREATION DATE*/
-    private LocalDateTime createDate;
-    /**WHO THE CREATED CUSTOMER*/
-    private String createdBy;
-    /**CUSTOMERS LAST UPDATE*/
-    private LocalDateTime lastUpdate;
-    /**WHO UPDATED CUSTOMER*/
-    private String lastUpdateBy;
+    private String customerAddress;
+    private String customerPostalCode;
+    private String customerPhoneNumber;
+    //private int customerState;
+    private int divisionID;
 
-    public Customer(String name) {
-        this.customerName = name;
+    public Customer(int customerID, String customerName, String customerAddress, String customerPostalCode,
+                     String customerPhoneNumber, int divisionID, String divisionName) {
+
+        this.customerID = customerID;
+        this.customerName = customerName;
+        this.customerAddress = customerAddress;
+        this.customerPostalCode = customerPostalCode;
+        this.customerPhoneNumber = customerPhoneNumber;
+        this.divisionID = divisionID;
+        this.divisionName = divisionName;
     }
 
-    /**GETTERS AND SETTERS*/
-    public int getCustomerId() {
-        return customerId;
+
+    /**
+     * @return customerID
+     */
+    public Integer getCustomerID() {
+
+        return customerID;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    /**
+     * @param customerID
+     */
+    public void setCustomerID(Integer customerID) {
+
+        this.customerID = customerID;
     }
 
+    /**
+     * @return customerName
+     */
     public String getCustomerName() {
+
         return customerName;
     }
 
+    /**
+     * @param customerName
+     */
     public void setCustomerName(String customerName) {
+
         this.customerName = customerName;
     }
 
-    public int getAddressId() {
-        return addressId;
+    /**
+     * @return customerAddress
+     */
+    public String getCustomerAddress() {
+
+        return customerAddress;
     }
 
-    public void setAddressId(int addressId) {
-        this.addressId = addressId;
+    /**
+     * @param address
+     */
+    public void setCustomerAddress(String address) {
+
+        this.customerAddress = address;
     }
 
-    public LocalDateTime getCreateDate() {
-        return createDate;
+    /**
+     * @return customerPostalCode
+     */
+    public String getCustomerPostalCode() {
+
+        return customerPostalCode;
     }
 
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
+    /**
+     * @param postalCode
+     */
+    public void setCustomerPostalCode(String postalCode) {
+
+        this.customerPostalCode = postalCode;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    /**
+     * @return customerPhoneNumber
+     */
+    public String getCustomerPhone() {
+
+        return customerPhoneNumber;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    /**
+     * @param phone
+     */
+    public void setCustomerPhone(String phone) {
+
+        this.customerPhoneNumber = phone;
     }
 
-    public LocalDateTime getLastUpdate() {
-        return lastUpdate;
+    /**
+     * @return divisionID
+     */
+    public Integer getCustomerDivisionID() {
+
+        return divisionID;
     }
 
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    /**
+     * @return divisionID
+     */
+    public String getDivisionName() {
+
+        return divisionName;
     }
 
-    public String getLastUpdateBy() {
-        return lastUpdateBy;
-    }
+    /**
+     * @param divisionID
+     */
+    public void setCustomerDivisionID(Integer divisionID) {
 
-    public void setLastUpdateBy(String lastUpdateBy) {
-        this.lastUpdateBy = lastUpdateBy;
+        this.divisionID = divisionID;
     }
 }
