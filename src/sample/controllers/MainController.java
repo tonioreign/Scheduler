@@ -2,10 +2,7 @@ package sample.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -13,12 +10,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import sample.db.AppointmentDB;
 import sample.misc.AccessMethod;
+import sample.models.Appointments;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -30,46 +32,46 @@ public class MainController implements Initializable {
     private Button addAppointmentButton;
 
     @FXML
-    private TableColumn<?, ?> apmtContactCol;
+    private TableColumn<Appointments, Integer> apmtContactCol;
 
     @FXML
-    private TableColumn<?, ?> apmtCustomerIdCol;
+    private TableColumn<Appointments, Integer> apmtCustomerIdCol;
 
     @FXML
     private DatePicker apmtDatePicker;
 
     @FXML
-    private TableColumn<?, ?> apmtDescriptionCol;
+    private TableColumn<Appointments, String> apmtDescriptionCol;
 
     @FXML
-    private TableColumn<?, ?> apmtEndDateCol;
+    private TableColumn<Appointments, LocalDateTime> apmtEndDateCol;
 
     @FXML
     private TableColumn<?, ?> apmtEndTimeCol;
 
     @FXML
-    private TableColumn<?, ?> apmtIdCol;
+    private TableColumn<Appointments, Integer> apmtIdCol;
 
     @FXML
-    private TableColumn<?, ?> apmtLocationCol;
+    private TableColumn<Appointments, String> apmtLocationCol;
 
     @FXML
-    private TableColumn<?, ?> apmtStartDateCol;
+    private TableColumn<Appointments, LocalDateTime> apmtStartDateCol;
 
     @FXML
     private TableColumn<?, ?> apmtStartTimeCol;
 
     @FXML
-    private TableView<?> apmtTableView;
+    private TableView<Appointments> apmtTableView;
 
     @FXML
-    private TableColumn<?, ?> apmtTitleCol;
+    private TableColumn<Appointments, String> apmtTitleCol;
 
     @FXML
-    private TableColumn<?, ?> apmtTypeCol;
+    private TableColumn<Appointments, String> apmtTypeCol;
 
     @FXML
-    private TableColumn<?, ?> apmtUserIdCol;
+    private TableColumn<Appointments, Integer> apmtUserIdCol;
 
     @FXML
     private AnchorPane appointmentPanel;
@@ -130,5 +132,20 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        try {
+            apmtTableView.setItems(AppointmentDB.getAllAppointments());
+            apmtIdCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("apmtId"));
+            apmtTitleCol.setCellValueFactory(new PropertyValueFactory<Appointments, String>("apmtTitle"));
+            apmtDescriptionCol.setCellValueFactory(new PropertyValueFactory<Appointments, String>("apmtDescription"));
+            apmtLocationCol.setCellValueFactory(new PropertyValueFactory<Appointments, String>("apmtLocation"));
+            apmtTypeCol.setCellValueFactory(new PropertyValueFactory<Appointments, String>("apmtType"));
+            apmtStartDateCol.setCellValueFactory(new PropertyValueFactory<Appointments, LocalDateTime>("apmtStart"));
+            apmtEndDateCol.setCellValueFactory(new PropertyValueFactory<Appointments, LocalDateTime>("apmtEnd"));
+            apmtCustomerIdCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("apmtCustomerId"));
+            apmtUserIdCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("apmtUserId"));
+            apmtContactCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("apmtContactId"));
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
     }
 }

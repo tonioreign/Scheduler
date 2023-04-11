@@ -1,17 +1,16 @@
-package sample.utils;
+package sample.db;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 import sample.models.User;
+import sample.utils.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DBUser {
-
+public class UserDB {
     private static Connection conn = DBConnection.openConnection();
     public static ObservableList<User> users = FXCollections.observableArrayList();
 
@@ -39,6 +38,7 @@ public class DBUser {
      * @param password
      * @param username
      */
+
     public static int validateUser(String username, String password)
     {
         try

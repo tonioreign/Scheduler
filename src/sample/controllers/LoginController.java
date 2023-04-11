@@ -11,8 +11,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import sample.db.UserDB;
 import sample.misc.AccessMethod;
-import sample.utils.DBUser;
 
 import java.io.IOException;
 import java.net.URL;
@@ -71,7 +71,7 @@ public class LoginController implements Initializable {
     void onLoginButton(ActionEvent event) throws IOException {
         String userName = UserField.getText();
         String password = PassField.getText();
-        int Id = DBUser.validateUser(userName, password);
+        int Id = UserDB.validateUser(userName, password);
         if(Id!=-1){
             AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
         }
