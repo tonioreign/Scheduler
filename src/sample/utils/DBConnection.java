@@ -2,6 +2,7 @@ package sample.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /*
@@ -26,6 +27,8 @@ public class DBConnection {
     //Username & password
     private static final String userName = "sqlUser";
     private static final String password = "Passw0rd!";
+
+    private static PreparedStatement preparedStatement;
 
     //connection
     public static Connection openConnection(){
@@ -53,6 +56,15 @@ public class DBConnection {
         } catch(SQLException e){
             System.out.println(e.getMessage());
         }
+    }
+
+    public static void setPreparedStatement(Connection conn, String sqlStatement) throws SQLException {
+        preparedStatement = conn.prepareStatement(sqlStatement);
+    }
+
+    public static PreparedStatement getPreparedStatement() {
+
+        return preparedStatement;
     }
 
 }
