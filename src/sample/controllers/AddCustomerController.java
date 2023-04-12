@@ -108,6 +108,43 @@ public class AddCustomerController implements Initializable {
         }
     }
 
+    public void customerEditCountryDropDown(ActionEvent event) throws SQLException {
+        try {
+            DBConnection.openConnection();
+
+            String selectedCountry = countryBox.getSelectionModel().getSelectedItem();
+
+            ObservableList<FirstLevelDivision> getAllFirstLevelDivisions = FirstLevelDivisionDB.getAllFirstLevelDivisions();
+
+            ObservableList<String> flDivisionUS = FXCollections.observableArrayList();
+            ObservableList<String> flDivisionUK = FXCollections.observableArrayList();
+            ObservableList<String> flDivisionCanada = FXCollections.observableArrayList();
+
+            getAllFirstLevelDivisions.forEach(firstLevelDivision -> {
+                if (firstLevelDivision.getCountry_ID() == 1) {
+                    flDivisionUS.add(firstLevelDivision.getDivisionName());
+                } else if (firstLevelDivision.getCountry_ID() == 2) {
+                    flDivisionUK.add(firstLevelDivision.getDivisionName());
+                } else if (firstLevelDivision.getCountry_ID() == 3) {
+                    flDivisionCanada.add(firstLevelDivision.getDivisionName());
+                }
+            });
+
+            //needs a little revision
+            if (selectedCountry.equals("U.S")) {
+                divisionIDBox.setItems(flDivisionUS);
+            }
+            else if (selectedCountry.equals("UK")) {
+                divisionIDBox.setItems(flDivisionUK);
+            }
+            else if (selectedCountry.equals("Canada")) {
+                divisionIDBox.setItems(flDivisionCanada);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Connection connection = DBConnection.getConnection();

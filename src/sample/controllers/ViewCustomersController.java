@@ -77,7 +77,7 @@ public class ViewCustomersController implements Initializable {
     @FXML
     private Button deleteCustomerButton;
 
-    private static Customer selectedCustomer;
+    private static Customer selectedCustomer = null;
 
     @FXML
     public static Customer getModifiedCustomer(){
@@ -130,7 +130,7 @@ public class ViewCustomersController implements Initializable {
 
     @FXML
     void onModCustomer(ActionEvent event) throws IOException {
-        Customer selectedCustomer = (Customer) customerTableView.getSelectionModel().getSelectedItem();
+        selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
 
         AccessMethod.changeScreen(event, "ModCustomer.fxml", "Update Customer");
     }
@@ -139,7 +139,7 @@ public class ViewCustomersController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             Connection connection = DBConnection.openConnection();
-            selectedCustomer = (Customer) customerTableView.getSelectionModel().getSelectedItem();
+
 
             ObservableList<Country> allCountries = CountryDB.getCountries();
             ObservableList<String> countryNames = FXCollections.observableArrayList();

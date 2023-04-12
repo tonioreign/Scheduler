@@ -17,6 +17,11 @@ import sample.utils.DBConnection;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class ModCustomerController implements Initializable {
@@ -57,6 +62,8 @@ public class ModCustomerController implements Initializable {
     @FXML
     private Button saveButton;
 
+    private Customer selectedCustomer = null;
+
     @FXML
     void onCancel(ActionEvent event) throws IOException {
         AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
@@ -64,8 +71,76 @@ public class ModCustomerController implements Initializable {
 
     @FXML
     void onSave(ActionEvent event) throws IOException {
+        try {
+            Connection connection = DBConnection.openConnection();
 
-        AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
+            if (!customerNameField.getText().isEmpty() || !addressField.getText().isEmpty() || !zipField.getText().isEmpty() || !phoneNumberField.getText().isEmpty() || !countryBox.getValue().isEmpty() || !divisionIDBox.getValue().isEmpty())
+            {
+
+                int firstLevelDivisionName = 0;
+                for (FirstLevelDivision firstLevelDivision : FirstLevelDivisionDB.getAllFirstLevelDivisions()) {
+                    if (divisionIDBox.getSelectionModel().getSelectedItem().equals(firstLevelDivision.getDivisionName())) {
+                        firstLevelDivisionName = firstLevelDivision.getDivisionID();
+                    }
+                }
+                String insertStatement = "UPDATE customers SET Customer_ID = ?, Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Create_Date = ?, Created_By = ?, Last_Update = ?, Last_Updated_By = ?, Division_ID = ? WHERE Customer_ID = ?";
+                DBConnection.setPreparedStatement(DBConnection.getConnection(), insertStatement);
+                PreparedStatement ps = DBConnection.getPreparedStatement();
+                ps.setInt(1, Integer.parseInt(customerIDField.getText()));
+                ps.setString(2, customerNameField.getText());
+                ps.setString(3, addressField.getText());
+                ps.setString(4, zipField.getText());
+                ps.setString(5, phoneNumberField.getText());
+                ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setString(7, "admin");
+                ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setString(9, "admin");
+                ps.setInt(10, firstLevelDivisionName);
+                ps.setInt(11, Integer.parseInt(customerIDField.getText()));
+                ps.executeUpdate();
+
+            }
+            AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void customerEditCountryDropDown(ActionEvent event) throws SQLException {
+        try {
+            DBConnection.openConnection();
+
+            String selectedCountry = countryBox.getSelectionModel().getSelectedItem();
+
+            ObservableList<FirstLevelDivision> getAllFirstLevelDivisions = FirstLevelDivisionDB.getAllFirstLevelDivisions();
+
+            ObservableList<String> flDivisionUS = FXCollections.observableArrayList();
+            ObservableList<String> flDivisionUK = FXCollections.observableArrayList();
+            ObservableList<String> flDivisionCanada = FXCollections.observableArrayList();
+
+            getAllFirstLevelDivisions.forEach(firstLevelDivision -> {
+                if (firstLevelDivision.getCountry_ID() == 1) {
+                    flDivisionUS.add(firstLevelDivision.getDivisionName());
+                } else if (firstLevelDivision.getCountry_ID() == 2) {
+                    flDivisionUK.add(firstLevelDivision.getDivisionName());
+                } else if (firstLevelDivision.getCountry_ID() == 3) {
+                    flDivisionCanada.add(firstLevelDivision.getDivisionName());
+                }
+            });
+
+            //needs a little revision
+            if (selectedCountry.equals("U.S")) {
+                divisionIDBox.setItems(flDivisionUS);
+            }
+            else if (selectedCountry.equals("UK")) {
+                divisionIDBox.setItems(flDivisionUK);
+            }
+            else if (selectedCountry.equals("Canada")) {
+                divisionIDBox.setItems(flDivisionCanada);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -73,7 +148,19 @@ public class ModCustomerController implements Initializable {
 
         try {
             DBConnection.openConnection();
-            Customer selectedCustomer = ViewCustomersController.getModifiedCustomer();
+            Connection connection = DBConnection.getConnection();
+            selectedCustomer = ViewCustomersController.getModifiedCustomer();
+            ObservableList<Country> allCountries = CountryDB.getCountries();
+            ObservableList<String> countryNames = FXCollections.observableArrayList();
+            ObservableList<FirstLevelDivision> allFirstLevelDivisions = FirstLevelDivisionDB.getAllFirstLevelDivisions();
+            ObservableList<String> firstLevelDivisionAllNames = FXCollections.observableArrayList();
+
+            allCountries.stream().map(Country::getCountryName).forEach(countryNames::add);
+            countryBox.setItems(countryNames);
+            allFirstLevelDivisions.stream().map(FirstLevelDivision::getDivisionName).forEach(countryNames::add);
+            divisionIDBox.setItems(countryNames);
+
+            allFirstLevelDivisions.forEach(firstLevelDivision -> firstLevelDivisionAllNames.add(firstLevelDivision.getDivisionName()));
 
             String divisionName = "", countryName = "";
 
@@ -104,8 +191,6 @@ public class ModCustomerController implements Initializable {
                         }
                     }
                 }
-                divisionIDBox.setValue(divisionName);
-                countryBox.setValue(countryName);
             }
         } catch (Exception e) {
             e.printStackTrace();
