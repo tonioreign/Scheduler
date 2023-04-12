@@ -1,5 +1,6 @@
 package sample.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -128,6 +129,54 @@ public class MainController implements Initializable {
     @FXML
     void onViewCustomers(ActionEvent event) throws IOException {
         AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
+    }
+
+    @FXML
+    void appointmentMonthSelected(ActionEvent event) throws SQLException {
+        try {
+            byCustomerRadio.setSelected(false);
+            byWeekRadio.setSelected(false);
+            ObservableList<Appointments> allAppointmentsList = AppointmentDB.getAllAppointments();
+            ObservableList<Appointments> appointmentsMonth = FXCollections.observableArrayList();
+
+            LocalDateTime currentMonthStart = LocalDateTime.now().minusMonths(1);
+            LocalDateTime currentMonthEnd = LocalDateTime.now().plusMonths(1);
+
+            if (allAppointmentsList != null)
+
+                allAppointmentsList.forEach(appointment -> {
+                    if (appointment.getApmtEnd().isAfter(currentMonthStart) && appointment.getApmtEnd().isBefore(currentMonthEnd)) {
+                        appointmentsMonth.add(appointment);
+                    }
+                    apmtTableView.setItems(appointmentsMonth);
+                });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void appointmentWeekSelected(ActionEvent event) throws SQLException {
+        try {
+            byCustomerRadio.setSelected(false);
+            byMonthRadio.setSelected(false);
+            ObservableList<Appointments> allAppointmentsList = AppointmentDB.getAllAppointments();
+            ObservableList<Appointments> appointmentsWeek = FXCollections.observableArrayList();
+
+            LocalDateTime weekStart = LocalDateTime.now().minusWeeks(1);
+            LocalDateTime weekEnd = LocalDateTime.now().plusWeeks(1);
+
+            if (allAppointmentsList != null)
+                //IDE converted forEach
+                allAppointmentsList.forEach(appointment -> {
+                    if (appointment.getApmtEnd().isAfter(weekStart) && appointment.getApmtEnd().isBefore(weekEnd)) {
+                        appointmentsWeek.add(appointment);
+                    }
+                    apmtTableView.setItems(appointmentsWeek);
+                });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
