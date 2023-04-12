@@ -1,14 +1,19 @@
 package sample.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.SplitMenuButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import sample.db.CountryDB;
+import sample.db.FirstLevelDivisionDB;
 import sample.misc.AccessMethod;
+import sample.models.Country;
+import sample.models.Customer;
+import sample.models.FirstLevelDivision;
+import sample.utils.DBConnection;
 
 import java.io.IOException;
 import java.net.URL;
@@ -41,10 +46,10 @@ public class ModCustomerController implements Initializable {
     private TextField stateField;
 
     @FXML
-    private MenuButton countryMenu;
+    private ComboBox<String> countryBox;
 
     @FXML
-    private MenuButton divisionIDMenu;
+    private ComboBox<String> divisionIDBox;
 
     @FXML
     private Button cancelButton;
@@ -66,5 +71,44 @@ public class ModCustomerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        try {
+            DBConnection.openConnection();
+            Customer selectedCustomer = ViewCustomersController.getModifiedCustomer();
+
+            String divisionName = "", countryName = "";
+
+            if (selectedCustomer != null) {
+                ObservableList<Country> getAllCountries = CountryDB.getCountries();
+                ObservableList<FirstLevelDivision> getFLDivisionNames = FirstLevelDivisionDB.getAllFirstLevelDivisions();
+                ObservableList<String> allFLDivision = FXCollections.observableArrayList();
+
+                divisionIDBox.setItems(allFLDivision);
+
+                customerIDField.setText(String.valueOf((selectedCustomer.getCustomerID())));
+                customerNameField.setText(selectedCustomer.getCustomerName());
+                addressField.setText(selectedCustomer.getCustomerAddress());
+                zipField.setText(selectedCustomer.getCustomerPostalCode());
+                phoneNumberField.setText(selectedCustomer.getCustomerPhone());
+
+                for (FirstLevelDivision flDivision: getFLDivisionNames) {
+                    allFLDivision.add(flDivision.getDivisionName());
+                    int countryIDToSet = flDivision.getCountry_ID();
+
+                    if (flDivision.getDivisionID() == selectedCustomer.getCustomerDivisionID()) {
+                        divisionName = flDivision.getDivisionName();
+
+                        for (Country country: getAllCountries) {
+                            if (country.getCountryID() == countryIDToSet) {
+                                countryName = country.getCountryName();
+                            }
+                        }
+                    }
+                }
+                divisionIDBox.setValue(divisionName);
+                countryBox.setValue(countryName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
