@@ -51,7 +51,6 @@ public class DBConnection {
     }
 
     public static PreparedStatement getPreparedStatement() {
-
         return preparedStatement;
     }
 

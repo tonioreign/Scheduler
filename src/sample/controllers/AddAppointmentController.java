@@ -196,10 +196,8 @@ public class AddAppointmentController implements Initializable {
                     }
                 }
 
-                String insertStatement = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
-                DBConnection.setPreparedStatement(DBConnection.getConnection(), insertStatement);
-                PreparedStatement ps = DBConnection.getPreparedStatement();
+                String sql = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, User_ID, Customer_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                PreparedStatement ps = connection.prepareStatement(sql);
                 ps.setInt(1, newAppointmentID);
                 ps.setString(2, titleField.getText());
                 ps.setString(3, descField.getText());
@@ -212,17 +210,17 @@ public class AddAppointmentController implements Initializable {
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                 ps.setString(9, "admin");
                 ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setInt(11, 1);
-                ps.setInt(12, customerID);
-                ps.setInt(13, Integer.parseInt(ContactDB.findContactID(contactBox.getValue())));
-                ps.setInt(14, Integer.parseInt(ContactDB.findContactID(String.valueOf(userIDBox.getValue()))));
+                ps.setInt(11, customerID);
+                ps.setInt(12, userIDBox.getValue());
+                ps.setInt(13, Integer.parseInt(contactBox.getValue()));
 
-                ps.execute();
+                ps.executeUpdate();
+                ps.close();
             }
-            AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
         }catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
+        AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
     }
 
         @Override

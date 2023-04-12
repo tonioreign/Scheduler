@@ -6,23 +6,22 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import sample.db.AppointmentDB;
 import sample.misc.AccessMethod;
 import sample.models.Appointments;
+import sample.utils.DBConnection;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -76,12 +75,6 @@ public class MainController implements Initializable {
     private TableColumn<Appointments, Integer> apmtUserIdCol;
 
     @FXML
-    private AnchorPane appointmentPanel;
-
-    @FXML
-    private RadioButton byCustomerRadio;
-
-    @FXML
     private RadioButton byMonthRadio;
 
     @FXML
@@ -132,10 +125,45 @@ public class MainController implements Initializable {
     }
 
     @FXML
+    void deleteAppointment(ActionEvent event) throws Exception {
+        try {
+            Connection connection = DBConnection.openConnection();
+            int deleteAppointmentID = apmtTableView.getSelectionModel().getSelectedItem().getApmtId();
+            String deleteAppointmentType = apmtTableView.getSelectionModel().getSelectedItem().getApmtType();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete the selected appointment with appointment id: " + deleteAppointmentID + " and appointment type " + deleteAppointmentType);
+            Optional<ButtonType> confirmation = alert.showAndWait();
+            if (confirmation.isPresent() && confirmation.get() == ButtonType.OK) {
+                AppointmentDB.deleteAppointment(deleteAppointmentID, connection);
+
+                ObservableList<Appointments> allAppointmentsList = AppointmentDB.getAllAppointments();
+                apmtTableView.setItems(allAppointmentsList);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void appointViewAllSelected(ActionEvent event) throws SQLException{
+        try {
+            byWeekRadio.setSelected(false);
+            byMonthRadio.setSelected(false);
+            ObservableList<Appointments> allAppointmentsList = AppointmentDB.getAllAppointments();
+
+            if (allAppointmentsList != null)
+                for (Appointments appointment : allAppointmentsList) {
+                    apmtTableView.setItems(allAppointmentsList);
+                }
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    @FXML
     void appointmentMonthSelected(ActionEvent event) throws SQLException {
         try {
-            byCustomerRadio.setSelected(false);
             byWeekRadio.setSelected(false);
+            viewAllRadio.setSelected(false);
             ObservableList<Appointments> allAppointmentsList = AppointmentDB.getAllAppointments();
             ObservableList<Appointments> appointmentsMonth = FXCollections.observableArrayList();
 
@@ -157,9 +185,9 @@ public class MainController implements Initializable {
 
     @FXML
     void appointmentWeekSelected(ActionEvent event) throws SQLException {
+        byMonthRadio.setSelected(false);
+        viewAllRadio.setSelected(false);
         try {
-            byCustomerRadio.setSelected(false);
-            byMonthRadio.setSelected(false);
             ObservableList<Appointments> allAppointmentsList = AppointmentDB.getAllAppointments();
             ObservableList<Appointments> appointmentsWeek = FXCollections.observableArrayList();
 
