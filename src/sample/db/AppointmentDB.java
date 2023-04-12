@@ -21,20 +21,20 @@ public abstract class AppointmentDB {
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
-            int appointmentID = rs.getInt("Appointment_ID");
-            String appointmentTitle = rs.getString("Title");
-            String appointmentDescription = rs.getString("Description");
-            String appointmentLocation = rs.getString("Location");
-            String appointmentType = rs.getString("Type");
+            int apmtID = rs.getInt("Appointment_ID");
+            String apmtTitle = rs.getString("Title");
+            String apmtDesc = rs.getString("Description");
+            String apmtLocation = rs.getString("Location");
+            String apmtType = rs.getString("Type");
             //LocalDateTime start = convertTimeDateLocal(rs.getTimestamp("Start").toLocalDateTime());
             LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
             //LocalDateTime end = convertTimeDateLocal(rs.getTimestamp("End").toLocalDateTime());
             LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
-            int customerID = rs.getInt("Customer_ID");
+            int custID = rs.getInt("Customer_ID");
             int userID = rs.getInt("User_ID");
             int contactID = rs.getInt("Contact_ID");
-            Appointments appointment = new Appointments(appointmentID, appointmentTitle, appointmentDescription, appointmentLocation, appointmentType, start, end, customerID, userID, contactID);
-            getAllApmts.add(appointment);
+            Appointments apmt = new Appointments(apmtID, apmtTitle, apmtDesc, apmtLocation, apmtType, start, end, custID, userID, contactID);
+            getAllApmts.add(apmt);
         }
         return getAllApmts;
     }

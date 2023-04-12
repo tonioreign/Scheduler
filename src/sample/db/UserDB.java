@@ -13,6 +13,21 @@ import java.sql.SQLException;
 public class UserDB {
     private static Connection conn = DBConnection.openConnection();
     public static ObservableList<User> users = FXCollections.observableArrayList();
+    private static String sqlQuery = null;
+    private static PreparedStatement ps = null;
+    private static ResultSet rs = null;
+
+    public static int addUser(){
+
+
+        return -1;
+    }
+
+    public static int removeUser(){
+
+
+        return -1;
+    }
 
     /**
      * Method to pull in all user data to getAllUsers observablelist.
@@ -21,8 +36,8 @@ public class UserDB {
      */
     public static ObservableList<User> getAllUsers() throws SQLException {
         String sql = "SELECT * from users";
-        PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
+        ps = DBConnection.getConnection().prepareStatement(sql);
+        rs = ps.executeQuery();
         while (rs.next()) {
             int userID = rs.getInt("User_ID");
             String userName = rs.getString("User_Name");
@@ -43,10 +58,10 @@ public class UserDB {
     {
         try
         {
-            String sqlQuery = "SELECT * FROM users WHERE user_name = '" + username + "' AND password = '" + password +"'";
+            sqlQuery = "SELECT * FROM users WHERE user_name = '" + username + "' AND password = '" + password +"'";
 
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sqlQuery);
-            ResultSet rs = ps.executeQuery();
+            ps = DBConnection.getConnection().prepareStatement(sqlQuery);
+            rs = ps.executeQuery();
             rs.next();
             if (rs.getString("User_Name").equals(username))
             {

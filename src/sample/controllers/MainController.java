@@ -1,5 +1,6 @@
 package sample.controllers;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -133,7 +134,8 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         try {
-            apmtTableView.setItems(AppointmentDB.getAllAppointments());
+            ObservableList<Appointments> allAppointments = AppointmentDB.getAllAppointments();
+
             apmtIdCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("apmtId"));
             apmtTitleCol.setCellValueFactory(new PropertyValueFactory<Appointments, String>("apmtTitle"));
             apmtDescriptionCol.setCellValueFactory(new PropertyValueFactory<Appointments, String>("apmtDescription"));
@@ -144,6 +146,8 @@ public class MainController implements Initializable {
             apmtCustomerIdCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("apmtCustomerId"));
             apmtUserIdCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("apmtUserId"));
             apmtContactCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("apmtContactId"));
+
+            apmtTableView.setItems(allAppointments);
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }

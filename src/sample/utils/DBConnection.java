@@ -28,7 +28,8 @@ public class DBConnection {
     private static final String userName = "sqlUser";
     private static final String password = "Passw0rd!";
 
-    private static PreparedStatement preparedStatement;
+
+    private static PreparedStatement preparedStatement = null;
 
     //connection
     public static Connection openConnection(){
@@ -45,6 +46,15 @@ public class DBConnection {
         return conn;
     }
 
+    public static void setPreparedStatement(Connection conn, String sqlStatement) throws SQLException {
+        preparedStatement = conn.prepareStatement(sqlStatement);
+    }
+
+    public static PreparedStatement getPreparedStatement() {
+
+        return preparedStatement;
+    }
+
     public static Connection getConnection(){
         return conn;
     }
@@ -56,15 +66,6 @@ public class DBConnection {
         } catch(SQLException e){
             System.out.println(e.getMessage());
         }
-    }
-
-    public static void setPreparedStatement(Connection conn, String sqlStatement) throws SQLException {
-        preparedStatement = conn.prepareStatement(sqlStatement);
-    }
-
-    public static PreparedStatement getPreparedStatement() {
-
-        return preparedStatement;
     }
 
 }

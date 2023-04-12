@@ -1,7 +1,5 @@
 package sample.models;
 
-import java.time.LocalDateTime;
-
 public class Customer {
     private String divisionName;
     private int customerID;

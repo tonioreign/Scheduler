@@ -9,9 +9,14 @@ import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import sample.misc.AccessMethod;
+import sample.utils.DBConnection;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class AddCustomerController implements Initializable {
@@ -58,8 +63,25 @@ public class AddCustomerController implements Initializable {
     }
 
     @FXML
-    void onSave(ActionEvent event) throws IOException {
+    void onSave(ActionEvent event) throws IOException, SQLException {
 
+        //create random ID for new customer id
+        Integer newCustomerID = (int) (Math.random() * 100);
+
+        String insertStatement = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        DBConnection.setPreparedStatement(DBConnection.getConnection(), insertStatement);
+        PreparedStatement ps = DBConnection.getPreparedStatement();
+        ps.setInt(1, newCustomerID);
+        ps.setString(2, customerNameField.getText());
+        ps.setString(3, addressField.getText());
+        ps.setString(4, zipField.getText());
+        ps.setString(5, phoneNumberField.getText());
+        ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+        ps.setString(7, "admin");
+        ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
+        ps.setString(9, "admin");
+       // ps.setInt(10, firstLevelDivisionName);
+        ps.execute();
         AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
     }
 
