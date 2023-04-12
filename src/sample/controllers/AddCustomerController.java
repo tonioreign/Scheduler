@@ -23,6 +23,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class AddCustomerController implements Initializable {
@@ -70,23 +72,28 @@ public class AddCustomerController implements Initializable {
 
     @FXML
     void onSave(ActionEvent event) throws IOException, SQLException {
-        try {
-            Connection connection = DBConnection.openConnection();
 
-            if (!customerNameField.getText().isEmpty() || !addressField.getText().isEmpty() || !zipField.getText().isEmpty() || !phoneNumberField.getText().isEmpty() || !countryBox.getValue().isEmpty() || !divisionIDBox.getValue().isEmpty()) {
+        if (!customerNameField.getText().isEmpty() || !addressField.getText().isEmpty() || !zipField.getText().isEmpty() || !phoneNumberField.getText().isEmpty() || !countryBox.getValue().isEmpty() || !divisionIDBox.getValue().isEmpty()) {
+            // Generate random ID for new customer
+            Integer newCustomerID = (int) (Math.random() * 100);
 
-                //create random ID for new customer id
-                Integer newCustomerID = (int) (Math.random() * 100);
+            // Get first level division ID
+            int firstLevelDivisionID = 0;
+            Map<String, FirstLevelDivision> divisionMap = new HashMap<>();
+            for (FirstLevelDivision firstLevelDivision : FirstLevelDivisionDB.getAllFirstLevelDivisions()) {
+                divisionMap.put(firstLevelDivision.getDivisionName(), firstLevelDivision);
+            }
+            // Retrieve the FirstLevelDivision object using selected division name
+            String selectedDivisionName = divisionIDBox.getSelectionModel().getSelectedItem();
+            if (divisionMap.containsKey(selectedDivisionName)) {
+                FirstLevelDivision selectedDivision = divisionMap.get(selectedDivisionName);
+                firstLevelDivisionID = selectedDivision.getDivisionID();
+            }
 
-                int firstLevelDivisionName = 0;
-                for (FirstLevelDivision firstLevelDivision : FirstLevelDivisionDB.getAllFirstLevelDivisions()) {
-                    if (divisionIDBox.getSelectionModel().getSelectedItem().equals(firstLevelDivision.getDivisionName())) {
-                        firstLevelDivisionName = firstLevelDivision.getDivisionID();
-                    }
-                }
-                String insertStatement = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
-                DBConnection.setPreparedStatement(DBConnection.getConnection(), insertStatement);
-                PreparedStatement ps = DBConnection.getPreparedStatement();
+            // Insert data into database
+            String insertStatement = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
+            try (Connection conn = DBConnection.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(insertStatement)) {
                 ps.setInt(1, newCustomerID);
                 ps.setString(2, customerNameField.getText());
                 ps.setString(3, addressField.getText());
@@ -96,15 +103,15 @@ public class AddCustomerController implements Initializable {
                 ps.setString(7, "admin");
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                 ps.setString(9, "admin");
-                ps.setInt(10, firstLevelDivisionName);
+                ps.setInt(10, firstLevelDivisionID);
                 ps.executeUpdate();
 
                 AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
+            } catch (SQLException e) {
+                // Handle any database errors
+                e.printStackTrace();
+                // Add appropriate error handling or logging as needed
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
