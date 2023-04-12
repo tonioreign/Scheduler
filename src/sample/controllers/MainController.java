@@ -21,6 +21,8 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -209,6 +211,11 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Locale locale = Locale.getDefault();
+        Locale.setDefault(locale);
+
+        ZoneId zone = ZoneId.systemDefault();
+        setTimeLabel.setText(String.valueOf(zone));
 
         try {
             ObservableList<Appointments> allAppointments = AppointmentDB.getAllAppointments();
