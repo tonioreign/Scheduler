@@ -191,7 +191,8 @@ public class AddAppointmentController implements Initializable {
                 }
 
                 String sql = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, User_ID, Customer_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+                Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setInt(1, newAppointmentID);
                 ps.setString(2, titleField.getText());
                 ps.setString(3, descField.getText());
@@ -207,6 +208,9 @@ public class AddAppointmentController implements Initializable {
                 ps.setInt(13, Integer.parseInt(contactBox.getValue()));
 
                 ps.executeUpdate();
+            }
+            else {
+                System.out.println("Something is wrong");
             }
         }catch (SQLException throwables) {
             throwables.printStackTrace();
