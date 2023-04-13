@@ -187,33 +187,69 @@ public class MainController implements Initializable {
      */
     private Scene scene;
 
-
+    /**
+     * Event handler for the "Add Appointment" button. Changes the screen to the "AddAppointment.fxml" view for scheduling a new appointment.
+     *
+     * @param event The ActionEvent triggered by clicking the "Add Appointment" button.
+     * @throws IOException If an I/O error occurs while changing the screen.
+     */
     @FXML
     void onAddApmt(ActionEvent event) throws IOException {
         AccessMethod.changeScreen(event, "AddAppointment.fxml", "Schedule Appointment");
     }
 
+    /**
+     * Event handler for the "Log Out" button. Changes the screen to the "login-form.fxml" view for logging out of the scheduling application.
+     *
+     * @param event The ActionEvent triggered by clicking the "Log Out" button.
+     * @throws IOException If an I/O error occurs while changing the screen.
+     */
     @FXML
     void onLogOut(ActionEvent event) throws IOException {
         AccessMethod.changeScreen(event, "login-form.fxml", "Scheduling Application");
     }
 
+    /**
+     * Event handler for the "Modify Appointment" button. Gets the selected appointment from the appointment table view and changes the screen to the "UpdateAppointment.fxml" view for updating the appointment.
+     *
+     * @param event The ActionEvent triggered by clicking the "Modify Appointment" button.
+     * @throws IOException If an I/O error occurs while changing the screen.
+     */
     @FXML
     void onModifyApmt(ActionEvent event) throws IOException {
         selectedAppointment = apmtTableView.getSelectionModel().getSelectedItem();
         AccessMethod.changeScreen(event, "UpdateAppointment.fxml", "Update Appointment");
     }
 
+    /**
+     * Event handler for the "Reports" button. Changes the screen to the "Reports.fxml" view for generating reports.
+     *
+     * @param event The ActionEvent triggered by clicking the "Reports" button.
+     * @throws IOException If an I/O error occurs while changing the screen.
+     */
     @FXML
     void onReports(ActionEvent event) throws IOException {
         AccessMethod.changeScreen(event, "Reports.fxml", "Reports");
     }
 
+    /**
+     * Event handler for the "View Customers" button. Changes the screen to the "ViewCustomers.fxml" view for viewing customer details.
+     *
+     * @param event The ActionEvent triggered by clicking the "View Customers" button.
+     * @throws IOException If an I/O error occurs while changing the screen.
+     */
     @FXML
     void onViewCustomers(ActionEvent event) throws IOException {
         AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
     }
 
+    /**
+     * Event handler for the "Delete Appointment" button. Deletes the selected appointment from the appointments table,
+     * and refreshes the appointments table view.
+     *
+     * @param event The ActionEvent triggered by clicking the "Delete Appointment" button.
+     * @throws Exception If an exception occurs while deleting the appointment or refreshing the appointments table view.
+     */
     @FXML
     void deleteAppointment(ActionEvent event) throws Exception {
         try {
@@ -233,6 +269,12 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Event handler for the "View All" button. Displays all appointments in the appointments table view.
+     *
+     * @param event The ActionEvent triggered by clicking the "View All" button.
+     * @throws SQLException If an exception occurs while retrieving appointments from the database.
+     */
     @FXML
     void appointViewAllSelected(ActionEvent event) throws SQLException{
         try {
@@ -249,6 +291,12 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Event handler for the "View by Month" button. Displays appointments for the current month in the appointments table view.
+     *
+     * @param event The ActionEvent triggered by clicking the "View by Month" button.
+     * @throws SQLException If an exception occurs while retrieving appointments from the database.
+     */
     @FXML
     void appointmentMonthSelected(ActionEvent event) throws SQLException {
         try {
@@ -273,6 +321,15 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Event handler for when an appointment week is selected.
+     * It retrieves all appointments from the database and filters them
+     * to only include appointments that fall within the past week.
+     * It then sets the filtered appointments to be displayed in the apmtTableView table view.
+     *
+     * @param event (ActionEvent) The event triggered by the selection of an appointment week.
+     * @throws SQLException If there is an error in retrieving appointments from the database.
+     */
     @FXML
     void appointmentWeekSelected(ActionEvent event) throws SQLException {
         byMonthRadio.setSelected(false);
@@ -298,6 +355,15 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Initializes the view with data from the given URL and ResourceBundle. This method sets up
+     * the display of appointments in a TableView, populating the columns with data from the
+     * Appointments objects retrieved from the AppointmentDB database. It also sets the default
+     * locale and time zone for the application.
+     *
+     * @param url The URL of the resource to initialize.
+     * @param resourceBundle The ResourceBundle to use for localization.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Locale locale = Locale.getDefault();

@@ -130,17 +130,36 @@ public class ViewCustomersController implements Initializable {
      */
     private static Customer selectedCustomer = null;
 
+    /**
+     * Returns the Customer object that was modified or selected in the UI.
+     *
+     * @return The Customer object that was modified or selected in the UI, or null if no customer was modified or selected.
+     */
     @FXML
     public static Customer getModifiedCustomer(){
         return selectedCustomer;
     }
 
+    /**
+     * Handles the "Add Customer" button action event.
+     * Changes the screen to the "AddCustomer.fxml" view.
+     *
+     * @param event The ActionEvent triggered by the button click.
+     * @throws IOException if an I/O error occurs while loading the "AddCustomer.fxml" view.
+     */
     @FXML
     void onAddCustomer(ActionEvent event) throws IOException {
         AccessMethod.changeScreen(event, "AddCustomer.fxml", "Add Customer");
 
     }
 
+    /**
+     * Handles the "Delete Customer" button action event.
+     * Deletes the selected customer and all their appointments from the database.
+     *
+     * @param event The ActionEvent triggered by the button click.
+     * @throws SQLException if a database error occurs while deleting the customer or appointments.
+     */
     @FXML
     void onDeleteCustomer(ActionEvent event) throws SQLException {
         Connection connection = DBConnection.openConnection();
@@ -174,11 +193,26 @@ public class ViewCustomersController implements Initializable {
 
     }
 
+    /**
+     * Handles the "Menu" button action event.
+     * Navigates to the main menu screen.
+     *
+     * @param event The ActionEvent triggered by the button click.
+     * @throws IOException if an I/O error occurs while changing the screen.
+     */
     @FXML
     void onMenu(ActionEvent event) throws IOException {
         AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
     }
 
+    /**
+     * Handles the "Modify Customer" button action event.
+     * Retrieves the selected customer from the customer table view.
+     * Navigates to the customer modification screen.
+     *
+     * @param event The ActionEvent triggered by the button click.
+     * @throws IOException if an I/O error occurs while changing the screen.
+     */
     @FXML
     void onModCustomer(ActionEvent event) throws IOException {
         selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
@@ -186,6 +220,13 @@ public class ViewCustomersController implements Initializable {
         AccessMethod.changeScreen(event, "ModCustomer.fxml", "Update Customer");
     }
 
+    /**
+     * Initializes the controller for the "Add Customer" screen.
+     * Retrieves data from the database to populate the customer table view and other UI components.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle The resource bundle used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {

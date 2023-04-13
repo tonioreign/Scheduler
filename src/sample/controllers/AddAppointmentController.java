@@ -98,12 +98,29 @@ public class AddAppointmentController implements Initializable {
     @FXML
     private ComboBox<Integer> userIDBox;
 
-
+    /**
+     * Event handler for the cancel button
+     * Back to the main screen of the application
+     *
+     * @param event The ActionEvent object that triggered the event.
+     *              This is typically provided by the JavaFX framework automatically
+     *              when the event handler is invoked.
+     * @throws IOException If an I/O exception occurs during the screen change process.
+     *                     This exception is thrown by the AccessMethod.changeScreen() method,
+     *                     which is responsible for changing the screen or scene in the JavaFX application.
+     */
     @FXML
     void onCancel(ActionEvent event) throws IOException {
         AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
     }
 
+    /**
+     * Event handler for the "Save" button in a JavaFX application.
+     * This method is called when the "Save" button is clicked.
+     * It performs various validation checks on the input fields and saves the appointment details to the database if all checks pass.
+     * @param event The ActionEvent object representing the button click event.
+     * @throws IOException If an IO exception occurs while performing database operations.
+     */
     @FXML
     void onSave(ActionEvent event) throws IOException {
         try {
@@ -252,6 +269,13 @@ public class AddAppointmentController implements Initializable {
         AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
     }
 
+    /**
+     * Overrides the initialize method from the Initializable interface to initialize the UI elements and data
+     * when the associated FXML file is loaded.
+     *
+     * @param url            The URL location of the FXML file.
+     * @param resourceBundle The ResourceBundle associated with the FXML file.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<Contacts> contactsList = null;

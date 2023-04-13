@@ -112,13 +112,25 @@ public class LoginController implements Initializable {
      */
     private Scene scene;
 
-    /**Button that exits the login form - closes the program*/
+    /**
+     * Event handler for the "Exit" button.
+     * Terminates the Java Virtual Machine (JVM) with an exit status of 0,
+     * indicating a successful termination, effectively closing the application
+     * and exiting the program.
+     *
+     * @param event The ActionEvent triggered by the "Exit" button click.
+     */
     @FXML
     void onExitButton(ActionEvent event) {
         System.exit(0);
     }
 
-    /**Button that opens " " form after confirmation of the login details*/
+    /**
+     * Event handler for the login button. This method is called when the login button is clicked.
+     *
+     * @param event The ActionEvent representing the login button click event.
+     * @throws IOException if an error occurs during input/output operations.
+     */
     @FXML
     void onLoginButton(ActionEvent event) throws IOException {
         try {
@@ -182,13 +194,26 @@ public class LoginController implements Initializable {
         }
 
     }
-    /**Resets username and password field to empty*/
+
+    /**
+     * Event handler for the "Reset" button.
+     * Clears the text fields for username and password inputs.
+     *
+     * @param event The ActionEvent triggered by the "Reset" button click.
+     */
     @FXML
     void onReset(ActionEvent event){
         UserField.setText("");
         PassField.setText("");
     }
-    /***/
+
+    /**
+     * Initializes the controller after its root element has been completely processed.
+     * This method is called automatically by JavaFX when the FXML file is loaded.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle The resource bundle used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try

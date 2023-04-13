@@ -97,11 +97,27 @@ public class UpdateAppointmentController implements Initializable {
     @FXML
     private ComboBox<Integer> userIDBox;
 
+    /**
+     * Event handler for the cancel button
+     * Back to the main screen of the application
+     *
+     * @param event The ActionEvent object that triggered the event.
+     *              This is typically provided by the JavaFX framework automatically
+     *              when the event handler is invoked.
+     * @throws IOException If an I/O exception occurs during the screen change process.
+     *                     This exception is thrown by the AccessMethod.changeScreen() method,
+     *                     which is responsible for changing the screen or scene in the JavaFX application.
+     */
     @FXML
     void onCancel(ActionEvent event) throws IOException {
         AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
     }
 
+    /**
+     * Updates an appointment when the "Save" button is clicked.
+     * @param event The ActionEvent object that represents the event of the "Save" button being clicked.
+     * @throws IOException If an I/O error occurs while opening the database connection.
+     */
     @FXML
     void onSave(ActionEvent event) throws IOException {
         try {
@@ -249,6 +265,12 @@ public class UpdateAppointmentController implements Initializable {
 
         AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
     }
+    /**
+     * Initializes the UI components with data for editing an appointment.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle The resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<Contacts> contactsList = null;

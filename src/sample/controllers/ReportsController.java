@@ -167,8 +167,10 @@ public class ReportsController {
     private TableColumn<?, ?> countryCounter;
 
     /**
-     * Initialize and setup fields on the form.
-     * @throws SQLException
+     * Initializes the appointment scheduler view with data from the database.
+     * This method sets up the cell value factories for the appointment scheduler table columns,
+     * and populates the contact selection box with contact names from the database.
+     * @throws SQLException If an SQL exception occurs while retrieving data from the database.
      */
     public void initialize() throws SQLException {
 
@@ -196,7 +198,11 @@ public class ReportsController {
     }
 
     /**
-     * Fill fxml form with appointment data by contact.
+     * Retrieves and displays appointment data for a specific contact in the appointment scheduler view.
+     * This method retrieves all appointment data and contact data from the database,
+     * matches the selected contact name with the corresponding contact ID,
+     * and displays the appointments associated with that contact in the appointments table.
+     * @throws SQLException If an SQL exception occurs while retrieving data from the database.
      */
     @FXML
     public void appointmentDataByContact() {
@@ -232,8 +238,11 @@ public class ReportsController {
     }
 
     /**
-     * Total number of customer appointments by type and month report.
-     * @throws SQLException
+     * Calculates and displays appointment totals by month and appointment type in the appointment totals tab.
+     * This method retrieves all appointment data from the database,
+     * calculates the total number of appointments for each month and appointment type,
+     * and displays the results in corresponding tables in the appointment totals tab.
+     * @throws SQLException If an SQL exception occurs while retrieving data from the database.
      */
     public void appointmentTotalsTab() throws SQLException {
         try {
@@ -292,8 +301,11 @@ public class ReportsController {
     }
 
     /**
-     * Custom report to display number of appointments in each Country.
-     * @throws SQLException
+     * Retrieves and displays customer data aggregated by country in the customer by country tab.
+     * This method retrieves customer data from the database,
+     * aggregates the data by country using the {@link ReportDB#getCountries()} method,
+     * and displays the aggregated customer data in the appropriate table in the customer by country tab.
+     * @throws SQLException If an SQL exception occurs while retrieving data from the database.
      */
     public void customerByCountry() throws SQLException {
         try {
@@ -313,8 +325,11 @@ public class ReportsController {
 
 
     /**
-     * Button to go back to main menu.
-     * @throws IOException
+     * Handles the event when the "Back to Main Menu" button is clicked.
+     * This method changes the screen to the "MainMenu.fxml" view using the {@link AccessMethod#changeScreen(ActionEvent, String, String)} method,
+     * with the event, the FXML file name, and the window title as parameters.
+     * @param event The ActionEvent triggered by the "Back to Main Menu" button.
+     * @throws IOException If an I/O exception occurs while loading the FXML file.
      */
     @FXML
     public void backToMainMenu (ActionEvent event) throws IOException {

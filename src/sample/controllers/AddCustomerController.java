@@ -101,11 +101,36 @@ public class AddCustomerController implements Initializable {
     @FXML
     private Button saveButton;
 
+    /**
+     * Event handler for the cancel button
+     * Back to the main screen of the application
+     *
+     * @param event The ActionEvent object that triggered the event.
+     *              This is typically provided by the JavaFX framework automatically
+     *              when the event handler is invoked.
+     * @throws IOException If an I/O exception occurs during the screen change process.
+     *                     This exception is thrown by the AccessMethod.changeScreen() method,
+     *                     which is responsible for changing the screen or scene in the JavaFX application.
+     */
     @FXML
     void onCancel(ActionEvent event) throws IOException {
         AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
     }
 
+    /**
+     * Event handler for the save button in a JavaFX application.
+     * This method is responsible for saving customer data to the database when the save button is clicked.
+     *
+     * @param event The ActionEvent object that triggered the event.
+     *              This is typically provided by the JavaFX framework automatically
+     *              when the event handler is invoked.
+     * @throws IOException  If an I/O exception occurs during the screen change process.
+     *                      This exception is thrown by the AccessMethod.changeScreen() method,
+     *                      which is responsible for changing the screen or scene in the JavaFX application.
+     * @throws SQLException If a SQL exception occurs during the database operation.
+     *                      This exception is thrown by the database operations performed in this method,
+     *                      such as executing SQL statements or accessing database connections.
+     */
     @FXML
     void onSave(ActionEvent event) throws IOException, SQLException {
 
@@ -151,6 +176,12 @@ public class AddCustomerController implements Initializable {
         }
     }
 
+    /**
+     * Event handler for handling changes in the selection of the country dropdown in a customer edit form.
+     *
+     * @param event The ActionEvent that triggered the event.
+     * @throws SQLException If there is an error accessing the database.
+     */
     public void customerEditCountryDropDown(ActionEvent event) throws SQLException {
         try {
             DBConnection.openConnection();
@@ -188,6 +219,13 @@ public class AddCustomerController implements Initializable {
         }
     }
 
+    /**
+     * Method called during initialization of the controller, typically used to initialize the UI components
+     * and populate data. This method is usually invoked automatically by the JavaFX framework.
+     *
+     * @param url The URL location of the FXML file.
+     * @param resourceBundle The ResourceBundle used to localize the UI components.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Connection connection = DBConnection.getConnection();
@@ -207,7 +245,6 @@ public class AddCustomerController implements Initializable {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
     }
 }
 

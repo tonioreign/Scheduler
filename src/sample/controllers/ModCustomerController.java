@@ -103,12 +103,33 @@ public class ModCustomerController implements Initializable {
      */
     private Customer selectedCustomer = null;
 
-
+    /**
+     * Event handler for the cancel button
+     * Back to the customer screen of the application
+     *
+     * @param event The ActionEvent object that triggered the event.
+     *              This is typically provided by the JavaFX framework automatically
+     *              when the event handler is invoked.
+     * @throws IOException If an I/O exception occurs during the screen change process.
+     *                     This exception is thrown by the AccessMethod.changeScreen() method,
+     *                     which is responsible for changing the screen or scene in the JavaFX application.
+     */
     @FXML
     void onCancel(ActionEvent event) throws IOException {
         AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
     }
 
+    /**
+     * Saves the updated customer information to the database when the "Save" button is clicked.
+     * This method performs the following steps:
+     * 1. Retrieves the updated customer information from the input fields.
+     * 2. Performs validation to check if all required fields are not empty.
+     * 3. Updates the customer information in the database using an SQL UPDATE statement.
+     * 4. Navigates back to the "ViewCustomers.fxml" screen after the update is successful.
+     *
+     * @param event The ActionEvent triggered by the "Save" button click.
+     * @throws IOException if an I/O error occurs during navigation to the next screen.
+     */
     @FXML
     void onSave(ActionEvent event) throws IOException {
         try {
@@ -146,7 +167,12 @@ public class ModCustomerController implements Initializable {
         }
     }
 
-
+    /**
+     * Handles the event when the country drop-down box is edited.
+     *
+     * @param event The action event triggered by the country drop-down box.
+     * @throws SQLException If an SQL exception occurs during database operations.
+     */
     public void customerEditCountryDropDown(ActionEvent event) throws SQLException {
         try {
             DBConnection.openConnection();
@@ -184,6 +210,12 @@ public class ModCustomerController implements Initializable {
         }
     }
 
+    /**
+     * Initializes the controller class for the corresponding view.
+     *
+     * @param url The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle The resource bundle used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
