@@ -32,38 +32,72 @@ import static sample.utils.TimeZoneUtil.convertTimeDateUTC;
 
 public class AddAppointmentController implements Initializable {
 
+    /**
+     * Text field for the title input.
+     */
     @FXML
     private TextField titleField;
 
+    /**
+     * Text field for the description input.
+     */
     @FXML
     private TextField descField;
 
+    /**
+     * Text field for the location input.
+     */
     @FXML
     private TextField locationField;
 
+    /**
+     * Combo box for selecting a contact ID.
+     */
     @FXML
     private ComboBox<Integer> contactBox;
 
+    /**
+     * Text field for the type input.
+     */
     @FXML
     private TextField typeField;
 
+    /**
+     * Date picker for selecting the start date.
+     */
     @FXML
     private DatePicker startDatePicker;
 
+    /**
+     * Combo box for selecting the start time.
+     */
     @FXML
     private ComboBox<String> startTimeBox;
 
+    /**
+     * Date picker for selecting the end date.
+     */
     @FXML
     private DatePicker endDatePicker;
 
+    /**
+     * Combo box for selecting the end time.
+     */
     @FXML
     private ComboBox<String> endTimeBox;
 
+    /**
+     * Combo box for selecting a customer ID.
+     */
     @FXML
     private ComboBox<Integer> customerIDBox;
 
+    /**
+     * Combo box for selecting a user ID.
+     */
     @FXML
     private ComboBox<Integer> userIDBox;
+
 
     @FXML
     void onCancel(ActionEvent event) throws IOException {

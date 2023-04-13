@@ -31,36 +31,69 @@ package sample.controllers;
 
 public class UpdateAppointmentController implements Initializable {
 
+    /**
+     * TextField for entering appointment title in the UI.
+     */
     @FXML
     private TextField titleField;
 
+    /**
+     * TextField for entering appointment description in the UI.
+     */
     @FXML
     private TextField descField;
 
+    /**
+     * TextField for entering appointment location in the UI.
+     */
     @FXML
     private TextField locationField;
 
+    /**
+     * ComboBox for selecting appointment contact in the UI.
+     */
     @FXML
     private ComboBox<Integer> contactBox;
 
+    /**
+     * TextField for entering appointment type in the UI.
+     */
     @FXML
     private TextField typeField;
 
+    /**
+     * DatePicker for selecting appointment start date in the UI.
+     */
     @FXML
     private DatePicker startDatePicker;
 
+    /**
+     * ComboBox for selecting appointment start time in the UI.
+     */
     @FXML
     private ComboBox<String> startTimeBox;
 
+    /**
+     * DatePicker for selecting appointment end date in the UI.
+     */
     @FXML
     private DatePicker endDatePicker;
 
+    /**
+     * ComboBox for selecting appointment end time in the UI.
+     */
     @FXML
     private ComboBox<String> endTimeBox;
 
+    /**
+     * ComboBox for selecting customer ID in the UI.
+     */
     @FXML
     private ComboBox<Integer> customerIDBox;
 
+    /**
+     * ComboBox for selecting user ID in the UI.
+     */
     @FXML
     private ComboBox<Integer> userIDBox;
 

@@ -25,82 +25,166 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
+    /**
+     * Button for generating a report in the UI.
+     */
     @FXML
     private Button ReportButton;
 
+    /**
+     * Button for adding a new appointment in the UI.
+     */
     @FXML
     private Button addAppointmentButton;
 
+    /**
+     * TableColumn for displaying the contact column in the appointments table view.
+     */
     @FXML
     private TableColumn<Appointments, Integer> apmtContactCol;
 
+    /**
+     * TableColumn for displaying the customer ID column in the appointments table view.
+     */
     @FXML
     private TableColumn<Appointments, Integer> apmtCustomerIdCol;
 
+    /**
+     * DatePicker for selecting the appointment date in the UI.
+     */
     @FXML
     private DatePicker apmtDatePicker;
 
+    /**
+     * TableColumn for displaying the description column in the appointments table view.
+     */
     @FXML
     private TableColumn<Appointments, String> apmtDescriptionCol;
 
+    /**
+     * TableColumn for displaying the end date column in the appointments table view.
+     */
     @FXML
     private TableColumn<Appointments, LocalDateTime> apmtEndDateCol;
 
+    /**
+     * TableColumn for displaying the end time column in the appointments table view.
+     */
     @FXML
     private TableColumn<?, ?> apmtEndTimeCol;
 
+    /**
+     * TableColumn for displaying the appointment ID column in the appointments table view.
+     */
     @FXML
     private TableColumn<Appointments, Integer> apmtIdCol;
 
+    /**
+     * TableColumn for displaying the location column in the appointments table view.
+     */
     @FXML
     private TableColumn<Appointments, String> apmtLocationCol;
 
+    /**
+     * TableColumn for displaying the start date column in the appointments table view.
+     */
     @FXML
     private TableColumn<Appointments, LocalDateTime> apmtStartDateCol;
 
+    /**
+     * TableColumn for displaying the start time column in the appointments table view.
+     */
     @FXML
     private TableColumn<?, ?> apmtStartTimeCol;
 
+    /**
+     * TableView for displaying the list of appointments in the UI.
+     */
     @FXML
     private TableView<Appointments> apmtTableView;
 
+    /**
+     * TableColumn for displaying the title column in the appointments table view.
+     */
     @FXML
     private TableColumn<Appointments, String> apmtTitleCol;
 
+    /**
+     * TableColumn for displaying the type column in the appointments table view.
+     */
     @FXML
     private TableColumn<Appointments, String> apmtTypeCol;
 
+    /**
+     * TableColumn for displaying the user ID column in the appointments table view.
+     */
     @FXML
     private TableColumn<Appointments, Integer> apmtUserIdCol;
 
+    /**
+     * RadioButton for selecting the "by month" view option in the UI.
+     */
     @FXML
     private RadioButton byMonthRadio;
 
+    /**
+     * RadioButton for selecting the "by week" view option in the UI.
+     */
     @FXML
     private RadioButton byWeekRadio;
 
+    /**
+     * Button for logging out in the UI.
+     */
     @FXML
     private Button logoutButton;
 
+    /**
+     * Button for modifying an appointment in the UI.
+     */
     @FXML
     private Button modifyAppointmentButton;
 
+    /**
+     * Label for displaying the current time in the UI.
+     */
     @FXML
     private Label setTimeLabel;
 
+    /**
+     * Label for displaying the time in the UI.
+     */
     @FXML
     private Label timeLabel;
 
+    /**
+     * RadioButton for selecting the "view all" view option in the UI.
+     */
     @FXML
     private RadioButton viewAllRadio;
 
+    /**
+     * Static variable for storing the selected appointment.
+     */
     private static Appointments selectedAppointment;
 
+    /**
+     * Getter method for retrieving the selected appointment.
+     *
+     * @return The selected appointment.
+     */
     public static Appointments getSelectedAppointment(){
         return selectedAppointment;
     }
 
+    /**
+     * Stage object for the UI.
+     */
     private Stage stage;
+
+    /**
+     * Scene object for the UI.
+     */
     private Scene scene;
 
 

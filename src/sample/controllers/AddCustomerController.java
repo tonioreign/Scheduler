@@ -29,39 +29,75 @@ import java.util.ResourceBundle;
 
 public class AddCustomerController implements Initializable {
 
+    /**
+     * Anchor pane for the "Add Customer" panel in the UI.
+     */
     @FXML
     private AnchorPane addCustomerPanel;
 
+    /**
+     * Text field for the customer ID input.
+     */
     @FXML
     private TextField customerIDField;
 
+    /**
+     * Text field for the customer name input.
+     */
     @FXML
     private TextField customerNameField;
 
+    /**
+     * Text field for the phone number input.
+     */
     @FXML
     private TextField phoneNumberField;
 
+    /**
+     * Text field for the address input.
+     */
     @FXML
     private TextField addressField;
 
+    /**
+     * Text field for the city input.
+     */
     @FXML
     private TextField cityField;
 
+    /**
+     * Text field for the zip code input.
+     */
     @FXML
     private TextField zipField;
 
+    /**
+     * Text field for the state input.
+     */
     @FXML
     private TextField stateField;
 
+    /**
+     * Combo box for selecting a country.
+     */
     @FXML
     private ComboBox<String> countryBox;
 
+    /**
+     * Combo box for selecting a division ID.
+     */
     @FXML
     private ComboBox<String> divisionIDBox;
 
+    /**
+     * Button for canceling the customer addition operation.
+     */
     @FXML
     private Button cancelButton;
 
+    /**
+     * Button for saving the customer information.
+     */
     @FXML
     private Button saveButton;
 

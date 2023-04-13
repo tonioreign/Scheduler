@@ -29,54 +29,105 @@ import java.util.ResourceBundle;
 
 public class ViewCustomersController implements Initializable {
 
+    /**
+     * AnchorPane for customer panel in the UI.
+     */
     @FXML
     private AnchorPane customerPanel;
 
+    /**
+     * Button for menu navigation in the UI.
+     */
     @FXML
     private Button menuButton;
 
+    /**
+     * TableView for displaying customer data in the UI.
+     */
     @FXML
     private TableView<Customer> customerTableView;
 
+    /**
+     * TableColumn for displaying customer ID in the UI.
+     */
     @FXML
     private TableColumn<?, ?> customerIDCol;
 
+    /**
+     * TableColumn for displaying customer name in the UI.
+     */
     @FXML
     private TableColumn<?, ?> customerNameCol;
 
+    /**
+     * TableColumn for displaying customer address in the UI.
+     */
     @FXML
     private TableColumn<?, ?> customerAddCol;
 
+    /**
+     * TableColumn for displaying customer zip code in the UI.
+     */
     @FXML
     private TableColumn<?, ?> customerZipCol;
 
+    /**
+     * TableColumn for displaying customer phone number in the UI.
+     */
     @FXML
     private TableColumn<?, ?> customerPhoneCol;
 
+    /**
+     * TableColumn for displaying customer creation date in the UI.
+     */
     @FXML
     private TableColumn<?, ?> customerCreationDateCol;
 
+    /**
+     * TableColumn for displaying customer created by user in the UI.
+     */
     @FXML
     private TableColumn<?, ?> customerCreatedByCol;
 
+    /**
+     * TableColumn for displaying customer last updated date in the UI.
+     */
     @FXML
     private TableColumn<?, ?> customerLastUpdatedCol;
 
+    /**
+     * TableColumn for displaying customer last updated by user in the UI.
+     */
     @FXML
     private TableColumn<?, ?> customerLastUpdatedByCol;
 
+    /**
+     * TableColumn for displaying customer division ID in the UI.
+     */
     @FXML
     private TableColumn<?, ?> customerDivisionIDCol;
 
+    /**
+     * Button for adding a new customer in the UI.
+     */
     @FXML
     private Button addCustomerButton;
 
+    /**
+     * Button for modifying an existing customer in the UI.
+     */
     @FXML
     private Button modCustomerButton;
 
+    /**
+     * Button for deleting a customer in the UI.
+     */
     @FXML
     private Button deleteCustomerButton;
 
+    /**
+     * Selected customer object for storing currently selected customer in the UI.
+     */
     private static Customer selectedCustomer = null;
 
     @FXML

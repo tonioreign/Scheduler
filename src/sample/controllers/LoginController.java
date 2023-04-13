@@ -37,39 +37,80 @@ import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
     /**The login main plane*/
+    /**
+     * Anchor pane for the login panel in the UI.
+     */
     @FXML
     private AnchorPane LoginAnchor;
-    /**The login user field*/
+
+    /**
+     * Text field for the login user input.
+     */
     @FXML
     private TextField UserField;
-    /**The login title*/
+
+    /**
+     * Label for the login title.
+     */
     @FXML
     private Label LoginLabel;
-    /**The login username label*/
+
+    /**
+     * Label for the login username.
+     */
     @FXML
     private Label UserLabel;
-    /**The login password field*/
+
+    /**
+     * Password field for the login password input.
+     */
     @FXML
     private PasswordField PassField;
-    /**The login password label*/
+
+    /**
+     * Label for the login password.
+     */
     @FXML
     private Label PassLabel;
-    /**The login button*/
+
+    /**
+     * Button for initiating the login operation.
+     */
     @FXML
     private Button LoginButton;
-    /**The login exit button*/
+
+    /**
+     * Button for exiting the login screen.
+     */
     @FXML
     private Button ExitButton;
-    /**The login time zone label*/
+
+    /**
+     * Label for displaying the time zone information in the login UI.
+     */
     @FXML
     private Label TimeLabel;
-    /**Setting the login time zone label*/
+
+    /**
+     * Label for setting the time zone information in the login UI.
+     */
     @FXML
     private Label SetTimeLabel;
 
-    Parent parent;
-    Stage stage;
-    Scene scene;
+    /**
+     * Parent object for the login UI.
+     */
+    private Parent parent;
+
+    /**
+     * Stage object for the login UI.
+     */
+    private Stage stage;
+
+    /**
+     * Scene object for the login UI.
+     */
+    private Scene scene;
 
     /**Button that exits the login form - closes the program*/
     @FXML

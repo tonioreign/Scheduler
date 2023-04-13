@@ -28,29 +28,143 @@ import java.util.Collections;
 
 public class ReportsController {
 
-    @FXML private TableView<Appointments> allAppointmentsTable;
-    @FXML private TableColumn<?, ?> appointmentContact;
-    @FXML private TableColumn<?, ?> appointmentCustomerID;
-    @FXML private TableColumn<?, ?> appointmentDescription;
-    @FXML private TableColumn<?, ?> appointmentEnd;
-    @FXML private TableColumn<?, ?> appointmentID;
-    @FXML private TableColumn<?, ?> appointmentLocation;
-    @FXML private TableColumn<?, ?> appointmentStart;
-    @FXML private TableColumn<?, ?> appointmentTitle;
-    @FXML private TableColumn<?, ?> appointmentTotalsAppointmentTypeCol;
-    @FXML private TableColumn<?, ?> appointmentTotalsByMonth;
-    @FXML private TableColumn<?, ?> appointmentTotalsMonthTotal;
-    @FXML private TableColumn<?, ?> appointmentTotalsTypeTotalCol;
-    @FXML private TableColumn<?, ?> appointmentType;
-    @FXML private Button backToMainMenu;
-    @FXML private ComboBox<String> contactScheduleContactBox;
-    @FXML private TableColumn<?, ?> tableContactID;
-    @FXML private TableView<ReportType> appointmentTotalsAppointmentType;
-    @FXML private Tab appointmentTotalsTab;
-    @FXML private TableView<MonthlyReport> appointmentTotalAppointmentByMonth;
-    @FXML private TableView<Reports> customerByCountry;
-    @FXML private TableColumn<?, ?> countryName;
-    @FXML private TableColumn<?, ?> countryCounter;
+    /**
+     * TableView for displaying all appointments in the UI.
+     */
+    @FXML
+    private TableView<Appointments> allAppointmentsTable;
+
+    /**
+     * TableColumn for displaying appointment contact information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentContact;
+
+    /**
+     * TableColumn for displaying appointment customer ID information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentCustomerID;
+
+    /**
+     * TableColumn for displaying appointment description information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentDescription;
+
+    /**
+     * TableColumn for displaying appointment end date and time information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentEnd;
+
+    /**
+     * TableColumn for displaying appointment ID information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentID;
+
+    /**
+     * TableColumn for displaying appointment location information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentLocation;
+
+    /**
+     * TableColumn for displaying appointment start date and time information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentStart;
+
+    /**
+     * TableColumn for displaying appointment title information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentTitle;
+
+    /**
+     * TableColumn for displaying appointment type information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentType;
+
+    /**
+     * TableColumn for displaying totals by appointment type information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentTotalsAppointmentTypeCol;
+
+    /**
+     * TableColumn for displaying totals by month information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentTotalsByMonth;
+
+    /**
+     * TableColumn for displaying month total information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentTotalsMonthTotal;
+
+    /**
+     * TableColumn for displaying type total information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> appointmentTotalsTypeTotalCol;
+
+    /**
+     * Button for navigating back to the main menu in the UI.
+     */
+    @FXML
+    private Button backToMainMenu;
+
+    /**
+     * ComboBox for selecting contact schedule contact in the UI.
+     */
+    @FXML
+    private ComboBox<String> contactScheduleContactBox;
+
+    /**
+     * TableColumn for displaying contact ID information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> tableContactID;
+
+    /**
+     * TableView for displaying appointment type totals in the UI.
+     */
+    @FXML
+    private TableView<ReportType> appointmentTotalsAppointmentType;
+
+    /**
+     * Tab for displaying appointment totals information in the UI.
+     */
+    @FXML
+    private Tab appointmentTotalsTab;
+
+    /**
+     * TableView for displaying monthly appointment totals in the UI.
+     */
+    @FXML
+    private TableView<MonthlyReport> appointmentTotalAppointmentByMonth;
+
+    /**
+     * TableView for displaying customer by country report in the UI.
+     */
+    @FXML
+    private TableView<Reports> customerByCountry;
+
+    /**
+     * TableColumn for displaying country name information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> countryName;
+
+    /**
+     * TableColumn for displaying country counter information in the UI.
+     */
+    @FXML
+    private TableColumn<?, ?> countryCounter;
 
     /**
      * Initialize and setup fields on the form.

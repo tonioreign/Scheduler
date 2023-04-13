@@ -26,43 +26,83 @@ import java.util.ResourceBundle;
 
 public class ModCustomerController implements Initializable {
 
+    /**
+     * AnchorPane for the modify customer panel in the UI.
+     */
     @FXML
     private AnchorPane modCustomerPanel;
 
+    /**
+     * TextField for entering the customer ID in the UI.
+     */
     @FXML
     private TextField customerIDField;
 
+    /**
+     * TextField for entering the customer name in the UI.
+     */
     @FXML
     private TextField customerNameField;
 
+    /**
+     * TextField for entering the phone number in the UI.
+     */
     @FXML
     private TextField phoneNumberField;
 
+    /**
+     * TextField for entering the address in the UI.
+     */
     @FXML
     private TextField addressField;
 
+    /**
+     * TextField for entering the city in the UI.
+     */
     @FXML
     private TextField cityField;
 
+    /**
+     * TextField for entering the ZIP code in the UI.
+     */
     @FXML
     private TextField zipField;
 
+    /**
+     * TextField for entering the state in the UI.
+     */
     @FXML
     private TextField stateField;
 
+    /**
+     * ComboBox for selecting the country in the UI.
+     */
     @FXML
     private ComboBox<String> countryBox;
 
+    /**
+     * ComboBox for selecting the division ID in the UI.
+     */
     @FXML
     private ComboBox<String> divisionIDBox;
 
+    /**
+     * Button for canceling the modification in the UI.
+     */
     @FXML
     private Button cancelButton;
 
+    /**
+     * Button for saving the modified customer in the UI.
+     */
     @FXML
     private Button saveButton;
 
+    /**
+     * Customer object for storing the selected customer.
+     */
     private Customer selectedCustomer = null;
+
 
     @FXML
     void onCancel(ActionEvent event) throws IOException {
