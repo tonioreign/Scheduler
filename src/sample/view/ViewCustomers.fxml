@@ -7,30 +7,26 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="customerPanel" prefHeight="491.0" prefWidth="941.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.ViewCustomersController">
+<AnchorPane fx:id="customerPanel" prefHeight="491.0" prefWidth="754.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.ViewCustomersController">
    <children>
-      <Label layoutX="356.0" layoutY="42.0" text="Customer Information">
+      <Label layoutX="305.0" layoutY="42.0" text="Customer Information">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <Button fx:id="menuButton" layoutX="848.0" layoutY="440.0" mnemonicParsing="false" onAction="#onMenu" text="Main Menu" />
-      <TableView fx:id="customerTableView" layoutX="4.0" layoutY="97.0" prefHeight="297.0" prefWidth="932.0">
+      <Button fx:id="menuButton" layoutX="661.0" layoutY="450.0" mnemonicParsing="false" onAction="#onMenu" text="Main Menu" />
+      <TableView fx:id="customerTableView" layoutX="19.0" layoutY="97.0" prefHeight="297.0" prefWidth="725.0">
         <columns>
           <TableColumn fx:id="customerIDCol" prefWidth="84.0" text="Customer ID" />
           <TableColumn fx:id="customerNameCol" prefWidth="100.0" text="Customer Name" />
-            <TableColumn fx:id="customerAddCol" prefWidth="103.0" text="Address" />
-            <TableColumn fx:id="customerZipCol" prefWidth="69.0" text="Zip Code" />
-            <TableColumn fx:id="customerPhoneCol" prefWidth="111.0" text="Phone" />
-            <TableColumn fx:id="customerCreationDateCol" prefWidth="99.0" text="Creation Date" />
-            <TableColumn fx:id="customerCreatedByCol" prefWidth="91.0" text="Created By" />
-            <TableColumn fx:id="customerLastUpdatedCol" prefWidth="99.0" text="Last Updated" />
-            <TableColumn fx:id="customerLastUpdatedByCol" prefWidth="103.0" text="Last Updated By" />
-            <TableColumn fx:id="customerDivisionIDCol" prefWidth="71.0" text="Division ID" />
+            <TableColumn fx:id="customerAddCol" prefWidth="172.0" text="Address" />
+            <TableColumn fx:id="customerZipCol" minWidth="0.0" prefWidth="89.0" text="Zip Code" />
+            <TableColumn fx:id="customerPhoneCol" prefWidth="194.0" text="Phone" />
+            <TableColumn fx:id="customerDivisionIDCol" minWidth="0.0" prefWidth="85.0" text="Division ID" />
         </columns>
       </TableView>
-      <Button fx:id="addCustomerButton" layoutX="174.0" layoutY="413.0" mnemonicParsing="false" onAction="#onAddCustomer" text="Add Customer" />
-      <Button fx:id="modCustomerButton" layoutX="414.0" layoutY="413.0" mnemonicParsing="false" onAction="#onModCustomer" text="Modify Customer" />
-      <Button fx:id="deleteCustomerButton" layoutX="652.0" layoutY="413.0" mnemonicParsing="false" onAction="#onDeleteCustomer" text="Delete Customer" />
+      <Button fx:id="addCustomerButton" layoutX="19.0" layoutY="413.0" mnemonicParsing="false" onAction="#onAddCustomer" text="Add Customer" />
+      <Button fx:id="modCustomerButton" layoutX="358.0" layoutY="413.0" mnemonicParsing="false" onAction="#onModCustomer" text="Modify Customer" />
+      <Button fx:id="deleteCustomerButton" layoutX="634.0" layoutY="413.0" mnemonicParsing="false" onAction="#onDeleteCustomer" text="Delete Customer" />
    </children>
 </AnchorPane>
