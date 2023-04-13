@@ -42,7 +42,7 @@ public class AddAppointmentController implements Initializable {
     private TextField locationField;
 
     @FXML
-    private ComboBox<String> contactBox;
+    private ComboBox<Integer> contactBox;
 
     @FXML
     private TextField typeField;
@@ -76,7 +76,7 @@ public class AddAppointmentController implements Initializable {
 
             Connection connection = DBConnection.openConnection();
 
-            if (!titleField.getText().isEmpty() && !descField.getText().isEmpty() && !locationField.getText().isEmpty() && !typeField.getText().isEmpty() && startDatePicker.getValue() != null && endDatePicker.getValue() != null && !startTimeBox.getValue().isEmpty() && !endTimeBox.getValue().isEmpty() && customerIDBox.getValue() == null) {
+            if (!titleField.getText().isEmpty() && !descField.getText().isEmpty() && !locationField.getText().isEmpty() && !typeField.getText().isEmpty() && startDatePicker.getValue() != null && endDatePicker.getValue() != null && !startTimeBox.getValue().isEmpty() && !endTimeBox.getValue().isEmpty() && !(customerIDBox.getValue() == null)) {
 
                 ObservableList<Customer> getAllCustomers = CustomerDB.getAllCustomers(connection);
                 ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
@@ -88,8 +88,8 @@ public class AddAppointmentController implements Initializable {
                 getAllCustomers.stream().map(Customer::getCustomerID).forEach(storeCustomerIDs::add);
                 getAllUsers.stream().map(User::getUserId).forEach(storeUserIDs::add);
 
-                LocalDate localDateEnd = startDatePicker.getValue();
-                LocalDate localDateStart = endDatePicker.getValue();
+                LocalDate localDateEnd = endDatePicker.getValue();
+                LocalDate localDateStart = startDatePicker.getValue();
 
                 DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
                 String appointmentStartDate = startDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -203,9 +203,10 @@ public class AddAppointmentController implements Initializable {
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                 ps.setString(9, "admin");
                 ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setInt(11, customerID);
-                ps.setInt(12, userIDBox.getValue());
-                ps.setInt(13, Integer.parseInt(contactBox.getValue()));
+                ps.setString(11, "admin");
+                ps.setInt(12, customerID);
+                ps.setInt(13, userIDBox.getValue());
+                ps.setInt(14, contactBox.getValue());
 
                 ps.executeUpdate();
             }
@@ -231,12 +232,12 @@ public class AddAppointmentController implements Initializable {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        ObservableList<String> allContactsNames = FXCollections.observableArrayList();
+        ObservableList<Integer> allContactIDs = FXCollections.observableArrayList();
         ObservableList<Integer> allCustomerIDs = FXCollections.observableArrayList();
         ObservableList<Integer> allUserIDs = FXCollections.observableArrayList();
 
         // lambda #2
-        contactsList.forEach(contacts -> allContactsNames.add(contacts.getContactName()));
+        contactsList.forEach(contacts -> allContactIDs.add(contacts.getContactID()));
         customerIDList.forEach(customer -> allCustomerIDs.add(customer.getCustomerID()));
         userIDsList.forEach(user -> allUserIDs.add(user.getUserId()));
         // here
@@ -254,7 +255,7 @@ public class AddAppointmentController implements Initializable {
         }
         startTimeBox.setItems(appointmentTimes);
         endTimeBox.setItems(appointmentTimes);
-        contactBox.setItems(allContactsNames);
+        contactBox.setItems(allContactIDs);
         customerIDBox.setItems(allUserIDs);
         userIDBox.setItems(allCustomerIDs);
     }

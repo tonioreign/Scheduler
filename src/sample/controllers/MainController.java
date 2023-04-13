@@ -8,14 +8,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import sample.db.AppointmentDB;
 import sample.misc.AccessMethod;
 import sample.models.Appointments;
 import sample.utils.DBConnection;
-
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -204,6 +201,7 @@ public class MainController implements Initializable {
                     }
                     apmtTableView.setItems(appointmentsWeek);
                 });
+            else System.out.println("Something went wrong");
         } catch (Exception e) {
             e.printStackTrace();
         }
