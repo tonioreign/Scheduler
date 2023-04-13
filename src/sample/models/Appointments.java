@@ -1,20 +1,80 @@
 package sample.models;
 
 import java.time.LocalDateTime;
-
+/**
+ * The Appointments class represents an appointment with various properties such as ID, title,
+ * description, location, type, start and end times, customer ID, user ID, and contact ID.
+ * It provides getters and setters for accessing and modifying the properties.
+ */
 public class Appointments {
+    /**
+     * The appointment ID.
+     */
     private int apmtId;
+
+    /**
+     * The appointment title.
+     */
     private String apmtTitle;
+
+    /**
+     * The appointment description.
+     */
     private String apmtDescription;
+
+    /**
+     * The appointment location.
+     */
     private String apmtLocation;
+
+    /**
+     * The appointment type.
+     */
     private String apmtType;
+
+    /**
+     * The start date and time of the appointment.
+     */
     private LocalDateTime apmtStart;
+
+    /**
+     * The end date and time of the appointment.
+     */
     private LocalDateTime apmtEnd;
+
+    /**
+     * The customer ID associated with the appointment.
+     * This variable is public, use with caution.
+     */
     public int apmtCustomerId;
+
+    /**
+     * The user ID associated with the appointment.
+     * This variable is public, use with caution.
+     */
     public int apmtUserId;
+
+    /**
+     * The contact ID associated with the appointment.
+     * This variable is public, use with caution.
+     */
     public int apmtContactId;
 
 
+    /**
+     * Constructs a new Appointments object with the given parameters.
+     *
+     * @param apmtId          The appointment ID.
+     * @param apmtTitle       The appointment title.
+     * @param apmtDescription The appointment description.
+     * @param apmtLocation    The appointment location.
+     * @param apmtType        The appointment type.
+     * @param apmtStart       The start date and time of the appointment.
+     * @param apmtEnd         The end date and time of the appointment.
+     * @param apmtCustomerId  The customer ID associated with the appointment.
+     * @param apmtUserId      The user ID associated with the appointment.
+     * @param apmtContactId   The contact ID associated with the appointment.
+     */
     public Appointments(int apmtId, String apmtTitle, String apmtDescription,
                         String apmtLocation, String apmtType, LocalDateTime apmtStart, LocalDateTime apmtEnd, int apmtCustomerId,
                         int apmtUserId, int apmtContactId) {
@@ -29,6 +89,7 @@ public class Appointments {
         this.apmtUserId = apmtUserId;
         this.apmtContactId = apmtContactId;
     }
+
 
     /**GETTERS AND SETTERS*/
     public int getApmtId() {

@@ -1,12 +1,21 @@
 package sample.models;
 
 public class MonthlyReport {
+    /**
+     * The month for which the report is generated.
+     */
     public String apmtMonth;
+
+    /**
+     * The total number of appointments for the month.
+     */
     public int apmtTotal;
 
     /**
-     * @param apmtMonth
-     * @param apmtTotal
+     * Constructs a new MonthlyReport object with the given parameters.
+     *
+     * @param apmtMonth  The month for which the report is generated.
+     * @param apmtTotal  The total number of appointments for the month.
      */
     public MonthlyReport(String apmtMonth, int apmtTotal) {
         this.apmtMonth = apmtMonth;

@@ -3,26 +3,36 @@ package sample.models;
 import java.time.LocalDateTime;
 
 public class Country {
-    private int contryId;
+
+    /**
+     * The ID of the country.
+     */
+    private int countryId;
+
+    /**
+     * The name of the country.
+     */
     private String countryName;
 
     /**
+     * Constructs a new Country object with the given parameters.
      *
-     * @param contryId
-     * @param countryName
+     * @param countryId    The ID of the country.
+     * @param countryName  The name of the country.
      */
-    public Country(int contryId, String countryName) {
-        this.contryId = contryId;
+    public Country(int countryId, String countryName) {
+        this.countryId = countryId;
         this.countryName = countryName;
     }
 
+
     /**GETTERS AND SETTERS*/
     public int getCountryID() {
-        return contryId;
+        return countryId;
     }
 
     public void setCountryID(int contryId) {
-        this.contryId = contryId;
+        this.countryId = contryId;
     }
 
     public String getCountryName() {

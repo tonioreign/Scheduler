@@ -3,21 +3,48 @@ package sample.models;
 import java.time.LocalDateTime;
 
 public class User {
-    /**THE USERS ID*/
-    int userId;
-    /**THE USERS USERNAME*/
-    String userName;
-    /**THE USERS PASSWORD*/
-    String password;
-    /**WHEN THE USER WAS CREATED*/
-    LocalDateTime createDate;
-    /**WHO THE USER WAS CREATED BY*/
-    String createdBy;
-    /**LAST TIME THE USER WAS UPDATED*/
-    LocalDateTime lastUpdate;
-    /**WHO THE USER WAS UPDATED BY*/
-    String lastUpdatedBy;
+    /**
+     * The ID of the user.
+     */
+    private int userId;
 
+    /**
+     * The username of the user.
+     */
+    private String userName;
+
+    /**
+     * The password of the user.
+     */
+    private String password;
+
+    /**
+     * The date and time when the user was created.
+     */
+    private LocalDateTime createDate;
+
+    /**
+     * The username of the user who created this user.
+     */
+    private String createdBy;
+
+    /**
+     * The date and time of the last update made to this user.
+     */
+    private LocalDateTime lastUpdate;
+
+    /**
+     * The username of the user who last updated this user.
+     */
+    private String lastUpdatedBy;
+
+    /**
+     * Constructs a new User object with the given user ID, username, and password.
+     *
+     * @param userId The ID of the user.
+     * @param userName The username of the user.
+     * @param password The password of the user.
+     */
     public User(int userId, String userName, String password) {
         this.userId = userId;
         this.userName = userName;
