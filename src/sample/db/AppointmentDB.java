@@ -10,44 +10,40 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 public abstract class AppointmentDB {
 
     public static ObservableList<Appointments> getAllAppointments() throws SQLException {
-
         ObservableList<Appointments> getAllApmts = FXCollections.observableArrayList();
-        String sql = "SELECT * from appointments";
-        PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
-
-        while (rs.next()) {
-            int apmtID = rs.getInt("Appointment_ID");
-            String apmtTitle = rs.getString("Title");
-            String apmtDesc = rs.getString("Description");
-            String apmtLocation = rs.getString("Location");
-            String apmtType = rs.getString("Type");
-            LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
-            LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
-            int custID = rs.getInt("Customer_ID");
-            int userID = rs.getInt("User_ID");
-            int contactID = rs.getInt("Contact_ID");
-            Appointments apmt = new Appointments(apmtID, apmtTitle, apmtDesc, apmtLocation, apmtType, start, end, custID, userID, contactID);
-            getAllApmts.add(apmt);
+        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments";
+        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                int apmtID = rs.getInt(1); // Use column index instead of column name
+                String apmtTitle = rs.getString(2);
+                String apmtDesc = rs.getString(3);
+                String apmtLocation = rs.getString(4);
+                String apmtType = rs.getString(5);
+                LocalDateTime start = rs.getTimestamp(6).toLocalDateTime();
+                LocalDateTime end = rs.getTimestamp(7).toLocalDateTime();
+                int custID = rs.getInt(8);
+                int userID = rs.getInt(9);
+                int contactID = rs.getInt(10);
+                Appointments apmt = new Appointments(apmtID, apmtTitle, apmtDesc, apmtLocation, apmtType, start, end, custID, userID, contactID);
+                getAllApmts.add(apmt);
+            }
         }
         return getAllApmts;
     }
 
 
 
-    public static int deleteAppointment(int cust, Connection conn)throws SQLException{
+    public static int deleteAppointment(int appointmentId, Connection conn) throws SQLException {
         String query = "DELETE FROM appointments WHERE Appointment_ID=?";
-        PreparedStatement ps = conn.prepareStatement(query);
-        ps.setInt(1, cust);
-        int result = ps.executeUpdate();
-        ps.close();
-        return result;
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, appointmentId);
+            int result = ps.executeUpdate();
+            return result;
+        }
     }
 }
