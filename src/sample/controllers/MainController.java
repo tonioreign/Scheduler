@@ -94,6 +94,12 @@ public class MainController implements Initializable {
     @FXML
     private RadioButton viewAllRadio;
 
+    private static Appointments selectedAppointment;
+
+    public static Appointments getSelectedAppointment(){
+        return selectedAppointment;
+    }
+
     private Stage stage;
     private Scene scene;
 
@@ -211,7 +217,7 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Locale locale = Locale.getDefault();
         Locale.setDefault(locale);
-
+        selectedAppointment = apmtTableView.getSelectionModel().getSelectedItem();
         ZoneId zone = ZoneId.systemDefault();
         setTimeLabel.setText(String.valueOf(zone));
 

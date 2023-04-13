@@ -68,7 +68,7 @@ public class ReportsController {
         appointmentStart.setCellValueFactory(new PropertyValueFactory<>("apmtStart"));
         appointmentEnd.setCellValueFactory(new PropertyValueFactory<>("apmtEnd"));
         appointmentCustomerID.setCellValueFactory(new PropertyValueFactory<>("apmtCustomerId"));
-        tableContactID.setCellValueFactory(new PropertyValueFactory<>("apmtContactId"));
+        appointmentContact.setCellValueFactory(new PropertyValueFactory<>("apmtContactId"));
         appointmentTotalsAppointmentTypeCol.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
         appointmentTotalsTypeTotalCol.setCellValueFactory(new PropertyValueFactory<>("appointmentTotal"));
         appointmentTotalsByMonth.setCellValueFactory(new PropertyValueFactory<>("apmtMonth"));

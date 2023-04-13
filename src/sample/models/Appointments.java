@@ -14,6 +14,7 @@ public class Appointments {
     public int apmtUserId;
     public int apmtContactId;
 
+
     public Appointments(int apmtId, String apmtTitle, String apmtDescription,
                         String apmtLocation, String apmtType, LocalDateTime apmtStart, LocalDateTime apmtEnd, int apmtCustomerId,
                         int apmtUserId, int apmtContactId) {

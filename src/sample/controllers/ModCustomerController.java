@@ -106,6 +106,7 @@ public class ModCustomerController implements Initializable {
         }
     }
 
+
     public void customerEditCountryDropDown(ActionEvent event) throws SQLException {
         try {
             DBConnection.openConnection();
@@ -161,7 +162,6 @@ public class ModCustomerController implements Initializable {
             divisionIDBox.setItems(countryNames);
 
             allFirstLevelDivisions.forEach(firstLevelDivision -> firstLevelDivisionAllNames.add(firstLevelDivision.getDivisionName()));
-
             String divisionName = "", countryName = "";
 
             if (selectedCustomer != null) {
@@ -176,6 +176,8 @@ public class ModCustomerController implements Initializable {
                 addressField.setText(selectedCustomer.getCustomerAddress());
                 zipField.setText(selectedCustomer.getCustomerPostalCode());
                 phoneNumberField.setText(selectedCustomer.getCustomerPhone());
+                countryBox.setValue(selectedCustomer.getDivisionName());
+
 
                 for (FirstLevelDivision flDivision: getFLDivisionNames) {
                     allFLDivision.add(flDivision.getDivisionName());

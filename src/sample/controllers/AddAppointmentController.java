@@ -98,7 +98,6 @@ public class AddAppointmentController implements Initializable {
                 String endDate = endDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String endTime = endTimeBox.getValue();
 
-                System.out.println("thisDate + thisStart " + appointmentStartDate + " " + appointmentStartTime + ":00");
                 String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");
                 String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
 

@@ -29,9 +29,7 @@ public abstract class AppointmentDB {
             String apmtDesc = rs.getString("Description");
             String apmtLocation = rs.getString("Location");
             String apmtType = rs.getString("Type");
-            //LocalDateTime start = convertTimeDateLocal(rs.getTimestamp("Start").toLocalDateTime());
             LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
-            //LocalDateTime end = convertTimeDateLocal(rs.getTimestamp("End").toLocalDateTime());
             LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
             int custID = rs.getInt("Customer_ID");
             int userID = rs.getInt("User_ID");
