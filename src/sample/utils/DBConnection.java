@@ -76,17 +76,13 @@ public class DBConnection {
      * @return A database connection object of type java.sql.Connection.
      */
     public static Connection openConnection() {
-        Connection conn = null;
         try {
-            // Load the JDBC driver class
             Class.forName(driver);
-
-            // Establish a database connection
             conn = DriverManager.getConnection(jdbcUrl, userName, password);
-
             System.out.println("Connection successful");
-        } catch(SQLException | ClassNotFoundException e){
-            // Print error message to console
+        } catch(ClassNotFoundException e){
+            System.out.println(e.getMessage());
+        } catch(SQLException e){
             System.out.println(e.getMessage());
         }
 
