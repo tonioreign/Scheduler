@@ -200,6 +200,7 @@ public class MainController implements Initializable {
 
     @FXML
     void onModifyApmt(ActionEvent event) throws IOException {
+        selectedAppointment = apmtTableView.getSelectionModel().getSelectedItem();
         AccessMethod.changeScreen(event, "UpdateAppointment.fxml", "Update Appointment");
     }
 
@@ -301,7 +302,7 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Locale locale = Locale.getDefault();
         Locale.setDefault(locale);
-        selectedAppointment = apmtTableView.getSelectionModel().getSelectedItem();
+
         ZoneId zone = ZoneId.systemDefault();
         setTimeLabel.setText(String.valueOf(zone));
 
