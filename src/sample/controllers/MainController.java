@@ -117,8 +117,8 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    void onReports(ActionEvent event) {
-
+    void onReports(ActionEvent event) throws IOException {
+        AccessMethod.changeScreen(event, "Reports.fxml", "Reports");
     }
 
     @FXML

@@ -9,7 +9,6 @@ public class Appointments {
     private String apmtLocation;
     private String apmtType;
     private LocalDateTime apmtStart;
-    //private String start;
     private LocalDateTime apmtEnd;
     public int apmtCustomerId;
     public int apmtUserId;

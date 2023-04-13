@@ -153,10 +153,6 @@ public class ViewCustomersController implements Initializable {
             customerZipCol.setCellValueFactory(new PropertyValueFactory<>("customerPostalCode"));
             customerPhoneCol.setCellValueFactory(new PropertyValueFactory<>("customerPhone"));
             customerDivisionIDCol.setCellValueFactory(new PropertyValueFactory<>("divisionName"));
-            //customerCreatedByCol.setCellValueFactory(new PropertyValueFactory<>());
-            //customerCreationDateCol.setCellValueFactory(new PropertyValueFactory<>());
-            //customerLastUpdatedByCol.setCellValueFactory(new PropertyValueFactory<>());
-            //customerLastUpdatedCol.setCellValueFactory(new PropertyValueFactory<>());
 
             //IDE converted to forEach
             allCountries.stream().map(Country::getCountryName).forEach(countryNames::add);

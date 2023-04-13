@@ -7,7 +7,7 @@ public class Customer {
     private String customerAddress;
     private String customerPostalCode;
     private String customerPhone;
-    //private int customerState;
+
     private int divisionID;
 
     public Customer(int customerID, String customerName, String customerAddress, String customerPostalCode,

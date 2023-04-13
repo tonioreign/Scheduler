@@ -60,19 +60,19 @@ public class ReportsController {
 
         countryName.setCellValueFactory(new PropertyValueFactory<>("countryName"));
         countryCounter.setCellValueFactory(new PropertyValueFactory<>("countryCount"));
-        appointmentID.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
-        appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
-        appointmentDescription.setCellValueFactory(new PropertyValueFactory<>("appointmentDescription"));
-        appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
-        appointmentType.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
-        appointmentStart.setCellValueFactory(new PropertyValueFactory<>("start"));
-        appointmentEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
-        appointmentCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
-        tableContactID.setCellValueFactory(new PropertyValueFactory<>("contactID"));
+        appointmentID.setCellValueFactory(new PropertyValueFactory<>("apmtId"));
+        appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("apmtTitle"));
+        appointmentDescription.setCellValueFactory(new PropertyValueFactory<>("apmtDescription"));
+        appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("apmtLocation"));
+        appointmentType.setCellValueFactory(new PropertyValueFactory<>("apmtType"));
+        appointmentStart.setCellValueFactory(new PropertyValueFactory<>("apmtStart"));
+        appointmentEnd.setCellValueFactory(new PropertyValueFactory<>("apmtEnd"));
+        appointmentCustomerID.setCellValueFactory(new PropertyValueFactory<>("apmtCustomerId"));
+        tableContactID.setCellValueFactory(new PropertyValueFactory<>("apmtContactId"));
         appointmentTotalsAppointmentTypeCol.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
         appointmentTotalsTypeTotalCol.setCellValueFactory(new PropertyValueFactory<>("appointmentTotal"));
-        appointmentTotalsByMonth.setCellValueFactory(new PropertyValueFactory<>("appointmentMonth"));
-        appointmentTotalsMonthTotal.setCellValueFactory(new PropertyValueFactory<>("appointmentTotal"));
+        appointmentTotalsByMonth.setCellValueFactory(new PropertyValueFactory<>("apmtMonth"));
+        appointmentTotalsMonthTotal.setCellValueFactory(new PropertyValueFactory<>("apmtTotal"));
 
         ObservableList<Contacts> contactsObservableList = ContactDB.getAllContacts();
         ObservableList<String> allContactsNames = FXCollections.observableArrayList();
