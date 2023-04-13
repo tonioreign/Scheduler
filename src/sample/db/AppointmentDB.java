@@ -10,9 +10,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-
+/**
+ * This abstract class represents a base class for managing appointments in a database.
+ * It provides common methods for performing CRUD (Create, Read, Update, Delete) operations
+ * related to appointments in a database.
+ */
 public abstract class AppointmentDB {
 
+    /**
+     * Retrieves all appointments from the database.
+     * @return ObservableList of Appointments objects containing all appointments
+     * @throws SQLException if an error occurs while accessing the database
+     */
     public static ObservableList<Appointments> getAllAppointments() throws SQLException {
         ObservableList<Appointments> getAllApmts = FXCollections.observableArrayList();
         String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments";
@@ -36,8 +45,13 @@ public abstract class AppointmentDB {
         return getAllApmts;
     }
 
-
-
+    /**
+     * Deletes an appointment from the database.
+     * @param appointmentId the ID of the appointment to be deleted
+     * @param conn the database connection to be used for the operation
+     * @return the number of rows affected by the delete operation
+     * @throws SQLException if an error occurs while accessing the database
+     */
     public static int deleteAppointment(int appointmentId, Connection conn) throws SQLException {
         String query = "DELETE FROM appointments WHERE Appointment_ID=?";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
