@@ -134,7 +134,7 @@ public class LoginController implements Initializable {
     @FXML
     void onLoginButton(ActionEvent event) throws IOException {
         try {
-            //definitions for +/- 15 minute appointment check
+            // Definitions for +/- 15 minute appointment check
             ObservableList<Appointments> getAllAppointments = AppointmentDB.getAllAppointments();
             LocalDateTime currentTimeMinus15Min = LocalDateTime.now().minusMinutes(15);
             LocalDateTime currentTimePlus15Min = LocalDateTime.now().plusMinutes(15);
@@ -143,7 +143,7 @@ public class LoginController implements Initializable {
             LocalDateTime displayTime = null;
             boolean appointmentWithin15Min = false;
 
-            //ResourceBundle rb = ResourceBundle.getBundle("lang/login", Locale.getDefault());
+            ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", Locale.getDefault());
 
             String usernameInput = UserField.getText();
             String passwordInput = PassField.getText();
@@ -155,11 +155,11 @@ public class LoginController implements Initializable {
             if (userId > 0) {
                 AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
 
-                //log the successful login
+                // Log the successful login
                 outputFile.print("user: " + usernameInput + " successfully logged in at: " + Timestamp.valueOf(LocalDateTime.now()) + "\n");
 
-                //check for upcoming appointments if user is validated
-                for (Appointments appointment: getAllAppointments) {
+                // Check for upcoming appointments if user is validated
+                for (Appointments appointment : getAllAppointments) {
                     startTime = appointment.getApmtStart();
                     if ((startTime.isAfter(currentTimeMinus15Min) || startTime.isEqual(currentTimeMinus15Min)) && (startTime.isBefore(currentTimePlus15Min) || (startTime.isEqual(currentTimePlus15Min)))) {
                         getAppointmentID = appointment.getApmtId();
@@ -167,24 +167,22 @@ public class LoginController implements Initializable {
                         appointmentWithin15Min = true;
                     }
                 }
-                if (appointmentWithin15Min !=false) {
+                if (appointmentWithin15Min) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment within 15 minutes: " + getAppointmentID + " and appointment start time of: " + displayTime);
                     Optional<ButtonType> confirmation = alert.showAndWait();
                     System.out.println("There is an appointment within 15 minutes");
-                }
-
-                else {
+                } else {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "No upcoming appointments.");
                     Optional<ButtonType> confirmation = alert.showAndWait();
-                    System.out.println("no upcoming appointments");
+                    System.out.println("No upcoming appointments");
                 }
             } else if (userId < 0) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                //alert.setTitle(rb.getString("Error"));
-                //alert.setContentText(rb.getString("Incorrect"));
+                alert.setTitle(rb.getString("Error"));
+                alert.setContentText(rb.getString("Incorrect"));
                 alert.show();
 
-                //log the failed login attempt
+                // Log the failed login attempt
                 outputFile.print("user: " + usernameInput + " failed login attempt at: " + Timestamp.valueOf(LocalDateTime.now()) + "\n");
 
             }
@@ -192,7 +190,6 @@ public class LoginController implements Initializable {
         } catch (IOException | SQLException ioException) {
             ioException.printStackTrace();
         }
-
     }
 
     /**
@@ -216,26 +213,23 @@ public class LoginController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try
-        {
-
+        try {
             Locale locale = Locale.getDefault();
             Locale.setDefault(locale);
 
             ZoneId zone = ZoneId.systemDefault();
             SetTimeLabel.setText(String.valueOf(zone));
 
-            //ResourceBundle rb = ResourceBundle.getBundle("lang/login.properties", Locale.getDefault());
-            //UserField.setText(rb.getString("username"));
-            //PassField.setText(rb.getString("password"));
-            //LoginButton.setText(rb.getString("Login"));
-            //ExitButton.setText(rb.getString("Exit"));
-            //TimeLabel.setText(rb.getString("Location"));
+            ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", Locale.getDefault());
+            UserField.setText(rb.getString("username"));
+            PassField.setText(rb.getString("password"));
+            LoginButton.setText(rb.getString("Login"));
+            ExitButton.setText(rb.getString("Exit"));
+            TimeLabel.setText(rb.getString("Location"));
 
-        } catch(MissingResourceException e) {
+        } catch (MissingResourceException e) {
             System.out.println("Resource file missing: " + e);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
