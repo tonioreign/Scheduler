@@ -143,7 +143,7 @@ public class LoginController implements Initializable {
             LocalDateTime displayTime = null;
             boolean appointmentWithin15Min = false;
 
-            ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", Locale.getDefault());
+            //ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", Locale.getDefault());
 
             String usernameInput = UserField.getText();
             String passwordInput = PassField.getText();
@@ -178,8 +178,8 @@ public class LoginController implements Initializable {
                 }
             } else if (userId < 0) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle(rb.getString("Error"));
-                alert.setContentText(rb.getString("Incorrect"));
+                //alert.setTitle(rb.getString("Error"));
+                //alert.setContentText(rb.getString("Incorrect"));
                 alert.show();
 
                 // Log the failed login attempt
@@ -220,12 +220,12 @@ public class LoginController implements Initializable {
             ZoneId zone = ZoneId.systemDefault();
             SetTimeLabel.setText(String.valueOf(zone));
 
-            ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", Locale.getDefault());
-            UserField.setText(rb.getString("username"));
-            PassField.setText(rb.getString("password"));
-            LoginButton.setText(rb.getString("Login"));
-            ExitButton.setText(rb.getString("Exit"));
-            TimeLabel.setText(rb.getString("Location"));
+            //ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", Locale.getDefault());
+            //UserField.setText(rb.getString("username"));
+            //PassField.setText(rb.getString("password"));
+            //LoginButton.setText(rb.getString("Login"));
+            //ExitButton.setText(rb.getString("Exit"));
+            //TimeLabel.setText(rb.getString("Location"));
 
         } catch (MissingResourceException e) {
             System.out.println("Resource file missing: " + e);
