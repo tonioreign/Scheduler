@@ -25,9 +25,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static sample.db.AppointmentDB.getAllAppointments;
 import static sample.utils.TimeZoneUtil.convertTimeDateUTC;
 
 public class AddAppointmentController implements Initializable {
@@ -97,6 +99,61 @@ public class AddAppointmentController implements Initializable {
      */
     @FXML
     private ComboBox<Integer> userIDBox;
+    Connection connection;
+    private ObservableList<Customer> getAllCustomers = CustomerDB.getAllCustomers(connection);
+    private ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
+    private ObservableList<User> getAllUsers = UserDB.getAllUsers();
+    private ObservableList<Integer> storeUserIDs = FXCollections.observableArrayList();
+    private ObservableList<Appointments> getAllAppointments = getAllAppointments();
+
+    private LocalDate localDateEnd = endDatePicker.getValue();
+    private LocalDate localDateStart = startDatePicker.getValue();
+
+    private DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
+    private String appointmentStartDate = startDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    private String appointmentStartTime = startTimeBox.getValue();
+
+    private String endDate = endDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    private String endTime = endTimeBox.getValue();
+
+    private String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");
+    private String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
+
+    private LocalTime localTimeStart = LocalTime.parse(startTimeBox.getValue(), minHourFormat);
+    private LocalTime LocalTimeEnd = LocalTime.parse(endTimeBox.getValue(), minHourFormat);
+
+    private LocalDateTime dateTimeStart = LocalDateTime.of(localDateStart, localTimeStart);
+    private LocalDateTime dateTimeEnd = LocalDateTime.of(localDateEnd, LocalTimeEnd);
+
+    private ZonedDateTime zoneDtStart = ZonedDateTime.of(dateTimeStart, ZoneId.systemDefault());
+    private ZonedDateTime zoneDtEnd = ZonedDateTime.of(dateTimeEnd, ZoneId.systemDefault());
+
+    private ZonedDateTime convertStartEST = zoneDtStart.withZoneSameInstant(ZoneId.of("America/New_York"));
+    private ZonedDateTime convertEndEST = zoneDtEnd.withZoneSameInstant(ZoneId.of("America/New_York"));
+
+    private LocalTime startAppointmentTimeToCheck = convertStartEST.toLocalTime();
+    private LocalTime endAppointmentTimeToCheck = convertEndEST.toLocalTime();
+
+    private DayOfWeek startAppointmentDayToCheck = convertStartEST.toLocalDate().getDayOfWeek();
+    private DayOfWeek endAppointmentDayToCheck = convertEndEST.toLocalDate().getDayOfWeek();
+
+    private int startAppointmentDayToCheckInt = startAppointmentDayToCheck.getValue();
+    private int endAppointmentDayToCheckInt = endAppointmentDayToCheck.getValue();
+
+    private int workWeekStart = DayOfWeek.MONDAY.getValue();
+    private int workWeekEnd = DayOfWeek.FRIDAY.getValue();
+
+    private LocalTime estBusinessStart = LocalTime.of(8, 0, 0);
+    private LocalTime estBusinessEnd = LocalTime.of(22, 0, 0);
+
+    private int newAppointmentID = Integer.parseInt(String.valueOf((int) (Math.random() * 100)));
+    private int customerID = customerIDBox.getValue();
+
+    ObservableList<Appointments> allAppointments = AppointmentDB.getAllAppointments();
+
+    public AddAppointmentController() throws SQLException {
+    }
+
 
     /**
      * Event handler for the cancel button
@@ -114,6 +171,70 @@ public class AddAppointmentController implements Initializable {
         AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
     }
 
+    private void validateAppointmentTime() {
+        if (startAppointmentDayToCheckInt < workWeekStart || startAppointmentDayToCheckInt > workWeekEnd || endAppointmentDayToCheckInt < workWeekStart || endAppointmentDayToCheckInt > workWeekEnd) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Day is outside of business operations (Monday-Friday)");
+            Optional<ButtonType> confirmation = alert.showAndWait();
+            System.out.println("day is outside of business hours");
+            return;
+        }
+
+        if (startAppointmentTimeToCheck.isBefore(estBusinessStart) || startAppointmentTimeToCheck.isAfter(estBusinessEnd) || endAppointmentTimeToCheck.isBefore(estBusinessStart) || endAppointmentTimeToCheck.isAfter(estBusinessEnd)) {
+            System.out.println("time is outside of business hours");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Time is outside of business hours (8am-10pm EST): " + startAppointmentTimeToCheck + " - " + endAppointmentTimeToCheck + " EST");
+            Optional<ButtonType> confirmation = alert.showAndWait();
+            return;
+        }
+
+        if (dateTimeStart.isAfter(dateTimeEnd)) {
+            System.out.println("Appointment has start time after end time");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment has start time after end time");
+            Optional<ButtonType> confirmation = alert.showAndWait();
+            return;
+        }
+
+        if (dateTimeStart.isEqual(dateTimeEnd)) {
+            System.out.println("Appointment has same start and end time");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment has same start and end time");
+            Optional<ButtonType> confirmation = alert.showAndWait();
+            return;
+        }
+    }
+
+    private void checkAppointmentOverlap(int customerID, int newAppointmentID, LocalDateTime dateTimeStart, LocalDateTime dateTimeEnd, List<Appointments> allAppointments) {
+        for (Appointments appointment : allAppointments) {
+            LocalDateTime checkStart = appointment.getApmtStart();
+            LocalDateTime checkEnd = appointment.getApmtEnd();
+
+            //"outer verify" meaning check to see if an appointment exists between start and end.
+            if ((customerID == appointment.getApmtCustomerId()) && (newAppointmentID != appointment.getApmtId()) &&
+                    (dateTimeStart.isBefore(checkStart)) && (dateTimeEnd.isAfter(checkEnd))) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.");
+                Optional<ButtonType> confirmation = alert.showAndWait();
+                System.out.println("Appointment overlaps with existing appointment.");
+                return;
+            }
+
+            if ((customerID == appointment.getApmtCustomerId()) && (newAppointmentID != appointment.getApmtId()) &&
+                    (dateTimeStart.isAfter(checkStart)) && (dateTimeStart.isBefore(checkEnd))) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Start time overlaps with existing appointment.");
+                Optional<ButtonType> confirmation = alert.showAndWait();
+                System.out.println("Start time overlaps with existing appointment.");
+                return;
+            }
+
+            if (customerID == appointment.getApmtCustomerId() && (newAppointmentID != appointment.getApmtId()) &&
+                    (dateTimeEnd.isAfter(checkStart)) && (dateTimeEnd.isBefore(checkEnd))) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "End time overlaps with existing appointment.");
+                Optional<ButtonType> confirmation = alert.showAndWait();
+                System.out.println("End time overlaps with existing appointment.");
+                return;
+            }
+        }
+    }
+
+
+
     /**
      * Event handler for the "Save" button in a JavaFX application.
      * This method is called when the "Save" button is clicked.
@@ -128,117 +249,8 @@ public class AddAppointmentController implements Initializable {
             Connection connection = DBConnection.openConnection();
 
             if (!titleField.getText().isEmpty() && !descField.getText().isEmpty() && !locationField.getText().isEmpty() && !typeField.getText().isEmpty() && startDatePicker.getValue() != null && endDatePicker.getValue() != null && !startTimeBox.getValue().isEmpty() && !endTimeBox.getValue().isEmpty() && !(customerIDBox.getValue() == null)) {
-
-                ObservableList<Customer> getAllCustomers = CustomerDB.getAllCustomers(connection);
-                ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
-                ObservableList<User> getAllUsers = UserDB.getAllUsers();
-                ObservableList<Integer> storeUserIDs = FXCollections.observableArrayList();
-                ObservableList<Appointments> getAllAppointments = AppointmentDB.getAllAppointments();
-
-
-                getAllCustomers.stream().map(Customer::getCustomerID).forEach(storeCustomerIDs::add);
-                getAllUsers.stream().map(User::getUserId).forEach(storeUserIDs::add);
-
-                LocalDate localDateEnd = endDatePicker.getValue();
-                LocalDate localDateStart = startDatePicker.getValue();
-
-                DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
-                String appointmentStartDate = startDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                String appointmentStartTime = startTimeBox.getValue();
-
-                String endDate = endDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                String endTime = endTimeBox.getValue();
-
-                String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");
-                String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
-
-                LocalTime localTimeStart = LocalTime.parse(startTimeBox.getValue(), minHourFormat);
-                LocalTime LocalTimeEnd = LocalTime.parse(endTimeBox.getValue(), minHourFormat);
-
-                LocalDateTime dateTimeStart = LocalDateTime.of(localDateStart, localTimeStart);
-                LocalDateTime dateTimeEnd = LocalDateTime.of(localDateEnd, LocalTimeEnd);
-
-                ZonedDateTime zoneDtStart = ZonedDateTime.of(dateTimeStart, ZoneId.systemDefault());
-                ZonedDateTime zoneDtEnd = ZonedDateTime.of(dateTimeEnd, ZoneId.systemDefault());
-
-                ZonedDateTime convertStartEST = zoneDtStart.withZoneSameInstant(ZoneId.of("America/New_York"));
-                ZonedDateTime convertEndEST = zoneDtEnd.withZoneSameInstant(ZoneId.of("America/New_York"));
-
-                LocalTime startAppointmentTimeToCheck = convertStartEST.toLocalTime();
-                LocalTime endAppointmentTimeToCheck = convertEndEST.toLocalTime();
-
-                DayOfWeek startAppointmentDayToCheck = convertStartEST.toLocalDate().getDayOfWeek();
-                DayOfWeek endAppointmentDayToCheck = convertEndEST.toLocalDate().getDayOfWeek();
-
-                int startAppointmentDayToCheckInt = startAppointmentDayToCheck.getValue();
-                int endAppointmentDayToCheckInt = endAppointmentDayToCheck.getValue();
-
-                int workWeekStart = DayOfWeek.MONDAY.getValue();
-                int workWeekEnd = DayOfWeek.FRIDAY.getValue();
-
-                LocalTime estBusinessStart = LocalTime.of(8, 0, 0);
-                LocalTime estBusinessEnd = LocalTime.of(22, 0, 0);
-
-                if (startAppointmentDayToCheckInt < workWeekStart || startAppointmentDayToCheckInt > workWeekEnd || endAppointmentDayToCheckInt < workWeekStart || endAppointmentDayToCheckInt > workWeekEnd) {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Day is outside of business operations (Monday-Friday)");
-                    Optional<ButtonType> confirmation = alert.showAndWait();
-                    System.out.println("day is outside of business hours");
-                    return;
-                }
-
-                if (startAppointmentTimeToCheck.isBefore(estBusinessStart) || startAppointmentTimeToCheck.isAfter(estBusinessEnd) || endAppointmentTimeToCheck.isBefore(estBusinessStart) || endAppointmentTimeToCheck.isAfter(estBusinessEnd)) {
-                    System.out.println("time is outside of business hours");
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Time is outside of business hours (8am-10pm EST): " + startAppointmentTimeToCheck + " - " + endAppointmentTimeToCheck + " EST");
-                    Optional<ButtonType> confirmation = alert.showAndWait();
-                    return;
-                }
-
-                int newAppointmentID = Integer.parseInt(String.valueOf((int) (Math.random() * 100)));
-                int customerID = customerIDBox.getValue();
-
-                if (dateTimeStart.isAfter(dateTimeEnd)) {
-                    System.out.println("Appointment has start time after end time");
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment has start time after end time");
-                    Optional<ButtonType> confirmation = alert.showAndWait();
-                    return;
-                }
-
-                if (dateTimeStart.isEqual(dateTimeEnd)) {
-                    System.out.println("Appointment has same start and end time");
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment has same start and end time");
-                    Optional<ButtonType> confirmation = alert.showAndWait();
-                    return;
-                }
-                for (Appointments appointment : getAllAppointments) {
-                    LocalDateTime checkStart = appointment.getApmtStart();
-                    LocalDateTime checkEnd = appointment.getApmtEnd();
-
-                    //"outer verify" meaning check to see if an appointment exists between start and end.
-                    if ((customerID == appointment.getApmtCustomerId()) && (newAppointmentID != appointment.getApmtId()) &&
-                            (dateTimeStart.isBefore(checkStart)) && (dateTimeEnd.isAfter(checkEnd))) {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.");
-                        Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("Appointment overlaps with existing appointment.");
-                        return;
-                    }
-
-                    if ((customerID == appointment.getApmtCustomerId()) && (newAppointmentID != appointment.getApmtId()) &&
-                            (dateTimeStart.isAfter(checkStart)) && (dateTimeStart.isBefore(checkEnd))) {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Start time overlaps with existing appointment.");
-                        Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("Start time overlaps with existing appointment.");
-                        return;
-                    }
-
-
-                    if (customerID == appointment.getApmtCustomerId() && (newAppointmentID != appointment.getApmtId()) &&
-                            (dateTimeEnd.isAfter(checkStart)) && (dateTimeEnd.isBefore(checkEnd))) {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "End time overlaps with existing appointment.");
-                        Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("End time overlaps with existing appointment.");
-                        return;
-                    }
-                }
+                validateAppointmentTime();
+                checkAppointmentOverlap(customerID, newAppointmentID, dateTimeStart, dateTimeEnd, allAppointments);
 
                 String sql = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, User_ID, Customer_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                 Connection conn = DBConnection.openConnection();
