@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Month;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 /**
  * Class and methods to display 3 reports.
@@ -207,9 +208,7 @@ public class ReportsController {
     @FXML
     public void appointmentDataByContact() {
         try {
-
             int contactID = 0;
-
             ObservableList<Appointments> getAllAppointmentData = AppointmentDB.getAllAppointments();
             ObservableList<Appointments> appointmentInfo = FXCollections.observableArrayList();
             ObservableList<Contacts> getAllContacts = ContactDB.getAllContacts();
@@ -218,20 +217,22 @@ public class ReportsController {
 
             String contactName = contactScheduleContactBox.getSelectionModel().getSelectedItem();
 
-            for (Contacts contact: getAllContacts) {
-                if (contactName.equals(contact.getContactName())) {
-                    contactID = contact.getContactID();
+            if (contactName != null) {
+                for (Contacts contact: getAllContacts) {
+                    if (contactName.equals(contact.getContactName())) {
+                        contactID = contact.getContactID();
+                        break; // exit loop once contact ID is found
+                    }
                 }
-            }
 
-            for (Appointments appointment: getAllAppointmentData) {
-                if (appointment.getApmtContactId() == contactID) {
-                    contactAppointmentInfo = appointment;
-                    appointmentInfo.add(contactAppointmentInfo);
+                for (Appointments appointment: getAllAppointmentData) {
+                    if (appointment.getApmtContactId() == contactID) {
+                        contactAppointmentInfo = appointment;
+                        appointmentInfo.add(contactAppointmentInfo);
+                    }
                 }
             }
             allAppointmentsTable.setItems(appointmentInfo);
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -256,46 +257,30 @@ public class ReportsController {
             ObservableList<ReportType> reportType = FXCollections.observableArrayList();
             ObservableList<MonthlyReport> reportMonths = FXCollections.observableArrayList();
 
-
-            //IDE converted to Lambda
-            getAllAppointments.forEach(appointments -> {
-                appointmentType.add(appointments.getApmtType());
+            // Extract appointment types and months in a single iteration
+            getAllAppointments.forEach(appointment -> {
+                appointmentType.add(appointment.getApmtType());
+                Month month = appointment.getApmtStart().getMonth();
+                if (!monthOfAppointments.contains(month)) {
+                    monthOfAppointments.add(month);
+                }
+                appointmentMonths.add(month);
             });
 
-            //IDE converted to Lambda
-            getAllAppointments.stream().map(appointment -> {
-                return appointment.getApmtStart().getMonth();
-            }).forEach(appointmentMonths::add);
+            // Calculate monthly appointment counts using Java 8 Streams
+            reportMonths = monthOfAppointments.stream()
+                    .map(month -> new MonthlyReport(month.name(), Collections.frequency(appointmentMonths, month)))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
-            //IDE converted to Lambda
-            appointmentMonths.stream().filter(month -> {
-                return !monthOfAppointments.contains(month);
-            }).forEach(monthOfAppointments::add);
+            // Calculate appointment type counts using Java 8 Streams
+            reportType = uniqueAppointment.stream()
+                    .map(type -> new ReportType(type, Collections.frequency(appointmentType, type)))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
-            for (Appointments appointments: getAllAppointments) {
-                String appointmentsAppointmentType = appointments.getApmtType();
-                if (!uniqueAppointment.contains(appointmentsAppointmentType)) {
-                    uniqueAppointment.add(appointmentsAppointmentType);
-                }
-            }
-
-            for (Month month: monthOfAppointments) {
-                int totalMonth = Collections.frequency(appointmentMonths, month);
-                String monthName = month.name();
-                MonthlyReport appointmentMonth = new MonthlyReport(monthName, totalMonth);
-                reportMonths.add(appointmentMonth);
-            }
             appointmentTotalAppointmentByMonth.setItems(reportMonths);
-
-            for (String type: uniqueAppointment) {
-                String typeToSet = type;
-                int typeTotal = Collections.frequency(appointmentType, type);
-                ReportType appointmentTypes = new ReportType(typeToSet, typeTotal);
-                reportType.add(appointmentTypes);
-            }
             appointmentTotalsAppointmentType.setItems(reportType);
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -309,20 +294,12 @@ public class ReportsController {
      */
     public void customerByCountry() throws SQLException {
         try {
-
             ObservableList<Reports> aggregatedCountries = ReportDB.getCountries();
-            ObservableList<Reports> countriesToAdd = FXCollections.observableArrayList();
-
-            //IDE converted
-            aggregatedCountries.forEach(countriesToAdd::add);
-
-            customerByCountry.setItems(countriesToAdd);
-
-        } catch (Exception exception) {
+            customerByCountry.setItems(aggregatedCountries);
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
     }
-
 
     /**
      * Handles the event when the "Back to Main Menu" button is clicked.
@@ -333,7 +310,6 @@ public class ReportsController {
      */
     @FXML
     public void backToMainMenu (ActionEvent event) throws IOException {
-
         AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
     }
 
