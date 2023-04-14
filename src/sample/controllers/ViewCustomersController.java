@@ -162,35 +162,42 @@ public class ViewCustomersController implements Initializable {
      */
     @FXML
     void onDeleteCustomer(ActionEvent event) throws SQLException {
-        Connection connection = DBConnection.openConnection();
-        ObservableList<Appointments> getAllAppointmentsList = AppointmentDB.getAllAppointments();
+        try (Connection connection = DBConnection.openConnection();
+             PreparedStatement psDelete = connection.prepareStatement("DELETE FROM customers WHERE Customer_ID = ?");
+             PreparedStatement psDeleteAppointments = connection.prepareStatement("DELETE FROM appointments WHERE Appointment_ID = ?")) {
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete the selected customer and all appointments? ");
-        Optional<ButtonType> confirmation = alert.showAndWait();
-        if (confirmation.isPresent() && confirmation.get() == ButtonType.OK) {
-            int deleteCustomerID = customerTableView.getSelectionModel().getSelectedItem().getCustomerID();
-            AppointmentDB.deleteAppointment(deleteCustomerID, connection);
+            ObservableList<Appointments> getAllAppointmentsList = AppointmentDB.getAllAppointments();
+            ObservableList<Customer> refreshCustomersList;
 
-            String sqlDelete = "DELETE FROM customers WHERE Customer_ID = ?";
-            DBConnection.setPreparedStatement(DBConnection.getConnection(), sqlDelete);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete the selected customer and all appointments? ");
+            Optional<ButtonType> confirmation = alert.showAndWait();
+            if (confirmation.isPresent() && confirmation.get() == ButtonType.OK) {
+                int deleteCustomerID = customerTableView.getSelectionModel().getSelectedItem().getCustomerID();
 
-            PreparedStatement psDelete = DBConnection.getPreparedStatement();
-            int customerFromTable = customerTableView.getSelectionModel().getSelectedItem().getCustomerID();
-
-            //Delete all customer appointments from database.
-            for (Appointments appointment: getAllAppointmentsList) {
-                int customerFromAppointments = appointment.getApmtCustomerId();
-                if (customerFromTable == customerFromAppointments) {
-                    String deleteStatementAppointments = "DELETE FROM appointments WHERE Appointment_ID = ?";
-                    DBConnection.setPreparedStatement(DBConnection.getConnection(), deleteStatementAppointments);
+                // Delete appointments for the customer
+                for (Appointments appointment : getAllAppointmentsList) {
+                    if (deleteCustomerID == appointment.getApmtCustomerId()) {
+                        psDeleteAppointments.setInt(1, appointment.getApmtId());
+                        psDeleteAppointments.addBatch();
+                    }
                 }
-            }
-            psDelete.setInt(1, customerFromTable);
-            psDelete.execute();
-            ObservableList<Customer> refreshCustomersList = CustomerDB.getAllCustomers(connection);
-            customerTableView.setItems(refreshCustomersList);
-        }
+                psDeleteAppointments.executeBatch();
 
+                // Delete customer
+                psDelete.setInt(1, deleteCustomerID);
+                psDelete.execute();
+
+                // Refresh customers list
+                refreshCustomersList = CustomerDB.getAllCustomers(connection);
+                customerTableView.setItems(refreshCustomersList);
+            }
+        } catch (SQLException e) {
+            // Handle SQLException
+            e.printStackTrace();
+            // Display error message to user
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error deleting customer");
+            errorAlert.showAndWait();
+        }
     }
 
     /**
