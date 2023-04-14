@@ -257,30 +257,46 @@ public class ReportsController {
             ObservableList<ReportType> reportType = FXCollections.observableArrayList();
             ObservableList<MonthlyReport> reportMonths = FXCollections.observableArrayList();
 
-            // Extract appointment types and months in a single iteration
-            getAllAppointments.forEach(appointment -> {
-                appointmentType.add(appointment.getApmtType());
-                Month month = appointment.getApmtStart().getMonth();
-                if (!monthOfAppointments.contains(month)) {
-                    monthOfAppointments.add(month);
-                }
-                appointmentMonths.add(month);
+
+            //IDE converted to Lambda
+            getAllAppointments.forEach(appointments -> {
+                appointmentType.add(appointments.getApmtType());
             });
 
-            // Calculate monthly appointment counts using Java 8 Streams
-            reportMonths = monthOfAppointments.stream()
-                    .map(month -> new MonthlyReport(month.name(), Collections.frequency(appointmentMonths, month)))
-                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+            //IDE converted to Lambda
+            getAllAppointments.stream().map(appointment -> {
+                return appointment.getApmtStart().getMonth();
+            }).forEach(appointmentMonths::add);
 
-            // Calculate appointment type counts using Java 8 Streams
-            reportType = uniqueAppointment.stream()
-                    .map(type -> new ReportType(type, Collections.frequency(appointmentType, type)))
-                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+            //IDE converted to Lambda
+            appointmentMonths.stream().filter(month -> {
+                return !monthOfAppointments.contains(month);
+            }).forEach(monthOfAppointments::add);
 
+            for (Appointments appointments: getAllAppointments) {
+                String appointmentsAppointmentType = appointments.getApmtType();
+                if (!uniqueAppointment.contains(appointmentsAppointmentType)) {
+                    uniqueAppointment.add(appointmentsAppointmentType);
+                }
+            }
+
+            for (Month month: monthOfAppointments) {
+                int totalMonth = Collections.frequency(appointmentMonths, month);
+                String monthName = month.name();
+                MonthlyReport appointmentMonth = new MonthlyReport(monthName, totalMonth);
+                reportMonths.add(appointmentMonth);
+            }
             appointmentTotalAppointmentByMonth.setItems(reportMonths);
+
+            for (String type: uniqueAppointment) {
+                String typeToSet = type;
+                int typeTotal = Collections.frequency(appointmentType, type);
+                ReportType appointmentTypes = new ReportType(typeToSet, typeTotal);
+                reportType.add(appointmentTypes);
+            }
             appointmentTotalsAppointmentType.setItems(reportType);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
