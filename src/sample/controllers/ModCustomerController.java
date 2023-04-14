@@ -99,11 +99,6 @@ public class ModCustomerController implements Initializable {
     private Button saveButton;
 
     /**
-     * Customer object for storing the selected customer.
-     */
-    private Customer selectedCustomer = null;
-
-    /**
      * Event handler for the cancel button
      * Back to the customer screen of the application
      *
@@ -133,7 +128,6 @@ public class ModCustomerController implements Initializable {
     @FXML
     void onSave(ActionEvent event) throws IOException {
         try {
-            Connection connection = DBConnection.openConnection();
 
             if (!customerNameField.getText().isEmpty() || !addressField.getText().isEmpty() || !zipField.getText().isEmpty() || !phoneNumberField.getText().isEmpty() || !countryBox.getValue().isEmpty() || !divisionIDBox.getValue().isEmpty())
             {
@@ -221,8 +215,7 @@ public class ModCustomerController implements Initializable {
 
         try {
             DBConnection.openConnection();
-            Connection connection = DBConnection.getConnection();
-            selectedCustomer = ViewCustomersController.getModifiedCustomer();
+            Customer selectedCustomer = ViewCustomersController.getModifiedCustomer();
             ObservableList<Country> allCountries = CountryDB.getCountries();
             ObservableList<String> countryNames = FXCollections.observableArrayList();
             ObservableList<FirstLevelDivision> allFirstLevelDivisions = FirstLevelDivisionDB.getAllFirstLevelDivisions();
@@ -230,8 +223,7 @@ public class ModCustomerController implements Initializable {
 
             allCountries.stream().map(Country::getCountryName).forEach(countryNames::add);
             countryBox.setItems(countryNames);
-            allFirstLevelDivisions.stream().map(FirstLevelDivision::getDivisionName).forEach(countryNames::add);
-            divisionIDBox.setItems(countryNames);
+            allFirstLevelDivisions.forEach(firstLevelDivision -> firstLevelDivisionAllNames.add(firstLevelDivision.getDivisionName()));
 
             allFirstLevelDivisions.forEach(firstLevelDivision -> firstLevelDivisionAllNames.add(firstLevelDivision.getDivisionName()));
             String divisionName = "", countryName = "";
@@ -248,7 +240,6 @@ public class ModCustomerController implements Initializable {
                 addressField.setText(selectedCustomer.getCustomerAddress());
                 zipField.setText(selectedCustomer.getCustomerPostalCode());
                 phoneNumberField.setText(selectedCustomer.getCustomerPhone());
-                countryBox.setValue(selectedCustomer.getDivisionName());
 
 
                 for (FirstLevelDivision flDivision: getFLDivisionNames) {
@@ -265,6 +256,8 @@ public class ModCustomerController implements Initializable {
                         }
                     }
                 }
+                divisionIDBox.setValue(divisionName);
+                countryBox.setValue(countryName);
             }
         } catch (Exception e) {
             e.printStackTrace();

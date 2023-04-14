@@ -239,7 +239,7 @@ public class UpdateAppointmentController implements Initializable {
 
                 String sql = "UPDATE appointments SET Appointment_ID = ?, Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
 
-                Connection conn = DBConnection.getConnection();
+                Connection conn = DBConnection.openConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setInt(1, newAppointmentID);
                 ps.setString(2, titleField.getText());
@@ -273,11 +273,11 @@ public class UpdateAppointmentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<Contacts> contactsList = null;
-        ObservableList<Customer> customerIDList = null;
-        ObservableList<User> userIDsList = null;
+        ObservableList<Contacts> contactsList = FXCollections.observableArrayList();
+        ObservableList<Customer> customerIDList = FXCollections.observableArrayList();
+        ObservableList<User> userIDsList = FXCollections.observableArrayList();
         try {
-            DBConnection.getConnection();
+            DBConnection.openConnection();
             Appointments selectedAppointment = MainController.getSelectedAppointment();
 
             if (selectedAppointment != null) {
@@ -291,7 +291,6 @@ public class UpdateAppointmentController implements Initializable {
                 contactsList.forEach(contacts -> allContactIDs.add(contacts.getContactID()));
                 customerIDList.forEach(customer -> allCustomerIDs.add(customer.getCustomerID()));
                 userIDsList.forEach(user -> allUserIDs.add(user.getUserId()));
-                contactBox.setItems(allContactIDs);
 
 
                 titleField.setText(selectedAppointment.getApmtTitle());

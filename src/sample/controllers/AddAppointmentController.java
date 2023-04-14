@@ -241,7 +241,7 @@ public class AddAppointmentController implements Initializable {
                 }
 
                 String sql = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, User_ID, Customer_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                Connection conn = DBConnection.getConnection();
+                Connection conn = DBConnection.openConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setInt(1, newAppointmentID);
                 ps.setString(2, titleField.getText());
