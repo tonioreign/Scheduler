@@ -21,6 +21,7 @@ package sample.controllers;
         import java.net.URL;
         import java.sql.Connection;
         import java.sql.PreparedStatement;
+        import java.sql.SQLException;
         import java.sql.Timestamp;
         import java.time.*;
         import java.time.format.DateTimeFormatter;
@@ -96,6 +97,8 @@ public class UpdateAppointmentController implements Initializable {
      */
     @FXML
     private ComboBox<Integer> userIDBox;
+
+    private Appointments selectedAppointment;
 
     /**
      * Event handler for the cancel button
@@ -238,10 +241,9 @@ public class UpdateAppointmentController implements Initializable {
                 }
 
                 String sql = "UPDATE appointments SET Appointment_ID = ?, Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
-
-                Connection conn = DBConnection.getConnection();
+                Connection conn = DBConnection.openConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setInt(1, newAppointmentID);
+                ps.setInt(1, selectedAppointment.getApmtId());
                 ps.setString(2, titleField.getText());
                 ps.setString(3, descField.getText());
                 ps.setString(4, locationField.getText());
@@ -250,11 +252,10 @@ public class UpdateAppointmentController implements Initializable {
                 ps.setTimestamp(7, Timestamp.valueOf(endUTC));
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                 ps.setString(9, "admin");
-                ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setString(11, "admin");
-                ps.setInt(12, customerID);
-                ps.setInt(13, userIDBox.getValue());
-                ps.setInt(14, contactBox.getValue());
+                ps.setInt(10, customerID);
+                ps.setInt(11, userIDBox.getValue());
+                ps.setInt(12, contactBox.getValue());
+                ps.setInt(13, selectedAppointment.getApmtId());
 
                 ps.executeUpdate();
             }
@@ -273,59 +274,58 @@ public class UpdateAppointmentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<Contacts> contactsList = null;
-        ObservableList<Customer> customerIDList = null;
-        ObservableList<User> userIDsList = null;
+        ObservableList<Contacts> contactsList = FXCollections.observableArrayList();
+        ObservableList<Customer> customerIDList = FXCollections.observableArrayList();
+        ObservableList<User> userIDsList = FXCollections.observableArrayList();
+        Connection connection = DBConnection.openConnection();
         try {
-            DBConnection.getConnection();
-            Appointments selectedAppointment = MainController.getSelectedAppointment();
-
-            if (selectedAppointment != null) {
-
-                //get all contact info and fill ComboBox.
-                ObservableList<Integer> allContactIDs = FXCollections.observableArrayList();
-                ObservableList<Integer> allCustomerIDs = FXCollections.observableArrayList();
-                ObservableList<Integer> allUserIDs = FXCollections.observableArrayList();
-
-                //lambda #3
-                contactsList.forEach(contacts -> allContactIDs.add(contacts.getContactID()));
-                customerIDList.forEach(customer -> allCustomerIDs.add(customer.getCustomerID()));
-                userIDsList.forEach(user -> allUserIDs.add(user.getUserId()));
-                contactBox.setItems(allContactIDs);
-
-
-                titleField.setText(selectedAppointment.getApmtTitle());
-                descField.setText(selectedAppointment.getApmtDescription());
-                locationField.setText(selectedAppointment.getApmtLocation());
-                typeField.setText(selectedAppointment.getApmtType());
-                customerIDBox.setValue(selectedAppointment.getApmtCustomerId());
-                startDatePicker.setValue(selectedAppointment.getApmtStart().toLocalDate());
-                endDatePicker.setValue(selectedAppointment.getApmtEnd().toLocalDate());
-                startTimeBox.setValue(String.valueOf(selectedAppointment.getApmtStart().toLocalTime()));
-                endTimeBox.setValue(String.valueOf(selectedAppointment.getApmtEnd().toLocalTime()));
-                userIDBox.setValue(selectedAppointment.getApmtUserId());
-                contactBox.setValue(selectedAppointment.getApmtContactId());
-
-                ObservableList<String> appointmentTimes = FXCollections.observableArrayList();
-
-                LocalTime firstAppointment = LocalTime.MIN.plusHours(8);
-                LocalTime lastAppointment = LocalTime.MAX.minusHours(1).minusMinutes(45);
-
-                //if statement fixed issue with infinite loop
-                if (!firstAppointment.equals(0) || !lastAppointment.equals(0)) {
-                    while (firstAppointment.isBefore(lastAppointment)) {
-                        appointmentTimes.add(String.valueOf(firstAppointment));
-                        firstAppointment = firstAppointment.plusMinutes(15);
-                    }
-                }
-                startTimeBox.setItems(appointmentTimes);
-                endTimeBox.setItems(appointmentTimes);
-                contactBox.setItems(allContactIDs);
-                customerIDBox.setItems(allUserIDs);
-                userIDBox.setItems(allCustomerIDs);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            contactsList = ContactDB.getAllContacts();
+            customerIDList = CustomerDB.getAllCustomers(connection);
+            userIDsList = UserDB.getAllUsers();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+        ObservableList<Integer> allContactIDs = FXCollections.observableArrayList();
+        ObservableList<Integer> allCustomerIDs = FXCollections.observableArrayList();
+        ObservableList<Integer> allUserIDs = FXCollections.observableArrayList();
+
+        // lambda #2
+        contactsList.forEach(contacts -> allContactIDs.add(contacts.getContactID()));
+        customerIDList.forEach(customer -> allCustomerIDs.add(customer.getCustomerID()));
+        userIDsList.forEach(user -> allUserIDs.add(user.getUserId()));
+
+        ObservableList<String> appointmentTimes = FXCollections.observableArrayList();
+        LocalTime firstAppointment = LocalTime.MIN.plusHours(8);
+        LocalTime lastAppointment = LocalTime.MAX.minusHours(1).minusMinutes(45);
+
+        //if statement fixed issue with infinite loop
+        if (!firstAppointment.equals(0) || !lastAppointment.equals(0)) {
+            while (firstAppointment.isBefore(lastAppointment)) {
+                appointmentTimes.add(String.valueOf(firstAppointment));
+                firstAppointment = firstAppointment.plusMinutes(15);
+            }
+        }
+        startTimeBox.setItems(appointmentTimes);
+        endTimeBox.setItems(appointmentTimes);
+        contactBox.setItems(allContactIDs);
+        customerIDBox.setItems(allCustomerIDs);
+        userIDBox.setItems(allUserIDs);
+
+        selectedAppointment = MainController.getSelectedAppointment();
+        if (selectedAppointment != null) {
+
+            titleField.setText(selectedAppointment.getApmtTitle());
+            descField.setText(selectedAppointment.getApmtDescription());
+            locationField.setText(selectedAppointment.getApmtLocation());
+            typeField.setText(selectedAppointment.getApmtType());
+            customerIDBox.setValue(selectedAppointment.getApmtCustomerId());
+            startDatePicker.setValue(selectedAppointment.getApmtStart().toLocalDate());
+            endDatePicker.setValue(selectedAppointment.getApmtEnd().toLocalDate());
+            startTimeBox.setValue(String.valueOf(selectedAppointment.getApmtStart().toLocalTime()));
+            endTimeBox.setValue(String.valueOf(selectedAppointment.getApmtEnd().toLocalTime()));
+            userIDBox.setValue(selectedAppointment.getApmtUserId());
+            contactBox.setValue(selectedAppointment.getApmtContactId());
+        }
+
     }
 }

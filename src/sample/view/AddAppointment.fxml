@@ -83,5 +83,6 @@
       <ComboBox fx:id="customerIDBox" layoutX="121.0" layoutY="421.0" prefHeight="27.0" prefWidth="157.0" promptText="Select Customer ID" />
       <ComboBox fx:id="userIDBox" layoutX="121.0" layoutY="458.0" prefHeight="27.0" prefWidth="157.0" promptText="Select User" />
       <ComboBox fx:id="contactBox" layoutX="121.0" layoutY="171.0" prefHeight="27.0" prefWidth="157.0" promptText="Select Contact" />
+
    </children>
 </AnchorPane>

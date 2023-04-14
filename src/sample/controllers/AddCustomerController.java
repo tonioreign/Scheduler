@@ -153,7 +153,7 @@ public class AddCustomerController implements Initializable {
 
             // Insert data into database
             String insertStatement = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
-            try (Connection conn = DBConnection.getConnection();
+            try (Connection conn = DBConnection.openConnection();
                  PreparedStatement ps = conn.prepareStatement(insertStatement)) {
                 ps.setInt(1, newCustomerID);
                 ps.setString(2, customerNameField.getText());
@@ -228,7 +228,7 @@ public class AddCustomerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Connection connection = DBConnection.getConnection();
+        Connection connection = DBConnection.openConnection();
 
         try {
             ObservableList<Country> allCountries = CountryDB.getCountries();
@@ -238,10 +238,8 @@ public class AddCustomerController implements Initializable {
 
             allCountries.stream().map(Country::getCountryName).forEach(countryNames::add);
             countryBox.setItems(countryNames);
-            allFirstLevelDivisions.stream().map(FirstLevelDivision::getDivisionName).forEach(countryNames::add);
-            divisionIDBox.setItems(countryNames);
-
             allFirstLevelDivisions.forEach(firstLevelDivision -> firstLevelDivisionAllNames.add(firstLevelDivision.getDivisionName()));
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

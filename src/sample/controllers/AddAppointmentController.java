@@ -241,7 +241,7 @@ public class AddAppointmentController implements Initializable {
                 }
 
                 String sql = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, User_ID, Customer_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                Connection conn = DBConnection.getConnection();
+                Connection conn = DBConnection.openConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setInt(1, newAppointmentID);
                 ps.setString(2, titleField.getText());
@@ -254,8 +254,8 @@ public class AddAppointmentController implements Initializable {
                 ps.setString(9, "admin");
                 ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
                 ps.setString(11, "admin");
-                ps.setInt(12, customerID);
-                ps.setInt(13, userIDBox.getValue());
+                ps.setInt(12, userIDBox.getValue());
+                ps.setInt(13, customerID);
                 ps.setInt(14, contactBox.getValue());
 
                 ps.executeUpdate();
@@ -278,9 +278,9 @@ public class AddAppointmentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<Contacts> contactsList = null;
-        ObservableList<Customer> customerIDList = null;
-        ObservableList<User> userIDsList = null;
+        ObservableList<Contacts> contactsList = FXCollections.observableArrayList();
+        ObservableList<Customer> customerIDList = FXCollections.observableArrayList();
+        ObservableList<User> userIDsList = FXCollections.observableArrayList();
         Connection connection = DBConnection.openConnection();
         try {
             contactsList = ContactDB.getAllContacts();
@@ -297,9 +297,8 @@ public class AddAppointmentController implements Initializable {
         contactsList.forEach(contacts -> allContactIDs.add(contacts.getContactID()));
         customerIDList.forEach(customer -> allCustomerIDs.add(customer.getCustomerID()));
         userIDsList.forEach(user -> allUserIDs.add(user.getUserId()));
-        // here
-        ObservableList<String> appointmentTimes = FXCollections.observableArrayList();
 
+        ObservableList<String> appointmentTimes = FXCollections.observableArrayList();
         LocalTime firstAppointment = LocalTime.MIN.plusHours(8);
         LocalTime lastAppointment = LocalTime.MAX.minusHours(1).minusMinutes(45);
 
@@ -313,7 +312,7 @@ public class AddAppointmentController implements Initializable {
         startTimeBox.setItems(appointmentTimes);
         endTimeBox.setItems(appointmentTimes);
         contactBox.setItems(allContactIDs);
-        customerIDBox.setItems(allUserIDs);
-        userIDBox.setItems(allCustomerIDs);
+        customerIDBox.setItems(allCustomerIDs);
+        userIDBox.setItems(allUserIDs);
     }
 }
