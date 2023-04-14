@@ -97,12 +97,13 @@ public class AddAppointmentController implements Initializable {
      */
     @FXML
     private ComboBox<Integer> userIDBox;
-    Connection connection;
+    Connection connection = DBConnection.openConnection();
     private ObservableList<Customer> getAllCustomers = CustomerDB.getAllCustomers(connection);
     private ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
     private ObservableList<User> getAllUsers = UserDB.getAllUsers();
     private ObservableList<Integer> storeUserIDs = FXCollections.observableArrayList();
     private ObservableList<Appointments> getAllAppointments = AppointmentDB.getAllAppointments();
+
 
     private LocalDate localDateEnd = endDatePicker.getValue();
     private LocalDate localDateStart = startDatePicker.getValue();
@@ -135,18 +136,6 @@ public class AddAppointmentController implements Initializable {
     private DayOfWeek startAppointmentDayToCheck = convertStartEST.toLocalDate().getDayOfWeek();
     private DayOfWeek endAppointmentDayToCheck = convertEndEST.toLocalDate().getDayOfWeek();
 
-    private int startAppointmentDayToCheckInt = startAppointmentDayToCheck.getValue();
-    private int endAppointmentDayToCheckInt = endAppointmentDayToCheck.getValue();
-
-    private int workWeekStart = DayOfWeek.MONDAY.getValue();
-    private int workWeekEnd = DayOfWeek.FRIDAY.getValue();
-
-    private LocalTime estBusinessStart = LocalTime.of(8, 0, 0);
-    private LocalTime estBusinessEnd = LocalTime.of(22, 0, 0);
-
-    private int newAppointmentID = Integer.parseInt(String.valueOf((int) (Math.random() * 100)));
-    private int customerID = customerIDBox.getValue();
-
     public AddAppointmentController() throws SQLException {
     }
 
@@ -178,9 +167,19 @@ public class AddAppointmentController implements Initializable {
     void onSave(ActionEvent event) throws IOException {
         try {
 
-            Connection connection = DBConnection.openConnection();
-
             if (!titleField.getText().isEmpty() && !descField.getText().isEmpty() && !locationField.getText().isEmpty() && !typeField.getText().isEmpty() && startDatePicker.getValue() != null && endDatePicker.getValue() != null && !startTimeBox.getValue().isEmpty() && !endTimeBox.getValue().isEmpty() && !(customerIDBox.getValue() == null)) {
+
+                getAllCustomers.stream().map(Customer::getCustomerID).forEach(storeCustomerIDs::add);
+                getAllUsers.stream().map(User::getUserId).forEach(storeUserIDs::add);
+
+                int startAppointmentDayToCheckInt = startAppointmentDayToCheck.getValue();
+                int endAppointmentDayToCheckInt = endAppointmentDayToCheck.getValue();
+
+                int workWeekStart = DayOfWeek.MONDAY.getValue();
+                int workWeekEnd = DayOfWeek.FRIDAY.getValue();
+
+                LocalTime estBusinessStart = LocalTime.of(8, 0, 0);
+                LocalTime estBusinessEnd = LocalTime.of(22, 0, 0);
 
                 if (startAppointmentDayToCheckInt < workWeekStart || startAppointmentDayToCheckInt > workWeekEnd || endAppointmentDayToCheckInt < workWeekStart || endAppointmentDayToCheckInt > workWeekEnd) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Day is outside of business operations (Monday-Friday)");
@@ -195,6 +194,9 @@ public class AddAppointmentController implements Initializable {
                     Optional<ButtonType> confirmation = alert.showAndWait();
                     return;
                 }
+
+                int newAppointmentID = Integer.parseInt(String.valueOf((int) (Math.random() * 100)));
+                int customerID = customerIDBox.getValue();
 
                 if (dateTimeStart.isAfter(dateTimeEnd)) {
                     System.out.println("Appointment has start time after end time");
