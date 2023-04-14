@@ -97,47 +97,6 @@ public class AddAppointmentController implements Initializable {
      */
     @FXML
     private ComboBox<Integer> userIDBox;
-    Connection connection = DBConnection.openConnection();
-    private ObservableList<Customer> getAllCustomers = CustomerDB.getAllCustomers(connection);
-    private ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
-    private ObservableList<User> getAllUsers = UserDB.getAllUsers();
-    private ObservableList<Integer> storeUserIDs = FXCollections.observableArrayList();
-    private ObservableList<Appointments> getAllAppointments = AppointmentDB.getAllAppointments();
-
-
-    private LocalDate localDateEnd = endDatePicker.getValue();
-    private LocalDate localDateStart = startDatePicker.getValue();
-
-    private DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
-    private String appointmentStartDate = startDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    private String appointmentStartTime = startTimeBox.getValue();
-
-    private String endDate = endDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    private String endTime = endTimeBox.getValue();
-
-    private String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");
-    private String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
-
-    private LocalTime localTimeStart = LocalTime.parse(startTimeBox.getValue(), minHourFormat);
-    private LocalTime LocalTimeEnd = LocalTime.parse(endTimeBox.getValue(), minHourFormat);
-
-    private LocalDateTime dateTimeStart = LocalDateTime.of(localDateStart, localTimeStart);
-    private LocalDateTime dateTimeEnd = LocalDateTime.of(localDateEnd, LocalTimeEnd);
-
-    private ZonedDateTime zoneDtStart = ZonedDateTime.of(dateTimeStart, ZoneId.systemDefault());
-    private ZonedDateTime zoneDtEnd = ZonedDateTime.of(dateTimeEnd, ZoneId.systemDefault());
-
-    private ZonedDateTime convertStartEST = zoneDtStart.withZoneSameInstant(ZoneId.of("America/New_York"));
-    private ZonedDateTime convertEndEST = zoneDtEnd.withZoneSameInstant(ZoneId.of("America/New_York"));
-
-    private LocalTime startAppointmentTimeToCheck = convertStartEST.toLocalTime();
-    private LocalTime endAppointmentTimeToCheck = convertEndEST.toLocalTime();
-
-    private DayOfWeek startAppointmentDayToCheck = convertStartEST.toLocalDate().getDayOfWeek();
-    private DayOfWeek endAppointmentDayToCheck = convertEndEST.toLocalDate().getDayOfWeek();
-
-    public AddAppointmentController() throws SQLException {
-    }
 
 
     /**
@@ -167,10 +126,50 @@ public class AddAppointmentController implements Initializable {
     void onSave(ActionEvent event) throws IOException {
         try {
 
+            Connection connection = DBConnection.openConnection();
+
             if (!titleField.getText().isEmpty() && !descField.getText().isEmpty() && !locationField.getText().isEmpty() && !typeField.getText().isEmpty() && startDatePicker.getValue() != null && endDatePicker.getValue() != null && !startTimeBox.getValue().isEmpty() && !endTimeBox.getValue().isEmpty() && !(customerIDBox.getValue() == null)) {
+
+                ObservableList<Customer> getAllCustomers = CustomerDB.getAllCustomers(connection);
+                ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
+                ObservableList<User> getAllUsers = UserDB.getAllUsers();
+                ObservableList<Integer> storeUserIDs = FXCollections.observableArrayList();
+                ObservableList<Appointments> getAllAppointments = AppointmentDB.getAllAppointments();
+
 
                 getAllCustomers.stream().map(Customer::getCustomerID).forEach(storeCustomerIDs::add);
                 getAllUsers.stream().map(User::getUserId).forEach(storeUserIDs::add);
+
+                LocalDate localDateEnd = endDatePicker.getValue();
+                LocalDate localDateStart = startDatePicker.getValue();
+
+                DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
+                String appointmentStartDate = startDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String appointmentStartTime = startTimeBox.getValue();
+
+                String endDate = endDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String endTime = endTimeBox.getValue();
+
+                String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");
+                String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
+
+                LocalTime localTimeStart = LocalTime.parse(startTimeBox.getValue(), minHourFormat);
+                LocalTime LocalTimeEnd = LocalTime.parse(endTimeBox.getValue(), minHourFormat);
+
+                LocalDateTime dateTimeStart = LocalDateTime.of(localDateStart, localTimeStart);
+                LocalDateTime dateTimeEnd = LocalDateTime.of(localDateEnd, LocalTimeEnd);
+
+                ZonedDateTime zoneDtStart = ZonedDateTime.of(dateTimeStart, ZoneId.systemDefault());
+                ZonedDateTime zoneDtEnd = ZonedDateTime.of(dateTimeEnd, ZoneId.systemDefault());
+
+                ZonedDateTime convertStartEST = zoneDtStart.withZoneSameInstant(ZoneId.of("America/New_York"));
+                ZonedDateTime convertEndEST = zoneDtEnd.withZoneSameInstant(ZoneId.of("America/New_York"));
+
+                LocalTime startAppointmentTimeToCheck = convertStartEST.toLocalTime();
+                LocalTime endAppointmentTimeToCheck = convertEndEST.toLocalTime();
+
+                DayOfWeek startAppointmentDayToCheck = convertStartEST.toLocalDate().getDayOfWeek();
+                DayOfWeek endAppointmentDayToCheck = convertEndEST.toLocalDate().getDayOfWeek();
 
                 int startAppointmentDayToCheckInt = startAppointmentDayToCheck.getValue();
                 int endAppointmentDayToCheckInt = endAppointmentDayToCheck.getValue();
