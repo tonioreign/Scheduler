@@ -366,6 +366,7 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        DBConnection.openConnection();
         Locale locale = Locale.getDefault();
         Locale.setDefault(locale);
 
