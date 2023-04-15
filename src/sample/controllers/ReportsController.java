@@ -4,13 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 import sample.db.AppointmentDB;
 import sample.db.ContactDB;
 import sample.db.ReportDB;
@@ -20,7 +15,6 @@ import sample.models.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Month;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,55 +29,55 @@ public class ReportsController {
      * TableView for displaying all appointments in the UI.
      */
     @FXML
-    private TableView<Appointments> allAppointmentsTable;
+    private TableView<Appointments> allApmtTable;
 
     /**
      * TableColumn for displaying appointment contact information in the UI.
      */
     @FXML
-    private TableColumn<?, ?> appointmentContact;
+    private TableColumn<?, ?> apmtContact;
 
     /**
      * TableColumn for displaying appointment customer ID information in the UI.
      */
     @FXML
-    private TableColumn<?, ?> appointmentCustomerID;
+    private TableColumn<?, ?> apmtCustomerID;
 
     /**
      * TableColumn for displaying appointment description information in the UI.
      */
     @FXML
-    private TableColumn<?, ?> appointmentDescription;
+    private TableColumn<?, ?> apmtDesc;
 
     /**
      * TableColumn for displaying appointment end date and time information in the UI.
      */
     @FXML
-    private TableColumn<?, ?> appointmentEnd;
+    private TableColumn<?, ?> apmtEnd;
 
     /**
      * TableColumn for displaying appointment ID information in the UI.
      */
     @FXML
-    private TableColumn<?, ?> appointmentID;
+    private TableColumn<?, ?> apmtID;
 
     /**
      * TableColumn for displaying appointment location information in the UI.
      */
     @FXML
-    private TableColumn<?, ?> appointmentLocation;
+    private TableColumn<?, ?> apmtLocation;
 
     /**
      * TableColumn for displaying appointment start date and time information in the UI.
      */
     @FXML
-    private TableColumn<?, ?> appointmentStart;
+    private TableColumn<?, ?> apmtStart;
 
     /**
      * TableColumn for displaying appointment title information in the UI.
      */
     @FXML
-    private TableColumn<?, ?> appointmentTitle;
+    private TableColumn<?, ?> apmtTitle;
 
     /**
      * TableColumn for displaying appointment type information in the UI.
@@ -95,31 +89,25 @@ public class ReportsController {
      * TableColumn for displaying totals by appointment type information in the UI.
      */
     @FXML
-    private TableColumn<?, ?> appointmentTotalsAppointmentTypeCol;
+    private TableColumn<?, ?> apmtTotalTypeCol;
 
     /**
      * TableColumn for displaying totals by month information in the UI.
      */
     @FXML
-    private TableColumn<?, ?> appointmentTotalsByMonth;
+    private TableColumn<?, ?> apmtTotalMonth;
 
     /**
      * TableColumn for displaying month total information in the UI.
      */
     @FXML
-    private TableColumn<?, ?> appointmentTotalsMonthTotal;
+    private TableColumn<?, ?> apptTotalsMonthTotal;
 
     /**
      * TableColumn for displaying type total information in the UI.
      */
     @FXML
-    private TableColumn<?, ?> appointmentTotalsTypeTotalCol;
-
-    /**
-     * Button for navigating back to the main menu in the UI.
-     */
-    @FXML
-    private Button backToMainMenu;
+    private TableColumn<?, ?> apmtTotalsTypeTotalCol;
 
     /**
      * ComboBox for selecting contact schedule contact in the UI.
@@ -128,22 +116,10 @@ public class ReportsController {
     private ComboBox<String> contactScheduleContactBox;
 
     /**
-     * TableColumn for displaying contact ID information in the UI.
-     */
-    @FXML
-    private TableColumn<?, ?> tableContactID;
-
-    /**
      * TableView for displaying appointment type totals in the UI.
      */
     @FXML
     private TableView<ReportType> appointmentTotalsAppointmentType;
-
-    /**
-     * Tab for displaying appointment totals information in the UI.
-     */
-    @FXML
-    private Tab appointmentTotalsTab;
 
     /**
      * TableView for displaying monthly appointment totals in the UI.
@@ -179,19 +155,19 @@ public class ReportsController {
 
         countryName.setCellValueFactory(new PropertyValueFactory<>("countryName"));
         countryCounter.setCellValueFactory(new PropertyValueFactory<>("countryCount"));
-        appointmentID.setCellValueFactory(new PropertyValueFactory<>("apmtId"));
-        appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("apmtTitle"));
-        appointmentDescription.setCellValueFactory(new PropertyValueFactory<>("apmtDescription"));
-        appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("apmtLocation"));
+        apmtID.setCellValueFactory(new PropertyValueFactory<>("apmtId"));
+        apmtTitle.setCellValueFactory(new PropertyValueFactory<>("apmtTitle"));
+        apmtDesc.setCellValueFactory(new PropertyValueFactory<>("apmtDescription"));
+        apmtLocation.setCellValueFactory(new PropertyValueFactory<>("apmtLocation"));
         appointmentType.setCellValueFactory(new PropertyValueFactory<>("apmtType"));
-        appointmentStart.setCellValueFactory(new PropertyValueFactory<>("apmtStart"));
-        appointmentEnd.setCellValueFactory(new PropertyValueFactory<>("apmtEnd"));
-        appointmentCustomerID.setCellValueFactory(new PropertyValueFactory<>("apmtCustomerId"));
-        appointmentContact.setCellValueFactory(new PropertyValueFactory<>("apmtContactId"));
-        appointmentTotalsAppointmentTypeCol.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
-        appointmentTotalsTypeTotalCol.setCellValueFactory(new PropertyValueFactory<>("appointmentTotal"));
-        appointmentTotalsByMonth.setCellValueFactory(new PropertyValueFactory<>("apmtMonth"));
-        appointmentTotalsMonthTotal.setCellValueFactory(new PropertyValueFactory<>("apmtTotal"));
+        apmtStart.setCellValueFactory(new PropertyValueFactory<>("apmtStart"));
+        apmtEnd.setCellValueFactory(new PropertyValueFactory<>("apmtEnd"));
+        apmtCustomerID.setCellValueFactory(new PropertyValueFactory<>("apmtCustomerId"));
+        apmtContact.setCellValueFactory(new PropertyValueFactory<>("apmtContactId"));
+        apmtTotalTypeCol.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
+        apmtTotalsTypeTotalCol.setCellValueFactory(new PropertyValueFactory<>("appointmentTotal"));
+        apmtTotalMonth.setCellValueFactory(new PropertyValueFactory<>("apmtMonth"));
+        apptTotalsMonthTotal.setCellValueFactory(new PropertyValueFactory<>("apmtTotal"));
 
         ObservableList<Contacts> contactsObservableList = ContactDB.getAllContacts();
         ObservableList<String> allContactsNames = FXCollections.observableArrayList();
@@ -228,7 +204,7 @@ public class ReportsController {
                         .filter(appointment -> appointment.getApmtContactId() == contactID)
                         .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
-                allAppointmentsTable.setItems(appointmentInfo);
+                allApmtTable.setItems(appointmentInfo);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -288,8 +264,7 @@ public class ReportsController {
 
     /**
      * Handles the event when the "Back to Main Menu" button is clicked.
-     * This method changes the screen to the "MainMenu.fxml" view using the {@link AccessMethod#changeScreen(ActionEvent, String, String)} method,
-     * with the event, the FXML file name, and the window title as parameters.
+     *
      * @param event The ActionEvent triggered by the "Back to Main Menu" button.
      * @throws IOException If an I/O exception occurs while loading the FXML file.
      */
