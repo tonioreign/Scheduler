@@ -132,7 +132,7 @@ public class Appointments {
         this.apmtType = apmtType;
     }
 
-    public LocalDateTime getApmtStart() {
+    public String getApmtStart() {
         return apmtStart;
     }
 
@@ -140,7 +140,7 @@ public class Appointments {
         this.apmtStart = apmtStart;
     }
 
-    public LocalDateTime getApmtEnd() {
+    public String getApmtEnd() {
         return apmtEnd;
     }
 

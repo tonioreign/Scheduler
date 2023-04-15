@@ -241,24 +241,39 @@ public class AddAppointmentController implements Initializable {
         }
     }
 
+    public LocalDateTime convertUTCToLocal(String utcDateTime) {
+        LocalDateTime utcTime = LocalDateTime.parse(utcDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        ZonedDateTime utcZoneDateTime = ZonedDateTime.of(utcTime, ZoneId.of("UTC"));
+        ZonedDateTime localZoneDateTime = utcZoneDateTime.withZoneSameInstant(ZoneId.systemDefault());
+        return localZoneDateTime.toLocalDateTime();
+    }
 
-        /**
-                 * Overrides the initialize method from the Initializable interface to initialize the UI elements and data
-                 * when the associated FXML file is loaded.
-                 *
-                 * @param url            The URL location of the FXML file.
-                 * @param resourceBundle The ResourceBundle associated with the FXML file.
-                 */
+    /**
+     * Overrides the initialize method from the Initializable interface to initialize the UI elements and data
+     * when the associated FXML file is loaded.
+     *
+     * @param url            The URL location of the FXML file.
+     * @param resourceBundle The ResourceBundle associated with the FXML file.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<Contacts> contactsList = FXCollections.observableArrayList();
         ObservableList<Customer> customerIDList = FXCollections.observableArrayList();
         ObservableList<User> userIDsList = FXCollections.observableArrayList();
+
         Connection connection = DBConnection.openConnection();
         try {
             contactsList = ContactDB.getAllContacts();
             customerIDList = CustomerDB.getAllCustomers(connection);
             userIDsList = UserDB.getAllUsers();
+            ObservableList<Appointments> appointments = AppointmentDB.getAllAppointments();
+
+            for (Appointments appointment : appointments) {
+                LocalDateTime localStart = convertUTCToLocal(appointment.getApmtStart());
+                LocalDateTime localEnd = convertUTCToLocal(appointment.getApmtEnd());
+                appointment.setApmtStart(LocalDateTime.parse(localStart.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
+                appointment.setApmtStart(LocalDateTime.parse(localEnd.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
