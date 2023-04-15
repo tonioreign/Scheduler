@@ -230,8 +230,16 @@ public class MainController implements Initializable {
      */
     @FXML
     void onModifyApmt(ActionEvent event) throws IOException {
-        selectedAppointment = apmtTableView.getSelectionModel().getSelectedItem();
-        AccessMethod.changeScreen(event, "UpdateAppointment.fxml", "Update Appointment");
+        if(apmtTableView.getSelectionModel().getSelectedItem() == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("No appointment selected.");
+            alert.setContentText("Please select an appointment to modify.");
+            alert.showAndWait();
+        }else{
+            selectedAppointment = apmtTableView.getSelectionModel().getSelectedItem();
+            AccessMethod.changeScreen(event, "UpdateAppointment.fxml", "Update Appointment");
+        }
     }
 
     /**

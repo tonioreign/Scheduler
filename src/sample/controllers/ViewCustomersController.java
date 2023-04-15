@@ -232,9 +232,16 @@ public class ViewCustomersController implements Initializable {
      */
     @FXML
     void onModCustomer(ActionEvent event) throws IOException {
-        selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
-
-        AccessMethod.changeScreen(event, "ModCustomer.fxml", "Update Customer");
+        if(customerTableView.getSelectionModel().getSelectedItem() == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("No customer selected");
+            alert.setContentText("Please select a customer to modify.");
+            alert.showAndWait();
+        }else {
+            selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
+            AccessMethod.changeScreen(event, "ModCustomer.fxml", "Update Customer");
+        }
     }
 
     /**
