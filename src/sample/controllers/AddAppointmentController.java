@@ -161,7 +161,22 @@ public class AddAppointmentController implements Initializable {
             LocalDateTime startDateTime = LocalDateTime.parse(startDateString, formatter);
             LocalDateTime endDateTime = LocalDateTime.parse(endDateString, formatter);
 
-            if (startDateTime.isAfter(endDateTime)) {
+            ZoneId zoneId = ZoneId.systemDefault();
+            ZonedDateTime startZonedDateTime = startDateTime.atZone(zoneId);
+            ZonedDateTime endZonedDateTime = endDateTime.atZone(zoneId);
+            ZonedDateTime startEST = startZonedDateTime.withZoneSameInstant(ZoneId.of("America/New_York"));
+            ZonedDateTime endEST = endZonedDateTime.withZoneSameInstant(ZoneId.of("America/New_York"));
+            String startESTString = startEST.format(DateTimeFormatter.ofPattern("HH:mm"));
+            String endESTString = endEST.format(DateTimeFormatter.ofPattern("HH:mm"));
+
+            if (startEST.getDayOfWeek() == DayOfWeek.SATURDAY || startEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments cannot be scheduled on weekends.");
+                alert.showAndWait();
+            } else if (startESTString.compareTo("08:00") < 0 || startESTString.compareTo("22:00") > 0 ||
+                    endESTString.compareTo("08:00") < 0 || endESTString.compareTo("22:00") > 0) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8:00 a.m. and 10:00 p.m. EST.");
+                alert.showAndWait();
+            } else if (startDateTime.isAfter(endDateTime)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be before end date/time.");
                 alert.showAndWait();
             } else if (startDateTime.isBefore(LocalDateTime.now())) {
@@ -174,7 +189,6 @@ public class AddAppointmentController implements Initializable {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "This customer already has an appointment scheduled during this time.");
                 alert.showAndWait();
             } else {
-                ZoneId zoneId = ZoneId.systemDefault();
                 ZonedDateTime startZDT = startDateTime.atZone(zoneId);
                 ZonedDateTime endZDT = endDateTime.atZone(zoneId);
                 ZonedDateTime utcStartZDT = startZDT.withZoneSameInstant(ZoneId.of("UTC"));

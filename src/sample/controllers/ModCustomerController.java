@@ -22,7 +22,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.ResourceBundle;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ModCustomerController implements Initializable {
 
@@ -122,49 +126,78 @@ public class ModCustomerController implements Initializable {
     }
 
     /**
-     * Saves the updated customer information to the database when the "Save" button is clicked.
-     * This method performs the following steps:
-     * 1. Retrieves the updated customer information from the input fields.
-     * 2. Performs validation to check if all required fields are not empty.
-     * 3. Updates the customer information in the database using an SQL UPDATE statement.
-     * 4. Navigates back to the "ViewCustomers.fxml" screen after the update is successful.
+     * Handles the save action event, inserts customer data into the database, and navigates to the "Customers" screen.
+     * This method first checks if any of the required fields are empty, and if not, it generates a random customer ID,
+     * retrieves the first-level division ID, inserts the customer data into the database, and then navigates to the
+     * "Customers" screen.
      *
-     * @param event The ActionEvent triggered by the "Save" button click.
-     * @throws IOException if an I/O error occurs during navigation to the next screen.
+     * @param event The action event that triggers this method.
      */
     @FXML
-    void onSave(ActionEvent event) throws IOException {
-        try {
+    void onSave(ActionEvent event) {
+        if (!areFieldsEmpty()) {
+            try {
+                int firstLevelDivisionID = getFirstLevelDivisionID();
 
-            if (!customerNameField.getText().isEmpty() || !addressField.getText().isEmpty() || !zipField.getText().isEmpty() || !phoneNumberField.getText().isEmpty() || !countryBox.getValue().isEmpty() || !divisionIDBox.getValue().isEmpty())
-            {
-
-                int firstLevelDivisionName = 0;
-                for (FirstLevelDivision firstLevelDivision : FirstLevelDivisionDB.getAllFirstLevelDivisions()) {
-                    if (divisionIDBox.getSelectionModel().getSelectedItem().equals(firstLevelDivision.getDivisionName())) {
-                        firstLevelDivisionName = firstLevelDivision.getDivisionID();
-                    }
-                }
-                String insertStatement = "UPDATE customers SET Customer_ID = ?, Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Create_Date = ?, Created_By = ?, Last_Update = ?, Last_Updated_By = ?, Division_ID = ? WHERE Customer_ID = ?";
-                DBConnection.setPreparedStatement(DBConnection.getConnection(), insertStatement);
-                PreparedStatement ps = DBConnection.getPreparedStatement();
-                ps.setInt(1, Integer.parseInt(customerIDField.getText()));
-                ps.setString(2, customerNameField.getText());
-                ps.setString(3, addressField.getText());
-                ps.setString(4, zipField.getText());
-                ps.setString(5, phoneNumberField.getText());
-                ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setString(7, "admin");
-                ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setString(9, "admin");
-                ps.setInt(10, firstLevelDivisionName);
-                ps.setInt(11, Integer.parseInt(customerIDField.getText()));
-                ps.executeUpdate();
-
+                insertCustomerData(firstLevelDivisionID);
+                AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
+            } catch (IOException | SQLException e) {
+                // Handle any errors
+                e.printStackTrace();
             }
-            AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Checks if any of the required fields (customer name, address, zip, phone number, country, and division) are empty.
+     *
+     * @return true if any of the required fields are empty, otherwise false.
+     */
+    private boolean areFieldsEmpty() {
+        return customerNameField.getText().isEmpty() || addressField.getText().isEmpty() || zipField.getText().isEmpty() || phoneNumberField.getText().isEmpty() || countryBox.getValue().isEmpty() || divisionIDBox.getValue().isEmpty();
+    }
+
+    /**
+     * Generates a random customer ID between 0 and 99.
+     *
+     * @return A random integer as the customer ID.
+     */
+    private Integer generateRandomCustomerID() {
+        return (int) (Math.random() * 100);
+    }
+
+    /**
+     * Retrieve the ID of the selected first-level division.
+     * @return The ID of the selected first-level division.
+     * @throws SQLException If there's an issue with the database.
+     * @throws NoSuchElementException If the selected division is not found.
+     */
+    private int getFirstLevelDivisionID() throws SQLException, NoSuchElementException {
+        Map<String, FirstLevelDivision> divisionMap = FirstLevelDivisionDB.getAllFirstLevelDivisions().stream().collect(Collectors.toMap(FirstLevelDivision::getDivisionName, Function.identity()));
+        String selectedDivisionName = divisionIDBox.getSelectionModel().getSelectedItem();
+        FirstLevelDivision selectedDivision = divisionMap.get(selectedDivisionName);
+        if (selectedDivision == null) {
+            throw new NoSuchElementException("Selected division not found in the divisionMap.");
+        }
+        return selectedDivision.getDivisionID();
+    }
+
+    private void insertCustomerData(int firstLevelDivisionID) throws SQLException {
+        String insertStatement = "UPDATE customers SET Customer_ID = ?, Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Create_Date = ?, Created_By = ?, Last_Update = ?, Last_Updated_By = ?, Division_ID = ? WHERE Customer_ID = ?";
+        try (Connection conn = DBConnection.openConnection();
+             PreparedStatement ps = conn.prepareStatement(insertStatement)) {
+            ps.setInt(1, Integer.parseInt(customerIDField.getText()));
+            ps.setString(2, customerNameField.getText());
+            ps.setString(3, addressField.getText());
+            ps.setString(4, zipField.getText());
+            ps.setString(5, phoneNumberField.getText());
+            ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setString(7, "admin");
+            ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setString(9, "admin");
+            ps.setInt(10, firstLevelDivisionID);
+            ps.setInt(11, Integer.parseInt(customerIDField.getText()));
+            ps.executeUpdate();
         }
     }
 

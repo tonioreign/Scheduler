@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Month;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -209,31 +210,26 @@ public class ReportsController {
     @FXML
     public void appointmentDataByContact() {
         try {
-            int contactID = 0;
             ObservableList<Appointments> getAllAppointmentData = AppointmentDB.getAllAppointments();
-            ObservableList<Appointments> appointmentInfo = FXCollections.observableArrayList();
             ObservableList<Contacts> getAllContacts = ContactDB.getAllContacts();
-
-            Appointments contactAppointmentInfo;
 
             String contactName = contactScheduleContactBox.getSelectionModel().getSelectedItem();
 
             if (contactName != null) {
-                for (Contacts contact: getAllContacts) {
-                    if (contactName.equals(contact.getContactName())) {
-                        contactID = contact.getContactID();
-                        break; // exit loop once contact ID is found
-                    }
-                }
+                // Find the contact ID based on the selected contact name
+                int contactID = getAllContacts.stream()
+                        .filter(contact -> contactName.equals(contact.getContactName()))
+                        .mapToInt(Contacts::getContactID)
+                        .findFirst()
+                        .orElse(0);
 
-                for (Appointments appointment: getAllAppointmentData) {
-                    if (appointment.getApmtContactId() == contactID) {
-                        contactAppointmentInfo = appointment;
-                        appointmentInfo.add(contactAppointmentInfo);
-                    }
-                }
+                // Filter appointments based on the contact ID
+                ObservableList<Appointments> appointmentInfo = getAllAppointmentData.stream()
+                        .filter(appointment -> appointment.getApmtContactId() == contactID)
+                        .collect(Collectors.toCollection(FXCollections::observableArrayList));
+
+                allAppointmentsTable.setItems(appointmentInfo);
             }
-            allAppointmentsTable.setItems(appointmentInfo);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -249,52 +245,24 @@ public class ReportsController {
     public void appointmentTotalsTab() throws SQLException {
         try {
             ObservableList<Appointments> getAllAppointments = AppointmentDB.getAllAppointments();
-            ObservableList<Month> appointmentMonths = FXCollections.observableArrayList();
-            ObservableList<Month> monthOfAppointments = FXCollections.observableArrayList();
-
-            ObservableList<String> appointmentType = FXCollections.observableArrayList();
-            ObservableList<String> uniqueAppointment = FXCollections.observableArrayList();
-
-            ObservableList<ReportType> reportType = FXCollections.observableArrayList();
             ObservableList<MonthlyReport> reportMonths = FXCollections.observableArrayList();
+            ObservableList<ReportType> reportType = FXCollections.observableArrayList();
 
+            // Count appointments by month
+            Map<Month, Long> monthCountMap = getAllAppointments.stream()
+                    .collect(Collectors.groupingBy(appointment -> appointment.getApmtStart().getMonth(), Collectors.counting()));
 
-            //IDE converted to Lambda
-            getAllAppointments.forEach(appointments -> {
-                appointmentType.add(appointments.getApmtType());
-            });
+            // lambda #2 expression to add the month and count to the reportMonths list
+            monthCountMap.forEach((month, count) -> reportMonths.add(new MonthlyReport(month.name(), count.intValue())));
 
-            //IDE converted to Lambda
-            getAllAppointments.stream().map(appointment -> {
-                return appointment.getApmtStart().getMonth();
-            }).forEach(appointmentMonths::add);
-
-            //IDE converted to Lambda
-            appointmentMonths.stream().filter(month -> {
-                return !monthOfAppointments.contains(month);
-            }).forEach(monthOfAppointments::add);
-
-            for (Appointments appointments: getAllAppointments) {
-                String appointmentsAppointmentType = appointments.getApmtType();
-                if (!uniqueAppointment.contains(appointmentsAppointmentType)) {
-                    uniqueAppointment.add(appointmentsAppointmentType);
-                }
-            }
-
-            for (Month month: monthOfAppointments) {
-                int totalMonth = Collections.frequency(appointmentMonths, month);
-                String monthName = month.name();
-                MonthlyReport appointmentMonth = new MonthlyReport(monthName, totalMonth);
-                reportMonths.add(appointmentMonth);
-            }
             appointmentTotalAppointmentByMonth.setItems(reportMonths);
 
-            for (String type: uniqueAppointment) {
-                String typeToSet = type;
-                int typeTotal = Collections.frequency(appointmentType, type);
-                ReportType appointmentTypes = new ReportType(typeToSet, typeTotal);
-                reportType.add(appointmentTypes);
-            }
+            // Count appointments by type
+            Map<String, Long> typeCountMap = getAllAppointments.stream()
+                    .collect(Collectors.groupingBy(Appointments::getApmtType, Collectors.counting()));
+
+            typeCountMap.forEach((type, count) -> reportType.add(new ReportType(type, count.intValue())));
+
             appointmentTotalsAppointmentType.setItems(reportType);
 
         } catch (Exception e) {
