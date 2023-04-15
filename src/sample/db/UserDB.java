@@ -13,6 +13,8 @@ import java.sql.SQLException;
  * This class provides methods for retrieving and managing user data in a database.
  * It allows for retrieving all user data from the database and populating an ObservableList of User objects,
  * as well as validating user credentials for a login form.
+ *
+ * @author Antonio Jenkins
  */
 public class UserDB {
     /**
@@ -66,12 +68,6 @@ public class UserDB {
         }
         return usersObservableList;
     }
-
-    /**
-     * This method validates the user for the login form.
-     * @param password
-     * @param username
-     */
 
     /**
      * Validates a user's credentials for the login form.

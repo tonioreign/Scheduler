@@ -11,6 +11,8 @@ import java.sql.SQLException;
 /**
  * This class provides methods for retrieving and managing countries in a database.
  * It allows for retrieving a list of countries from the database.
+ *
+ * @author Antonio Jenkins
  */
 public class CountryDB {
 

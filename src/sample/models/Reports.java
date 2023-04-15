@@ -1,5 +1,11 @@
 package sample.models;
-
+/**
+ * This class is used to create a report for the number of appointments by type and month.
+ * It also creates a report for the number of appointments by location.
+ * It also creates a report for the number of customers by country.
+ *
+ * @author Antonio Jenkins
+ */
 public class Reports {
     /**
      * The count of countries.

@@ -1,7 +1,11 @@
 package sample.models;
 
 import java.time.LocalDateTime;
-
+/**
+ * This class represents a user in the application.
+ *
+ * @author Antonio Jenkins
+ */
 public class User {
     /**
      * The ID of the user.

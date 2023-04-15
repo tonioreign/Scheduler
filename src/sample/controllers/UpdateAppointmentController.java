@@ -29,7 +29,12 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
 
-
+/**
+ * Controller class for the UpdateAppointment screen.
+ * This class contains the event handlers for the UpdateAppointment screen.
+ *
+ * @author Antonio Jenkins
+ */
 public class UpdateAppointmentController implements Initializable {
 
     /**

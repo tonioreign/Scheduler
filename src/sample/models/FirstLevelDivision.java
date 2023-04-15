@@ -1,5 +1,9 @@
 package sample.models;
-
+/**
+ * This class is used to create FirstLevelDivision objects.
+ *
+ * @author Antonio Jenkins
+ */
 public class FirstLevelDivision {
     /**
      * The ID of the division.

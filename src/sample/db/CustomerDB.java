@@ -12,6 +12,8 @@ import java.sql.SQLException;
 /**
  * This class provides methods for retrieving and managing customer data in a database.
  * It allows for retrieving all customer data from the database and creating an ObservableList of Customer objects.
+ *
+ * @author Antonio Jenkins
  */
 public class CustomerDB {
 

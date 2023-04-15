@@ -26,7 +26,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
+/** This class is the controller for the "Add Customer" screen.
+ *  It handles the logic for adding a new customer to the database.
+ *  @author Antonio Jenkins
+ * */
 public class AddCustomerController implements Initializable {
 
     /**
@@ -182,6 +185,11 @@ public class AddCustomerController implements Initializable {
         return selectedDivision.getDivisionID();
     }
 
+    /** Inserts the customer data into the database.
+     * @param newCustomerID The customer ID to insert.
+     * @param firstLevelDivisionID The first-level division ID to insert.
+     * @throws SQLException If there's an issue with the database.
+     */
     private void insertCustomerData(Integer newCustomerID, int firstLevelDivisionID) throws SQLException {
         String insertStatement = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
         try (Connection conn = DBConnection.openConnection();

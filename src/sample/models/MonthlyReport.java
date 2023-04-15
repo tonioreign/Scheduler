@@ -1,5 +1,9 @@
 package sample.models;
-
+/**
+ * This class is used to create MonthlyReport objects.
+ *
+ * @author Antonio Jenkins
+ */
 public class MonthlyReport {
     /**
      * The month for which the report is generated.

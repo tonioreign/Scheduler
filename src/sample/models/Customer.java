@@ -1,5 +1,8 @@
 package sample.models;
 
+/**
+ * This class represents a customer.
+ */
 public class Customer {
     /**
      * The name of the division.

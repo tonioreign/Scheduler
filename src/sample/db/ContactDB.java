@@ -12,6 +12,8 @@ import java.sql.SQLException;
  * This class provides methods for managing contacts in a database.
  * It allows for retrieving all contacts from the database and finding the contact ID
  * for a given contact name.
+ *
+ * @author Antonio Jenkins
  */
 public class ContactDB {
 

@@ -32,7 +32,12 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
+/**
+ * This class is the controller for the Add Appointment screen.
+ * It provides the logic for the screen.
+ *
+ * @author Antonio Jenkins
+ */
 public class AddAppointmentController implements Initializable {
 
     /**

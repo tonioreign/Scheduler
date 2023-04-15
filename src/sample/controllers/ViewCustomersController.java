@@ -26,7 +26,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
+/** This class is the controller for the View Customer view.
+ *  It handles the "Add Customer", "Modify Customer", and "Delete Customer" buttons.
+ *
+ *  @author Antonio Jenkins
+ * */
 public class ViewCustomersController implements Initializable {
 
     /**

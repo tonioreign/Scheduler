@@ -24,7 +24,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
+/**
+ * This class is the controller for the main screen.
+ * Provides functionality for the main screen.
+ *
+ * @author Antonio Jenkins
+ */
 public class MainController implements Initializable {
 
     /**

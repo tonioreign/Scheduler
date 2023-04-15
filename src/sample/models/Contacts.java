@@ -4,6 +4,8 @@ public class Contacts {
     /**
      * The ID of the contact.
      * This variable is public, use with caution.
+     *
+     * @author Antonio Jenkins
      */
     public int contactID;
 

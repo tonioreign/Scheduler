@@ -1,7 +1,11 @@
 package sample.models;
 
 import java.time.LocalDateTime;
-
+/**
+ * This class represents a country in the database.
+ *
+ * @author Antonio Jenkins
+ */
 public class Country {
 
     /**

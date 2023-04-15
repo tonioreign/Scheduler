@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
  *
  * @author Antonio Jenkins
  */
-
 public class ReportsController {
 
     /**

@@ -5,8 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-/*
- * Establishes a connection to the database
+/**
+ * This class is used to establish a connection to the database.
+ *
+ * @author Antonio Jenkins
  */
 public class DBConnection {
 

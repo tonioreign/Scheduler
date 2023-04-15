@@ -1,5 +1,9 @@
 package sample.models;
-
+/**
+ * This class is used to create ReportType objects.
+ *
+ * @author Antonio Jenkins
+ */
 public class ReportType {
     /**
      * The type of appointment.

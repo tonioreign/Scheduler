@@ -11,6 +11,8 @@ import java.sql.SQLException;
 /**
  * This class provides methods for retrieving and managing first level division data in a database.
  * It allows for retrieving all data from the first_level_divisions table and creating an ObservableList of FirstLevelDivision objects.
+ *
+ * @author Antonio Jenkins
  */
 public class FirstLevelDivisionDB {
 

@@ -13,6 +13,8 @@ import java.sql.SQLException;
  * appointment counts in a database.
  * It allows for retrieving countries and their corresponding total appointment count per country from the database
  * and creating an ObservableList of Reports objects containing country names and appointment counts.
+ *
+ * @author Antonio Jenkins
  */
 public class ReportDB {
     /**

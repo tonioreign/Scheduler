@@ -27,7 +27,11 @@ import java.util.NoSuchElementException;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
+/** This class is the controller for the modify customer screen.
+ *  It handles the logic for the modify customer screen.
+ *
+ *  @author Antonio Jenkins
+ * */
 public class ModCustomerController implements Initializable {
 
     /**
@@ -182,6 +186,10 @@ public class ModCustomerController implements Initializable {
         return selectedDivision.getDivisionID();
     }
 
+    /** Inserts the customer data into the database.
+     * @param firstLevelDivisionID The ID of the first-level division.
+     * @throws SQLException If there's an issue with the database.
+     */
     private void insertCustomerData(int firstLevelDivisionID) throws SQLException {
         String insertStatement = "UPDATE customers SET Customer_ID = ?, Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Create_Date = ?, Created_By = ?, Last_Update = ?, Last_Updated_By = ?, Division_ID = ? WHERE Customer_ID = ?";
         try (Connection conn = DBConnection.openConnection();

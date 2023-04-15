@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
  * The Appointments class represents an appointment with various properties such as ID, title,
  * description, location, type, start and end times, customer ID, user ID, and contact ID.
  * It provides getters and setters for accessing and modifying the properties.
+ *
+ * @author Antonio Jenkins
  */
 public class Appointments {
     /**
