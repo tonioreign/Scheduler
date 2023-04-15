@@ -135,7 +135,6 @@ public class LoginController implements Initializable {
     void onLoginButton(ActionEvent event) throws IOException {
         try {
             Locale locale = Locale.getDefault();
-            ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", locale);
 
             String usernameInput = UserField.getText();
             String passwordInput = PassField.getText();
@@ -160,8 +159,8 @@ public class LoginController implements Initializable {
                     }
                 } else if (userId < 0) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle(rb.getString("Error"));
-                    alert.setContentText(rb.getString("Incorrect"));
+                    //alert.setTitle(rb.getString("Error"));
+                    //alert.setContentText(rb.getString("Incorrect"));
                     alert.show();
                     outputFile.print("user: " + usernameInput + " failed login attempt at: " + Timestamp.valueOf(LocalDateTime.now()) + "\n");
                 }
@@ -214,16 +213,16 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             Locale locale = Locale.getDefault();
-            ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", locale);
+            //ResourceBundle rb = ResourceBundle.getBundle("resources/login", locale);
 
             ZoneId zone = ZoneId.systemDefault();
             SetTimeLabel.setText(zone.toString());
 
-            UserField.setPromptText(rb.getString("username"));
-            PassField.setPromptText(rb.getString("password"));
-            LoginButton.setText(rb.getString("Login"));
-            ExitButton.setText(rb.getString("Exit"));
-            TimeLabel.setText(rb.getString("Location"));
+            //UserField.setPromptText(rb.getString("username"));
+            //PassField.setPromptText(rb.getString("password"));
+            //LoginButton.setText(rb.getString("Login"));
+            //ExitButton.setText(rb.getString("Exit"));
+            //TimeLabel.setText(rb.getString("Location"));
 
         } catch (MissingResourceException e) {
             System.out.println("Resource file missing: " + e);
