@@ -204,22 +204,13 @@ public class AddCustomerController implements Initializable {
      */
     public void customerEditCountryDropDown(ActionEvent event) throws SQLException {
         try {
-            DBConnection.openConnection();
             String selectedCountry = countryBox.getSelectionModel().getSelectedItem();
             ObservableList<FirstLevelDivision> allFirstLevelDivisions = FirstLevelDivisionDB.getAllFirstLevelDivisions();
-
-            Map<String, ObservableList<String>> countryToDivisionsMap = allFirstLevelDivisions.stream()
-                    .collect(Collectors.groupingBy(
-                            FirstLevelDivision::getDivisionName,
-                            Collectors.collectingAndThen(
-                                    Collectors.mapping(FirstLevelDivision::getDivisionName, Collectors.toList()),
-                                    FXCollections::observableArrayList)
-                    ));
-
-            ObservableList<String> divisions = countryToDivisionsMap.getOrDefault(selectedCountry, FXCollections.observableArrayList());
-            divisionIDBox.setItems(divisions);
-        } catch (Exception e) {
-            e.printStackTrace();
+            ObservableList<String> firstLevelDivisionNames = FXCollections.observableArrayList();
+            allFirstLevelDivisions.stream().filter(division -> division.getDivisionName().equals(selectedCountry)).map(FirstLevelDivision::getDivisionName).forEach(firstLevelDivisionNames::add);
+            divisionIDBox.setItems(firstLevelDivisionNames);
+        } catch (NullPointerException e) {
+            // Do nothing
         }
     }
 
