@@ -3,18 +3,13 @@ package sample.controllers;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import sample.db.AppointmentDB;
 import sample.db.UserDB;
 import sample.misc.AccessMethod;
 import sample.models.Appointments;
-import sample.models.User;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,9 +29,7 @@ import java.util.ResourceBundle;
  *
  * @author Antonio Jenkins
  */
-
 public class LoginController implements Initializable {
-    /**The login main plane*/
     /**
      * Anchor pane for the login panel in the UI.
      */
@@ -98,21 +91,6 @@ public class LoginController implements Initializable {
     private Label SetTimeLabel;
 
     /**
-     * Parent object for the login UI.
-     */
-    private Parent parent;
-
-    /**
-     * Stage object for the login UI.
-     */
-    private Stage stage;
-
-    /**
-     * Scene object for the login UI.
-     */
-    private Scene scene;
-
-    /**
      * Event handler for the "Exit" button.
      * Terminates the Java Virtual Machine (JVM) with an exit status of 0,
      * indicating a successful termination, effectively closing the application
@@ -134,8 +112,6 @@ public class LoginController implements Initializable {
     @FXML
     void onLoginButton(ActionEvent event) throws IOException {
         try {
-            Locale locale = Locale.getDefault();
-            ResourceBundle resources = ResourceBundle.getBundle("resources/login", locale);
             String usernameInput = UserField.getText();
             String passwordInput = PassField.getText();
             int userId = UserDB.validateUser(usernameInput, passwordInput);
@@ -144,31 +120,63 @@ public class LoginController implements Initializable {
                  PrintWriter outputFile = new PrintWriter(fileWriter)) {
 
                 if (userId > 0) {
-                    AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
-                    outputFile.print("user: " + usernameInput + " successfully logged in at: " + Timestamp.valueOf(LocalDateTime.now()) + "\n");
-
-                    Appointments appointmentWithin15Min = findUpcomingAppointment();
-                    if (appointmentWithin15Min != null) {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment within 15 minutes: " + appointmentWithin15Min.getApmtId() + " and appointment start time of: " + appointmentWithin15Min.getApmtStart());
-                        Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("There is an appointment within 15 minutes");
-                    } else {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "No upcoming appointments.");
-                        Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("No upcoming appointments");
-                    }
+                    handleSuccessfulLogin(event, usernameInput, outputFile);
                 } else if (userId < 0) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle(resources.getString("error"));
-                    alert.setContentText(resources.getString("invalid"));
-                    alert.show();
-                    outputFile.print("user: " + usernameInput + " failed login attempt at: " + Timestamp.valueOf(LocalDateTime.now()) + "\n");
+                    handleFailedLogin(usernameInput, outputFile);
                 }
             }
         } catch (IOException | SQLException ioException) {
             ioException.printStackTrace();
         }
         onReset(event);
+    }
+
+/**
+ * Handles a successful login attempt.
+ *
+ * @param event        The ActionEvent representing the login button click event.
+ * @param usernameInput The input username.
+ * @param outputFile    The PrintWriter to write the login activity to the output file.
+ * @throws IOException if an error occurs during input/output operations.
+ */
+private void handleSuccessfulLogin(ActionEvent event, String usernameInput, PrintWriter outputFile) throws IOException, SQLException {
+    AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
+    outputFile.print("user: " + usernameInput + " successfully logged in at: " + Timestamp.valueOf(LocalDateTime.now()) + "\n");
+
+    Appointments appointmentWithin15Min = findUpcomingAppointment();
+    if (appointmentWithin15Min != null) {
+        showAppointmentAlert("Appointment within 15 minutes: " + appointmentWithin15Min.getApmtId() + " and appointment start time of: " + appointmentWithin15Min.getApmtStart());
+        System.out.println("There is an appointment within 15 minutes");
+    } else {
+        showAppointmentAlert("No upcoming appointments.");
+        System.out.println("No upcoming appointments");
+    }
+}
+
+    /**
+     * Handles a failed login attempt.
+     *
+     * @param usernameInput The input username.
+     * @param outputFile    The PrintWriter to write the login activity to the output file.
+     */
+    private void handleFailedLogin(String usernameInput, PrintWriter outputFile) {
+        Locale locale = Locale.getDefault();
+        ResourceBundle resources = ResourceBundle.getBundle("resources/login", locale);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(resources.getString("error"));
+        alert.setContentText(resources.getString("invalid"));
+        alert.show();
+        outputFile.print("user: " + usernameInput + " failed login attempt at: " + Timestamp.valueOf(LocalDateTime.now()) + "\n");
+    }
+
+    /**
+     * Displays an alert with the provided message.
+     *
+     * @param message The message to display in the alert.
+     */
+    private void showAppointmentAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message);
+        Optional<ButtonType> confirmation = alert.showAndWait();
     }
 
     /**
@@ -183,31 +191,42 @@ public class LoginController implements Initializable {
         LocalDateTime currentTimePlus15Min = LocalDateTime.now().plusMinutes(15);
 
         return getAllAppointments.stream()
-                .filter(appointment -> {
-                    LocalDateTime startTime = appointment.getApmtStart();
-                    return (startTime.isAfter(currentTimeMinus15Min) || startTime.isEqual(currentTimeMinus15Min)) && (startTime.isBefore(currentTimePlus15Min) || startTime.isEqual(currentTimePlus15Min));
-                })
+                .filter(appointment -> isWithin15Minutes(appointment, currentTimeMinus15Min, currentTimePlus15Min))
                 .findFirst()
                 .orElse(null);
     }
 
     /**
-     * Event handler for the "Reset" button.
-     * Clears the text fields for username and password inputs.
+     * Checks if the given appointment is within 15 minutes of the current time.
      *
-     * @param event The ActionEvent triggered by the "Reset" button click.
+     * @param appointment         The appointment to check.
+     * @param currentTimeMinus15Min The time 15 minutes before the current time.
+     * @param currentTimePlus15Min  The time 15 minutes after the current time.
+     * @return true if the appointment is within 15 minutes of the current time, false otherwise.
      */
-    @FXML
-    void onReset(ActionEvent event){
-        UserField.setText("");
-        PassField.setText("");
+    private boolean isWithin15Minutes(Appointments appointment, LocalDateTime currentTimeMinus15Min, LocalDateTime currentTimePlus15Min) {
+        LocalDateTime startTime = appointment.getApmtStart();
+        return (startTime.isAfter(currentTimeMinus15Min) || startTime.isEqual(currentTimeMinus15Min)) && (startTime.isBefore(currentTimePlus15Min) || startTime.isEqual(currentTimePlus15Min));
     }
+
+/**
+ * Event handler
+ * for the "Reset" button.
+ * Clears the text fields for username and password inputs.
+ *
+ * @param event The ActionEvent triggered by the "Reset" button click.
+ */
+@FXML
+void onReset(ActionEvent event) {
+    UserField.setText("");
+    PassField.setText("");
+}
 
     /**
      * Initializes the controller after its root element has been completely processed.
      * This method is called automatically by JavaFX when the FXML file is loaded.
      *
-     * @param url The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param url            The location used to resolve relative paths for the root object, or null if the location is not known.
      * @param resourceBundle The resource bundle used to localize the root object, or null if the root object was not localized.
      */
     @Override
