@@ -2,7 +2,7 @@
 
 ### Purpose of the Application
 
-The primary objective of this application is to offer a user-friendly, optimized GUI-based scheduling desktop application.
+The main goal of this application is to provide an easy-to-use, efficient, and visually appealing scheduling desktop app with a graphical user interface.
 
 ### Author Details
 
@@ -27,12 +27,11 @@ Cores: 4
 Kotlin: 211-1.4.32-release-IJ7628.19
 
 ### Executing the Program
-Upon launching the program, users will encounter a login screen, requiring a valid username and password that corresponds to information stored in a MySQL database. This program necessitates Java 11 and has not been assessed with other JVMs.
+When starting the program, users will be greeted with a login screen, where they need to enter a valid username and password that matches the information saved in a MySQL database. This software requires Java 17 and hasn't been tested with other Java Virtual Machines.
 
 ### Supplementary Report
-For the customized report, I opted to showcase the number of appointments per country. SQL was employed to perform all tasks, resulting in a query that merges three tables and outputs two columns (Country and count). Although the query is intricate, it simplified the Java side, allowing the data to be easily displayed in a table view format.
+In the tailored report, I decided to highlight the total number of appointments for every country. I used SQL to handle all the tasks, which led to a query that brings together three tables and displays two columns: "Country" and "Count". Even though the query is a bit complicated, it made things easier on the Java side, allowing the data to be neatly displayed in a table format.
 
 
 #### JavaFX: javafx-sdk-17.0.1
 #### MySQL Connector: mysql-connector-java-8.0.25
-
