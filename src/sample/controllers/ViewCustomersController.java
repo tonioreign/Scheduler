@@ -209,7 +209,13 @@ public class ViewCustomersController implements Initializable {
      */
     @FXML
     void onMenu(ActionEvent event) throws IOException {
-        AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Are you sure you want to go back to the main menu?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
+        }
     }
 
     /**

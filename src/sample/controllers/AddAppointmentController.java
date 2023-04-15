@@ -116,7 +116,14 @@ public class AddAppointmentController implements Initializable {
      */
     @FXML
     void onCancel(ActionEvent event) throws IOException {
-        AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Cancel");
+        alert.setHeaderText("Cancel");
+        alert.setContentText("Are you sure you want to cancel?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
+        }
     }
 
     /**

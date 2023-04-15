@@ -23,10 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -117,7 +114,14 @@ public class AddCustomerController implements Initializable {
      */
     @FXML
     void onCancel(ActionEvent event) throws IOException {
-        AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Cancel");
+        alert.setHeaderText("Cancel");
+        alert.setContentText("Are you sure you want to cancel?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
+        }
     }
 
     /**

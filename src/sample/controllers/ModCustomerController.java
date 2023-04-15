@@ -111,7 +111,14 @@ public class ModCustomerController implements Initializable {
      */
     @FXML
     void onCancel(ActionEvent event) throws IOException {
-        AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Cancel");
+        alert.setHeaderText("Are you sure you want to cancel?");
+        alert.setContentText("Any unsaved changes will be lost.");
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.OK) {
+            AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
+        }
     }
 
     /**
