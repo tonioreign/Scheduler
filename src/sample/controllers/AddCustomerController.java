@@ -25,7 +25,10 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.ResourceBundle;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class AddCustomerController implements Initializable {
 
@@ -118,61 +121,78 @@ public class AddCustomerController implements Initializable {
     }
 
     /**
-     * Event handler for the save button in a JavaFX application.
-     * This method is responsible for saving customer data to the database when the save button is clicked.
+     * Handles the save action event, inserts customer data into the database, and navigates to the "Customers" screen.
+     * This method first checks if any of the required fields are empty, and if not, it generates a random customer ID,
+     * retrieves the first-level division ID, inserts the customer data into the database, and then navigates to the
+     * "Customers" screen.
      *
-     * @param event The ActionEvent object that triggered the event.
-     *              This is typically provided by the JavaFX framework automatically
-     *              when the event handler is invoked.
-     * @throws IOException  If an I/O exception occurs during the screen change process.
-     *                      This exception is thrown by the AccessMethod.changeScreen() method,
-     *                      which is responsible for changing the screen or scene in the JavaFX application.
-     * @throws SQLException If a SQL exception occurs during the database operation.
-     *                      This exception is thrown by the database operations performed in this method,
-     *                      such as executing SQL statements or accessing database connections.
+     * @param event The action event that triggers this method.
      */
     @FXML
-    void onSave(ActionEvent event) throws IOException, SQLException {
+    void onSave(ActionEvent event) {
+        if (!areFieldsEmpty()) {
+            try {
+                Integer newCustomerID = generateRandomCustomerID();
+                int firstLevelDivisionID = getFirstLevelDivisionID();
 
-        if (!customerNameField.getText().isEmpty() || !addressField.getText().isEmpty() || !zipField.getText().isEmpty() || !phoneNumberField.getText().isEmpty() || !countryBox.getValue().isEmpty() || !divisionIDBox.getValue().isEmpty()) {
-            // Generate random ID for new customer
-            Integer newCustomerID = (int) (Math.random() * 100);
-
-            // Get first level division ID
-            int firstLevelDivisionID = 0;
-            Map<String, FirstLevelDivision> divisionMap = new HashMap<>();
-            for (FirstLevelDivision firstLevelDivision : FirstLevelDivisionDB.getAllFirstLevelDivisions()) {
-                divisionMap.put(firstLevelDivision.getDivisionName(), firstLevelDivision);
-            }
-            // Retrieve the FirstLevelDivision object using selected division name
-            String selectedDivisionName = divisionIDBox.getSelectionModel().getSelectedItem();
-            if (divisionMap.containsKey(selectedDivisionName)) {
-                FirstLevelDivision selectedDivision = divisionMap.get(selectedDivisionName);
-                firstLevelDivisionID = selectedDivision.getDivisionID();
-            }
-
-            // Insert data into database
-            String insertStatement = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
-            try (Connection conn = DBConnection.openConnection();
-                 PreparedStatement ps = conn.prepareStatement(insertStatement)) {
-                ps.setInt(1, newCustomerID);
-                ps.setString(2, customerNameField.getText());
-                ps.setString(3, addressField.getText());
-                ps.setString(4, zipField.getText());
-                ps.setString(5, phoneNumberField.getText());
-                ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setString(7, "admin");
-                ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setString(9, "admin");
-                ps.setInt(10, firstLevelDivisionID);
-                ps.executeUpdate();
-
+                insertCustomerData(newCustomerID, firstLevelDivisionID);
                 AccessMethod.changeScreen(event, "ViewCustomers.fxml", "Customers");
-            } catch (SQLException e) {
-                // Handle any database errors
+            } catch (IOException | SQLException e) {
+                // Handle any errors
                 e.printStackTrace();
-                // Add appropriate error handling or logging as needed
             }
+        }
+    }
+
+    /**
+     * Checks if any of the required fields (customer name, address, zip, phone number, country, and division) are empty.
+     *
+     * @return true if any of the required fields are empty, otherwise false.
+     */
+    private boolean areFieldsEmpty() {
+        return customerNameField.getText().isEmpty() || addressField.getText().isEmpty() || zipField.getText().isEmpty() || phoneNumberField.getText().isEmpty() || countryBox.getValue().isEmpty() || divisionIDBox.getValue().isEmpty();
+    }
+
+    /**
+     * Generates a random customer ID between 0 and 99.
+     *
+     * @return A random integer as the customer ID.
+     */
+    private Integer generateRandomCustomerID() {
+        return (int) (Math.random() * 100);
+    }
+
+    /**
+     * Retrieve the ID of the selected first-level division.
+     * @return The ID of the selected first-level division.
+     * @throws SQLException If there's an issue with the database.
+     * @throws NoSuchElementException If the selected division is not found.
+     */
+    private int getFirstLevelDivisionID() throws SQLException, NoSuchElementException {
+        Map<String, FirstLevelDivision> divisionMap = FirstLevelDivisionDB.getAllFirstLevelDivisions().stream().collect(Collectors.toMap(FirstLevelDivision::getDivisionName, Function.identity()));
+        String selectedDivisionName = divisionIDBox.getSelectionModel().getSelectedItem();
+        FirstLevelDivision selectedDivision = divisionMap.get(selectedDivisionName);
+        if (selectedDivision == null) {
+            throw new NoSuchElementException("Selected division not found in the divisionMap.");
+        }
+        return selectedDivision.getDivisionID();
+    }
+
+    private void insertCustomerData(Integer newCustomerID, int firstLevelDivisionID) throws SQLException {
+        String insertStatement = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        try (Connection conn = DBConnection.openConnection();
+             PreparedStatement ps = conn.prepareStatement(insertStatement)) {
+            ps.setInt(1, newCustomerID);
+            ps.setString(2, customerNameField.getText());
+            ps.setString(3, addressField.getText());
+            ps.setString(4, zipField.getText());
+            ps.setString(5, phoneNumberField.getText());
+            ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setString(7, "admin");
+            ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setString(9, "admin");
+            ps.setInt(10, firstLevelDivisionID);
+            ps.executeUpdate();
         }
     }
 
@@ -185,35 +205,19 @@ public class AddCustomerController implements Initializable {
     public void customerEditCountryDropDown(ActionEvent event) throws SQLException {
         try {
             DBConnection.openConnection();
-
             String selectedCountry = countryBox.getSelectionModel().getSelectedItem();
+            ObservableList<FirstLevelDivision> allFirstLevelDivisions = FirstLevelDivisionDB.getAllFirstLevelDivisions();
 
-            ObservableList<FirstLevelDivision> getAllFirstLevelDivisions = FirstLevelDivisionDB.getAllFirstLevelDivisions();
+            Map<String, ObservableList<String>> countryToDivisionsMap = allFirstLevelDivisions.stream()
+                    .collect(Collectors.groupingBy(
+                            FirstLevelDivision::getDivisionName,
+                            Collectors.collectingAndThen(
+                                    Collectors.mapping(FirstLevelDivision::getDivisionName, Collectors.toList()),
+                                    FXCollections::observableArrayList)
+                    ));
 
-            ObservableList<String> flDivisionUS = FXCollections.observableArrayList();
-            ObservableList<String> flDivisionUK = FXCollections.observableArrayList();
-            ObservableList<String> flDivisionCanada = FXCollections.observableArrayList();
-
-            getAllFirstLevelDivisions.forEach(firstLevelDivision -> {
-                if (firstLevelDivision.getCountry_ID() == 1) {
-                    flDivisionUS.add(firstLevelDivision.getDivisionName());
-                } else if (firstLevelDivision.getCountry_ID() == 2) {
-                    flDivisionUK.add(firstLevelDivision.getDivisionName());
-                } else if (firstLevelDivision.getCountry_ID() == 3) {
-                    flDivisionCanada.add(firstLevelDivision.getDivisionName());
-                }
-            });
-
-            //needs a little revision
-            if (selectedCountry.equals("U.S")) {
-                divisionIDBox.setItems(flDivisionUS);
-            }
-            else if (selectedCountry.equals("UK")) {
-                divisionIDBox.setItems(flDivisionUK);
-            }
-            else if (selectedCountry.equals("Canada")) {
-                divisionIDBox.setItems(flDivisionCanada);
-            }
+            ObservableList<String> divisions = countryToDivisionsMap.getOrDefault(selectedCountry, FXCollections.observableArrayList());
+            divisionIDBox.setItems(divisions);
         } catch (Exception e) {
             e.printStackTrace();
         }
