@@ -204,13 +204,31 @@ public class AddCustomerController implements Initializable {
      */
     public void customerEditCountryDropDown(ActionEvent event) throws SQLException {
         try {
+            DBConnection.openConnection();
+
             String selectedCountry = countryBox.getSelectionModel().getSelectedItem();
-            ObservableList<FirstLevelDivision> allFirstLevelDivisions = FirstLevelDivisionDB.getAllFirstLevelDivisions();
-            ObservableList<String> firstLevelDivisionNames = FXCollections.observableArrayList();
-            allFirstLevelDivisions.stream().filter(division -> division.getDivisionName().equals(selectedCountry)).map(FirstLevelDivision::getDivisionName).forEach(firstLevelDivisionNames::add);
-            divisionIDBox.setItems(firstLevelDivisionNames);
-        } catch (NullPointerException e) {
-            // Do nothing
+
+            ObservableList<FirstLevelDivision> getAllFirstLevelDivisions = FirstLevelDivisionDB.getAllFirstLevelDivisions();
+
+            Map<Integer, ObservableList<String>> countryIdToDivisionsMap = new HashMap<>();
+
+            getAllFirstLevelDivisions.forEach(firstLevelDivision -> {
+                int countryId = firstLevelDivision.getCountry_ID();
+                countryIdToDivisionsMap.putIfAbsent(countryId, FXCollections.observableArrayList());
+                countryIdToDivisionsMap.get(countryId).add(firstLevelDivision.getDivisionName());
+            });
+
+            Map<String, Integer> countryNameToIdMap = new HashMap<>();
+            countryNameToIdMap.put("U.S", 1);
+            countryNameToIdMap.put("UK", 2);
+            countryNameToIdMap.put("Canada", 3);
+
+            int selectedCountryId = countryNameToIdMap.getOrDefault(selectedCountry, -1);
+            ObservableList<String> divisions = countryIdToDivisionsMap.getOrDefault(selectedCountryId, FXCollections.observableArrayList());
+            divisionIDBox.setItems(divisions);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
