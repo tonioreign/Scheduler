@@ -135,7 +135,7 @@ public class AddAppointmentController implements Initializable {
      */
     @FXML
     void onSave(ActionEvent event) throws IOException {
-        Integer newAppointmentID = new Random().nextInt(100);
+        Integer newAppointmentID = new Random().nextInt(10000);
         if (titleField.getText().isBlank() || descField.getText().isBlank() || locationField.getText().isBlank() ||
                 typeField.getText().isBlank() || startDatePicker.getValue() == null || startTimeBox.getSelectionModel().isEmpty() ||
                 endDatePicker.getValue() == null || endTimeBox.getSelectionModel().isEmpty() || contactBox.getSelectionModel().isEmpty() ||

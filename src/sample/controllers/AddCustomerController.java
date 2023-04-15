@@ -158,12 +158,12 @@ public class AddCustomerController implements Initializable {
     }
 
     /**
-     * Generates a random customer ID between 0 and 99.
+     * Generates a random customer ID between 0 and 9999.
      *
      * @return A random integer as the customer ID.
      */
     private Integer generateRandomCustomerID() {
-        return (int) (Math.random() * 100);
+        return (int) (Math.random() * 10000);
     }
 
     /**
