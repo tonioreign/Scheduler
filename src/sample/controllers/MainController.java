@@ -206,7 +206,13 @@ public class MainController implements Initializable {
      */
     @FXML
     void onLogOut(ActionEvent event) throws IOException {
-        AccessMethod.changeScreen(event, "login-form.fxml", "Scheduling Application");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Log Out");
+        alert.setHeaderText("Are you sure you want to log out?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            AccessMethod.changeScreen(event, "login-form.fxml", "Login");
+        }
     }
 
     /**

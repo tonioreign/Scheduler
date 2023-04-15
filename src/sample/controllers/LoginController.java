@@ -134,62 +134,60 @@ public class LoginController implements Initializable {
     @FXML
     void onLoginButton(ActionEvent event) throws IOException {
         try {
-            // Definitions for +/- 15 minute appointment check
-            ObservableList<Appointments> getAllAppointments = AppointmentDB.getAllAppointments();
-            LocalDateTime currentTimeMinus15Min = LocalDateTime.now().minusMinutes(15);
-            LocalDateTime currentTimePlus15Min = LocalDateTime.now().plusMinutes(15);
-            LocalDateTime startTime;
-            int getAppointmentID = 0;
-            LocalDateTime displayTime = null;
-            boolean appointmentWithin15Min = false;
-
-            //ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", Locale.getDefault());
+            ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", Locale.getDefault());
 
             String usernameInput = UserField.getText();
             String passwordInput = PassField.getText();
             int userId = UserDB.validateUser(usernameInput, passwordInput);
 
-            FileWriter fileWriter = new FileWriter("login_activity.txt", true);
-            PrintWriter outputFile = new PrintWriter(fileWriter);
+            try (FileWriter fileWriter = new FileWriter("login_activity.txt", true);
+                 PrintWriter outputFile = new PrintWriter(fileWriter)) {
 
-            if (userId > 0) {
-                AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
+                if (userId > 0) {
+                    AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
+                    outputFile.print("user: " + usernameInput + " successfully logged in at: " + Timestamp.valueOf(LocalDateTime.now()) + "\n");
 
-                // Log the successful login
-                outputFile.print("user: " + usernameInput + " successfully logged in at: " + Timestamp.valueOf(LocalDateTime.now()) + "\n");
-
-                // Check for upcoming appointments if user is validated
-                for (Appointments appointment : getAllAppointments) {
-                    startTime = appointment.getApmtStart();
-                    if ((startTime.isAfter(currentTimeMinus15Min) || startTime.isEqual(currentTimeMinus15Min)) && (startTime.isBefore(currentTimePlus15Min) || (startTime.isEqual(currentTimePlus15Min)))) {
-                        getAppointmentID = appointment.getApmtId();
-                        displayTime = startTime;
-                        appointmentWithin15Min = true;
+                    Appointments appointmentWithin15Min = findUpcomingAppointment();
+                    if (appointmentWithin15Min != null) {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment within 15 minutes: " + appointmentWithin15Min.getApmtId() + " and appointment start time of: " + appointmentWithin15Min.getApmtStart());
+                        Optional<ButtonType> confirmation = alert.showAndWait();
+                        System.out.println("There is an appointment within 15 minutes");
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "No upcoming appointments.");
+                        Optional<ButtonType> confirmation = alert.showAndWait();
+                        System.out.println("No upcoming appointments");
                     }
+                } else if (userId < 0) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle(rb.getString("Error"));
+                    alert.setContentText(rb.getString("Incorrect"));
+                    alert.show();
+                    outputFile.print("user: " + usernameInput + " failed login attempt at: " + Timestamp.valueOf(LocalDateTime.now()) + "\n");
                 }
-                if (appointmentWithin15Min) {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment within 15 minutes: " + getAppointmentID + " and appointment start time of: " + displayTime);
-                    Optional<ButtonType> confirmation = alert.showAndWait();
-                    System.out.println("There is an appointment within 15 minutes");
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "No upcoming appointments.");
-                    Optional<ButtonType> confirmation = alert.showAndWait();
-                    System.out.println("No upcoming appointments");
-                }
-            } else if (userId < 0) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                //alert.setTitle(rb.getString("Error"));
-                //alert.setContentText(rb.getString("Incorrect"));
-                alert.show();
-
-                // Log the failed login attempt
-                outputFile.print("user: " + usernameInput + " failed login attempt at: " + Timestamp.valueOf(LocalDateTime.now()) + "\n");
-
             }
-            outputFile.close();
         } catch (IOException | SQLException ioException) {
             ioException.printStackTrace();
         }
+    }
+
+    /**
+     * Retrieves the first appointment within 15 minutes from the current time.
+     *
+     * @return An Appointments object representing the first appointment within 15 minutes if found; otherwise, null.
+     * @throws SQLException if there is an error while fetching appointments from the database.
+     */
+    private Appointments findUpcomingAppointment() throws SQLException {
+        ObservableList<Appointments> getAllAppointments = AppointmentDB.getAllAppointments();
+        LocalDateTime currentTimeMinus15Min = LocalDateTime.now().minusMinutes(15);
+        LocalDateTime currentTimePlus15Min = LocalDateTime.now().plusMinutes(15);
+
+        return getAllAppointments.stream()
+                .filter(appointment -> {
+                    LocalDateTime startTime = appointment.getApmtStart();
+                    return (startTime.isAfter(currentTimeMinus15Min) || startTime.isEqual(currentTimeMinus15Min)) && (startTime.isBefore(currentTimePlus15Min) || startTime.isEqual(currentTimePlus15Min));
+                })
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -215,17 +213,16 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             Locale locale = Locale.getDefault();
-            Locale.setDefault(locale);
+            ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", locale);
 
             ZoneId zone = ZoneId.systemDefault();
-            SetTimeLabel.setText(String.valueOf(zone));
+            SetTimeLabel.setText(zone.toString());
 
-            //ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", Locale.getDefault());
-            //UserField.setText(rb.getString("username"));
-            //PassField.setText(rb.getString("password"));
-            //LoginButton.setText(rb.getString("Login"));
-            //ExitButton.setText(rb.getString("Exit"));
-            //TimeLabel.setText(rb.getString("Location"));
+            UserField.setPromptText(rb.getString("username"));
+            PassField.setPromptText(rb.getString("password"));
+            LoginButton.setText(rb.getString("Login"));
+            ExitButton.setText(rb.getString("Exit"));
+            TimeLabel.setText(rb.getString("Location"));
 
         } catch (MissingResourceException e) {
             System.out.println("Resource file missing: " + e);

@@ -210,22 +210,31 @@ public class AddCustomerController implements Initializable {
 
             ObservableList<FirstLevelDivision> getAllFirstLevelDivisions = FirstLevelDivisionDB.getAllFirstLevelDivisions();
 
+            // Create a map to store the division names for each country ID
             Map<Integer, ObservableList<String>> countryIdToDivisionsMap = new HashMap<>();
 
+            // Populate the countryIdToDivisionsMap with the division names from getAllFirstLevelDivisions
             getAllFirstLevelDivisions.forEach(firstLevelDivision -> {
                 int countryId = firstLevelDivision.getCountry_ID();
+                // If the countryId is not present in the map, initialize an empty observable list
                 countryIdToDivisionsMap.putIfAbsent(countryId, FXCollections.observableArrayList());
+                // Add the division name to the appropriate country's list
                 countryIdToDivisionsMap.get(countryId).add(firstLevelDivision.getDivisionName());
             });
 
+            // Create a map to associate country names with their corresponding IDs
             Map<String, Integer> countryNameToIdMap = new HashMap<>();
             countryNameToIdMap.put("U.S", 1);
             countryNameToIdMap.put("UK", 2);
             countryNameToIdMap.put("Canada", 3);
 
+            // Retrieve the selected country ID using the country name
             int selectedCountryId = countryNameToIdMap.getOrDefault(selectedCountry, -1);
+            // Retrieve the list of divisions for the selected country or an empty list if the country ID is not found
             ObservableList<String> divisions = countryIdToDivisionsMap.getOrDefault(selectedCountryId, FXCollections.observableArrayList());
+            // Set the items for the divisionIDBox based on the selected country
             divisionIDBox.setItems(divisions);
+
 
         } catch (Exception e) {
             e.printStackTrace();
