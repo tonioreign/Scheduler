@@ -135,7 +135,7 @@ public class AddAppointmentController implements Initializable {
      */
     @FXML
     void onSave(ActionEvent event) throws IOException {
-        Integer newAppointmentID = new Random().nextInt(10000);
+        Integer newAppointmentID = new Random().nextInt(100);
         if (titleField.getText().isBlank() || descField.getText().isBlank() || locationField.getText().isBlank() ||
                 typeField.getText().isBlank() || startDatePicker.getValue() == null || startTimeBox.getSelectionModel().isEmpty() ||
                 endDatePicker.getValue() == null || endTimeBox.getSelectionModel().isEmpty() || contactBox.getSelectionModel().isEmpty() ||
@@ -166,15 +166,12 @@ public class AddAppointmentController implements Initializable {
             ZonedDateTime endZonedDateTime = endDateTime.atZone(zoneId);
             ZonedDateTime startEST = startZonedDateTime.withZoneSameInstant(ZoneId.of("America/New_York"));
             ZonedDateTime endEST = endZonedDateTime.withZoneSameInstant(ZoneId.of("America/New_York"));
-            String startESTString = startEST.format(DateTimeFormatter.ofPattern("HH:mm"));
-            String endESTString = endEST.format(DateTimeFormatter.ofPattern("HH:mm"));
 
             if (startEST.getDayOfWeek() == DayOfWeek.SATURDAY || startEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments cannot be scheduled on weekends.");
                 alert.showAndWait();
-            } else if (startESTString.compareTo("08:00") < 0 || startESTString.compareTo("22:00") > 0 ||
-                    endESTString.compareTo("08:00") < 0 || endESTString.compareTo("22:00") > 0) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8:00 a.m. and 10:00 p.m. EST.");
+            }else if (endEST.getDayOfWeek() == DayOfWeek.SATURDAY || endEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments cannot be scheduled on weekends.");
                 alert.showAndWait();
             } else if (startDateTime.isAfter(endDateTime)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be before end date/time.");
@@ -189,27 +186,23 @@ public class AddAppointmentController implements Initializable {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "This customer already has an appointment scheduled during this time.");
                 alert.showAndWait();
             } else {
-                ZonedDateTime startZDT = startDateTime.atZone(zoneId);
-                ZonedDateTime endZDT = endDateTime.atZone(zoneId);
-                ZonedDateTime utcStartZDT = startZDT.withZoneSameInstant(ZoneId.of("UTC"));
-                ZonedDateTime utcEndZDT = endZDT.withZoneSameInstant(ZoneId.of("UTC"));
+                ZonedDateTime utcStartZDT = startZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+                ZonedDateTime utcEndZDT = endZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
                 LocalDateTime utcStartDateTime = utcStartZDT.toLocalDateTime();
                 LocalDateTime utcEndDateTime = utcEndZDT.toLocalDateTime();
                 Timestamp startTimestamp = Timestamp.valueOf(utcStartDateTime);
                 Timestamp endTimestamp = Timestamp.valueOf(utcEndDateTime);
 
-                Connection connection = DBConnection.openConnection();
-                try {
+                try (Connection conn = DBConnection.openConnection()) {
                     String sql = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, User_ID, Customer_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                    Connection conn = DBConnection.openConnection();
                     PreparedStatement ps = conn.prepareStatement(sql);
                     ps.setInt(1, newAppointmentID);
                     ps.setString(2, title);
                     ps.setString(3, description);
                     ps.setString(4, location);
                     ps.setString(5, type);
-                    ps.setTimestamp(6, Timestamp.valueOf(startTimestamp.toLocalDateTime()));
-                    ps.setTimestamp(7, Timestamp.valueOf(endTimestamp.toLocalDateTime()));
+                    ps.setTimestamp(6, startTimestamp);
+                    ps.setTimestamp(7, endTimestamp);
                     ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                     ps.setString(9, "admin");
                     ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
@@ -219,7 +212,7 @@ public class AddAppointmentController implements Initializable {
                     ps.setInt(14, contactID);
                     ps.execute();
                     ps.close();
-                    connection.close();
+
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Appointment successfully added.");
                     alert.showAndWait();
                     AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
@@ -230,13 +223,13 @@ public class AddAppointmentController implements Initializable {
         }
     }
 
-    /**
-     * Overrides the initialize method from the Initializable interface to initialize the UI elements and data
-     * when the associated FXML file is loaded.
-     *
-     * @param url            The URL location of the FXML file.
-     * @param resourceBundle The ResourceBundle associated with the FXML file.
-     */
+        /**
+         * Overrides the initialize method from the Initializable interface to initialize the UI elements and data
+         * when the associated FXML file is loaded.
+         *
+         * @param url            The URL location of the FXML file.
+         * @param resourceBundle The ResourceBundle associated with the FXML file.
+         */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<Contacts> contactsList = FXCollections.observableArrayList();
