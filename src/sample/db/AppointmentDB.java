@@ -60,4 +60,21 @@ public abstract class AppointmentDB {
             return result;
         }
     }
+
+    public static boolean checkForAppointmentOverlap(LocalDateTime startDateTime, LocalDateTime endDateTime, int userID) {
+        String sql = "SELECT * FROM appointments WHERE (Start BETWEEN ? AND ?) OR (End BETWEEN ? AND ?) AND User_ID = ?";
+
+        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
+            ps.setTimestamp(1, java.sql.Timestamp.valueOf(startDateTime));
+            ps.setTimestamp(2, java.sql.Timestamp.valueOf(endDateTime));
+            ps.setTimestamp(3, java.sql.Timestamp.valueOf(startDateTime));
+            ps.setTimestamp(4, java.sql.Timestamp.valueOf(endDateTime));
+            ps.setInt(5, userID);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

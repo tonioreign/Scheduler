@@ -25,9 +25,12 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static sample.utils.TimeZoneUtil.convertTimeDateUTC;
 
@@ -154,6 +157,15 @@ public class AddAppointmentController implements Initializable {
             if (startDateTime.isAfter(endDateTime)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be before end date/time.");
                 alert.showAndWait();
+            } else if (startDateTime.isBefore(LocalDateTime.now())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be in the future.");
+                alert.showAndWait();
+            } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, userID)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "You already have an appointment scheduled during this time.");
+                alert.showAndWait();
+            } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, customerID)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "This customer already has an appointment scheduled during this time.");
+                alert.showAndWait();
             } else {
                 ZoneId zoneId = ZoneId.systemDefault();
                 ZonedDateTime startZDT = startDateTime.atZone(zoneId);
@@ -221,8 +233,8 @@ public class AddAppointmentController implements Initializable {
         ObservableList<Integer> allCustomerIDs = FXCollections.observableArrayList();
         ObservableList<Integer> allUserIDs = FXCollections.observableArrayList();
 
-        // lambda #2
-        contactsList.forEach(contacts -> allContactIDs.add(contacts.getContactID()));
+        // lambda #1
+        contactsList.forEach(contact -> allContactIDs.add(contact.getContactID()));
         customerIDList.forEach(customer -> allCustomerIDs.add(customer.getCustomerID()));
         userIDsList.forEach(user -> allUserIDs.add(user.getUserId()));
 
@@ -230,13 +242,12 @@ public class AddAppointmentController implements Initializable {
         LocalTime firstAppointment = LocalTime.MIN.plusHours(8);
         LocalTime lastAppointment = LocalTime.MAX.minusHours(1).minusMinutes(45);
 
-        //if statement fixed issue with infinite loop
-        if (!firstAppointment.equals(0) || !lastAppointment.equals(0)) {
-            while (firstAppointment.isBefore(lastAppointment)) {
-                appointmentTimes.add(String.valueOf(firstAppointment));
-                firstAppointment = firstAppointment.plusMinutes(15);
-            }
+        // generates a list of appointment times in 15 minutes intervals between firstAppointment and lastAppointment
+        while (firstAppointment.isBefore(lastAppointment)) {
+            appointmentTimes.add(firstAppointment.toString());
+            firstAppointment = firstAppointment.plusMinutes(15);
         }
+
         startTimeBox.setItems(appointmentTimes);
         endTimeBox.setItems(appointmentTimes);
         contactBox.setItems(allContactIDs);
