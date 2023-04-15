@@ -73,6 +73,12 @@ public class LoginController implements Initializable {
     private Button LoginButton;
 
     /**
+     * Button for initiating the reset operation on username and password field.
+     */
+    @FXML
+    private Button ResetButton;
+
+    /**
      * Button for exiting the login screen.
      */
     @FXML
@@ -237,11 +243,13 @@ void onReset(ActionEvent event) {
             ZoneId zone = ZoneId.systemDefault();
             SetTimeLabel.setText(zone.toString());
 
+            LoginLabel.setText(resources.getString("header"));
             UserLabel.setText(resources.getString("username"));
             PassLabel.setText(resources.getString("password"));
             LoginButton.setText(resources.getString("login"));
             ExitButton.setText(resources.getString("exit"));
             TimeLabel.setText(resources.getString("location"));
+            ResetButton.setText(resources.getString("reset"));
 
         } catch (MissingResourceException e) {
             System.out.println("Resource file missing: " + e);
