@@ -202,7 +202,7 @@ public class AddCustomerController implements Initializable {
 
     /**
      * Event handler for handling changes in the selection of the country dropdown in a customer edit form.
-     *
+     * Optimized to only query the database once for all first-level divisions.
      * @param event The ActionEvent that triggered the event.
      * @throws SQLException If there is an error accessing the database.
      */
@@ -248,6 +248,7 @@ public class AddCustomerController implements Initializable {
     /**
      * Method called during initialization of the controller, typically used to initialize the UI components
      * and populate data. This method is usually invoked automatically by the JavaFX framework.
+     * #2 - Lambda expression used to populate the countryNames list
      *
      * @param url The URL location of the FXML file.
      * @param resourceBundle The ResourceBundle used to localize the UI components.
@@ -262,6 +263,7 @@ public class AddCustomerController implements Initializable {
             ObservableList<FirstLevelDivision> allFirstLevelDivisions = FirstLevelDivisionDB.getAllFirstLevelDivisions();
             ObservableList<String> firstLevelDivisionAllNames = FXCollections.observableArrayList();
 
+            // #2 - Lambda expression used to populate the countryNames list
             allCountries.stream().map(Country::getCountryName).forEach(countryNames::add);
             countryBox.setItems(countryNames);
             allFirstLevelDivisions.forEach(firstLevelDivision -> firstLevelDivisionAllNames.add(firstLevelDivision.getDivisionName()));

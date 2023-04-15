@@ -313,17 +313,15 @@ public class MainController implements Initializable {
             ObservableList<Appointments> allAppointmentsList = AppointmentDB.getAllAppointments();
             ObservableList<Appointments> appointmentsMonth = FXCollections.observableArrayList();
 
-            LocalDateTime currentMonthStart = LocalDateTime.now().minusMonths(1);
-            LocalDateTime currentMonthEnd = LocalDateTime.now().plusMonths(1);
+            LocalDateTime monthStart = LocalDateTime.now().minusMonths(1);
+            LocalDateTime monthEnd = LocalDateTime.now();
 
-            if (allAppointmentsList != null)
-
-                allAppointmentsList.forEach(appointment -> {
-                    if (appointment.getApmtEnd().isAfter(currentMonthStart) && appointment.getApmtEnd().isBefore(currentMonthEnd)) {
-                        appointmentsMonth.add(appointment);
-                    }
-                    apmtTableView.setItems(appointmentsMonth);
-                });
+            for (Appointments appointment : allAppointmentsList) {
+                if (appointment.getApmtStart().isAfter(monthStart) && appointment.getApmtStart().isBefore(monthEnd)) {
+                    appointmentsMonth.add(appointment);
+                }
+            }
+            apmtTableView.setItems(appointmentsMonth);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -340,29 +338,32 @@ public class MainController implements Initializable {
      */
     @FXML
     void appointmentWeekSelected(ActionEvent event) throws SQLException {
-        byMonthRadio.setSelected(false);
-        viewAllRadio.setSelected(false);
         try {
+            byMonthRadio.setSelected(false);
+            viewAllRadio.setSelected(false);
             ObservableList<Appointments> allAppointmentsList = AppointmentDB.getAllAppointments();
             ObservableList<Appointments> appointmentsWeek = FXCollections.observableArrayList();
 
             LocalDateTime weekStart = LocalDateTime.now().minusWeeks(1);
-            LocalDateTime weekEnd = LocalDateTime.now().plusWeeks(1);
+            LocalDateTime weekEnd = LocalDateTime.now();
 
-            if (allAppointmentsList != null)
-                //IDE converted forEach
-                allAppointmentsList.forEach(appointment -> {
-                    if (appointment.getApmtEnd().isAfter(weekStart) && appointment.getApmtEnd().isBefore(weekEnd)) {
-                        appointmentsWeek.add(appointment);
-                    }
-                    apmtTableView.setItems(appointmentsWeek);
-                });
-            else System.out.println("Something went wrong");
+            for (Appointments appointment : allAppointmentsList) {
+                if (appointment.getApmtStart().isAfter(weekStart) && appointment.getApmtStart().isBefore(weekEnd)) {
+                    appointmentsWeek.add(appointment);
+                }
+            }
+            apmtTableView.setItems(appointmentsWeek);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Converts a LocalDateTime object from UTC to the local time zone.
+     *
+     * @param utcDateTime The LocalDateTime object to convert from UTC to the local time zone.
+     * @return The converted LocalDateTime object.
+     */
     public LocalDateTime convertUTCToLocal(LocalDateTime utcDateTime) {
         ZonedDateTime utcZonedDateTime = utcDateTime.atZone(ZoneId.of("UTC"));
         ZonedDateTime localZonedDateTime = utcZonedDateTime.withZoneSameInstant(ZoneId.systemDefault());
@@ -389,7 +390,7 @@ public class MainController implements Initializable {
         try {
             ObservableList<Appointments> allAppointments = AppointmentDB.getAllAppointments();
 
-            // Convert appointment start and end times to the user's local time
+
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
             for (Appointments appointment : allAppointments) {

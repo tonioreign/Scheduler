@@ -236,6 +236,7 @@ public class ViewCustomersController implements Initializable {
     /**
      * Initializes the controller for the "Add Customer" screen.
      * Retrieves data from the database to populate the customer table view and other UI components.
+     * lambda #4 - Use of a lambda expression to populate the country combo box
      *
      * @param url The location used to resolve relative paths for the root object, or null if the location is not known.
      * @param resourceBundle The resource bundle used to localize the root object, or null if the root object was not localized.
@@ -244,7 +245,6 @@ public class ViewCustomersController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             Connection connection = DBConnection.openConnection();
-
 
             ObservableList<Country> allCountries = CountryDB.getCountries();
             ObservableList<String> countryNames = FXCollections.observableArrayList();
@@ -259,7 +259,7 @@ public class ViewCustomersController implements Initializable {
             customerPhoneCol.setCellValueFactory(new PropertyValueFactory<>("customerPhone"));
             customerDivisionIDCol.setCellValueFactory(new PropertyValueFactory<>("divisionName"));
 
-            //IDE converted to forEach
+            // lambda #4 - Use of a lambda expression to populate the country combo box
             allCountries.stream().map(Country::getCountryName).forEach(countryNames::add);
 
             // lambda #1

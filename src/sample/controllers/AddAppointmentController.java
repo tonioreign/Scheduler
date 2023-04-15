@@ -225,7 +225,7 @@ public class AddAppointmentController implements Initializable {
     /**
      * Overrides the initialize method from the Initializable interface to initialize the UI elements and data
      * when the associated FXML file is loaded.
-     *
+     * #1 - Lambda expression used to populate the contact ID combo box.
      * @param url            The URL location of the FXML file.
      * @param resourceBundle The ResourceBundle associated with the FXML file.
      */

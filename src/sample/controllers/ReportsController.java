@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 
 /**
  * Class and methods to display 3 reports.
+ *
+ * @author Antonio Jenkins
  */
 
 public class ReportsController {

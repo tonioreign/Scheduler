@@ -203,6 +203,7 @@ public class ModCustomerController implements Initializable {
 
     /**
      * Handles the event when the country drop-down box is edited.
+     * #lambda 3 - stream and filter first level divisions by country ID and add to observable list for each country ID
      *
      * @param event The action event triggered by the country drop-down box.
      * @throws SQLException If an SQL exception occurs during database operations.
@@ -219,6 +220,7 @@ public class ModCustomerController implements Initializable {
             ObservableList<String> flDivisionUK = FXCollections.observableArrayList();
             ObservableList<String> flDivisionCanada = FXCollections.observableArrayList();
 
+            // lambda 3 - stream and filter first level divisions by country ID and add to observable list for each country ID
             getAllFirstLevelDivisions.forEach(firstLevelDivision -> {
                 if (firstLevelDivision.getCountry_ID() == 1) {
                     flDivisionUS.add(firstLevelDivision.getDivisionName());
@@ -229,16 +231,13 @@ public class ModCustomerController implements Initializable {
                 }
             });
 
-            //needs a little revision
-            if (selectedCountry.equals("U.S")) {
+            if (selectedCountry.equals("U.S"))
                 divisionIDBox.setItems(flDivisionUS);
-            }
-            else if (selectedCountry.equals("UK")) {
+            else if (selectedCountry.equals("Canada"))
                 divisionIDBox.setItems(flDivisionUK);
-            }
-            else if (selectedCountry.equals("Canada")) {
+            else if (selectedCountry.equals("UK"))
                 divisionIDBox.setItems(flDivisionCanada);
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
