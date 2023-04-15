@@ -134,7 +134,8 @@ public class LoginController implements Initializable {
     @FXML
     void onLoginButton(ActionEvent event) throws IOException {
         try {
-            ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", Locale.getDefault());
+            Locale locale = Locale.getDefault();
+            ResourceBundle rb = ResourceBundle.getBundle("lang/login_FR", locale);
 
             String usernameInput = UserField.getText();
             String passwordInput = PassField.getText();
