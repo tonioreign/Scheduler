@@ -237,6 +237,13 @@ public class UpdateAppointmentController implements Initializable {
             }
         }
     }
+
+    public LocalDateTime convertUTCToLocal(LocalDateTime utcTime) {
+        ZonedDateTime utcZoneDateTime = ZonedDateTime.of(utcTime, ZoneId.of("UTC"));
+        ZonedDateTime localZoneDateTime = utcZoneDateTime.withZoneSameInstant(ZoneId.systemDefault());
+        return localZoneDateTime.toLocalDateTime();
+    }
+
     /**
      * Initializes the UI components with data for editing an appointment.
      *
@@ -253,6 +260,15 @@ public class UpdateAppointmentController implements Initializable {
             contactsList = ContactDB.getAllContacts();
             customerIDList = CustomerDB.getAllCustomers(connection);
             userIDsList = UserDB.getAllUsers();
+            ObservableList<Appointments> appointments = AppointmentDB.getAllAppointments();
+
+            for (Appointments appointment : appointments) {
+                LocalDateTime localStart = convertUTCToLocal(appointment.getApmtStart());
+                LocalDateTime localEnd = convertUTCToLocal(appointment.getApmtEnd());
+                appointment.setApmtStart(LocalDateTime.parse(localStart.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
+                appointment.setApmtEnd(LocalDateTime.parse(localEnd.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
