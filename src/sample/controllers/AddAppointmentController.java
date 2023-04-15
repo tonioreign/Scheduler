@@ -32,7 +32,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static sample.utils.TimeZoneUtil.convertTimeDateUTC;
 
 public class AddAppointmentController implements Initializable {
 
@@ -135,7 +134,7 @@ public class AddAppointmentController implements Initializable {
      */
     @FXML
     void onSave(ActionEvent event) throws IOException {
-        Integer newAppointmentID = new Random().nextInt(10000);
+        Integer newAppointmentID = new Random().nextInt(100);
         if (titleField.getText().isBlank() || descField.getText().isBlank() || locationField.getText().isBlank() ||
                 typeField.getText().isBlank() || startDatePicker.getValue() == null || startTimeBox.getSelectionModel().isEmpty() ||
                 endDatePicker.getValue() == null || endTimeBox.getSelectionModel().isEmpty() || contactBox.getSelectionModel().isEmpty() ||
@@ -147,70 +146,52 @@ public class AddAppointmentController implements Initializable {
             String description = descField.getText();
             String location = locationField.getText();
             String type = typeField.getText();
+            LocalDate startDate = startDatePicker.getValue();
+            LocalDate endDate = endDatePicker.getValue();
+            String startTime = startTimeBox.getValue();
+            String endTime = endTimeBox.getValue();
             int contactID = contactBox.getValue();
             int customerID = customerIDBox.getValue();
             int userID = userIDBox.getValue();
 
-            LocalDate localDateEnd = endDatePicker.getValue();
-            LocalDate localDateStart = startDatePicker.getValue();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            String startDateString = startDate + " " + startTime;
+            String endDateString = endDate + " " + endTime;
+            LocalDateTime startDateTime = LocalDateTime.parse(startDateString, formatter);
+            LocalDateTime endDateTime = LocalDateTime.parse(endDateString, formatter);
 
-            DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
-            String appointmentStartDate = startDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String appointmentStartTime = startTimeBox.getValue();
+            ZoneId zoneId = ZoneId.systemDefault();
+            ZonedDateTime startZonedDateTime = startDateTime.atZone(zoneId);
+            ZonedDateTime endZonedDateTime = endDateTime.atZone(zoneId);
+            ZonedDateTime startEST = startZonedDateTime.withZoneSameInstant(ZoneId.of("America/New_York"));
+            ZonedDateTime endEST = endZonedDateTime.withZoneSameInstant(ZoneId.of("America/New_York"));
 
-            String endDate = endDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String endTime = endTimeBox.getValue();
-
-            System.out.println("thisDate + thisStart " + appointmentStartDate + " " + appointmentStartTime + ":00");
-            String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");
-            String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
-
-            LocalTime localTimeStart = LocalTime.parse(startTimeBox.getValue(), minHourFormat);
-            LocalTime localTimeEnd = LocalTime.parse(endTimeBox.getValue(), minHourFormat);
-
-            LocalDateTime dateTimeStart = LocalDateTime.of(localDateStart, localTimeStart);
-            LocalDateTime dateTimeEnd = LocalDateTime.of(localDateEnd, localTimeEnd);
-
-            ZonedDateTime zoneDtStart = ZonedDateTime.of(dateTimeStart, ZoneId.systemDefault());
-            ZonedDateTime zoneDtEnd = ZonedDateTime.of(dateTimeEnd, ZoneId.systemDefault());
-
-            ZonedDateTime convertStartEST = zoneDtStart.withZoneSameInstant(ZoneId.of("America/New_York"));
-            ZonedDateTime convertEndEST = zoneDtEnd.withZoneSameInstant(ZoneId.of("America/New_York"));
-
-            LocalTime startAppointmentTimeToCheck = convertStartEST.toLocalTime();
-            LocalTime endAppointmentTimeToCheck = convertEndEST.toLocalTime();
-
-            DayOfWeek startAppointmentDayToCheck = convertStartEST.getDayOfWeek();
-            DayOfWeek endAppointmentDayToCheck = convertEndEST.getDayOfWeek();
-
-            LocalTime estBusinessStart = LocalTime.of(8, 0, 0);
-            LocalTime estBusinessEnd = LocalTime.of(22, 0, 0);
-
-            if (startAppointmentTimeToCheck.isBefore(estBusinessStart) || startAppointmentTimeToCheck.isAfter(estBusinessEnd)) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8:00 AM and 10:00 PM EST.");
-                alert.showAndWait();
-            } else if (endAppointmentTimeToCheck.isBefore(estBusinessStart) || endAppointmentTimeToCheck.isAfter(estBusinessEnd)) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8:00 AM and 10:00 PM EST.");
-                alert.showAndWait();
-            } else if (startAppointmentDayToCheck == DayOfWeek.SATURDAY || startAppointmentDayToCheck == DayOfWeek.SUNDAY) {
+            if (startEST.getDayOfWeek() == DayOfWeek.SATURDAY || startEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments cannot be scheduled on weekends.");
                 alert.showAndWait();
-            } else if (endAppointmentDayToCheck == DayOfWeek.SATURDAY || endAppointmentDayToCheck == DayOfWeek.SUNDAY) {
+            }else if (endEST.getDayOfWeek() == DayOfWeek.SATURDAY || endEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments cannot be scheduled on weekends.");
                 alert.showAndWait();
-            } else if (startAppointmentTimeToCheck.isAfter(endAppointmentTimeToCheck)) {
+            } else if (startDateTime.isAfter(endDateTime)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be before end date/time.");
                 alert.showAndWait();
-            } else if (dateTimeStart.isBefore(LocalDateTime.now())) {
+            } else if (startDateTime.isBefore(LocalDateTime.now())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be in the future.");
                 alert.showAndWait();
-            } else if (AppointmentDB.checkForAppointmentOverlap(dateTimeStart, dateTimeEnd, userID)) {
+            } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, userID)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "You already have an appointment scheduled during this time.");
                 alert.showAndWait();
-            } else if (AppointmentDB.checkForAppointmentOverlap(dateTimeStart, dateTimeEnd, customerID)) {
+            } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, customerID)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "This customer already has an appointment scheduled during this time.");
                 alert.showAndWait();
             } else {
+                ZonedDateTime utcStartZDT = startZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+                ZonedDateTime utcEndZDT = endZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+                LocalDateTime utcStartDateTime = utcStartZDT.toLocalDateTime();
+                LocalDateTime utcEndDateTime = utcEndZDT.toLocalDateTime();
+                Timestamp startTimestamp = Timestamp.valueOf(utcStartDateTime);
+                Timestamp endTimestamp = Timestamp.valueOf(utcEndDateTime);
+
                 try (Connection conn = DBConnection.openConnection()) {
                     String sql = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, User_ID, Customer_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                     PreparedStatement ps = conn.prepareStatement(sql);
@@ -219,8 +200,8 @@ public class AddAppointmentController implements Initializable {
                     ps.setString(3, description);
                     ps.setString(4, location);
                     ps.setString(5, type);
-                    ps.setTimestamp(6, Timestamp.valueOf(startUTC));
-                    ps.setTimestamp(7, Timestamp.valueOf(endUTC));
+                    ps.setTimestamp(6, startTimestamp);
+                    ps.setTimestamp(7, endTimestamp);
                     ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                     ps.setString(9, "admin");
                     ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
@@ -253,7 +234,6 @@ public class AddAppointmentController implements Initializable {
         ObservableList<Contacts> contactsList = FXCollections.observableArrayList();
         ObservableList<Customer> customerIDList = FXCollections.observableArrayList();
         ObservableList<User> userIDsList = FXCollections.observableArrayList();
-
         Connection connection = DBConnection.openConnection();
         try {
             contactsList = ContactDB.getAllContacts();

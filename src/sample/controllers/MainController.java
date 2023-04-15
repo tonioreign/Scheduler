@@ -19,6 +19,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -361,6 +363,12 @@ public class MainController implements Initializable {
         }
     }
 
+    public LocalDateTime convertUTCToLocal(LocalDateTime utcDateTime) {
+        ZonedDateTime utcZonedDateTime = utcDateTime.atZone(ZoneId.of("UTC"));
+        ZonedDateTime localZonedDateTime = utcZonedDateTime.withZoneSameInstant(ZoneId.systemDefault());
+        return localZonedDateTime.toLocalDateTime();
+    }
+
     /**
      * Initializes the view with data from the given URL and ResourceBundle. This method sets up
      * the display of appointments in a TableView, populating the columns with data from the
@@ -375,12 +383,25 @@ public class MainController implements Initializable {
         DBConnection.openConnection();
         Locale locale = Locale.getDefault();
         Locale.setDefault(locale);
-
         ZoneId zone = ZoneId.systemDefault();
         setTimeLabel.setText(String.valueOf(zone));
 
         try {
             ObservableList<Appointments> allAppointments = AppointmentDB.getAllAppointments();
+
+            // Convert appointment start and end times to the user's local time
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+            for (Appointments appointment : allAppointments) {
+                LocalDateTime utcStart = appointment.getApmtStart();
+                LocalDateTime utcEnd = appointment.getApmtEnd();
+
+                LocalDateTime localStart = convertUTCToLocal(utcStart);
+                LocalDateTime localEnd = convertUTCToLocal(utcEnd);
+
+                appointment.setApmtStart(localStart);
+                appointment.setApmtEnd(localEnd);
+            }
 
             apmtIdCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("apmtId"));
             apmtTitleCol.setCellValueFactory(new PropertyValueFactory<Appointments, String>("apmtTitle"));
@@ -392,10 +413,11 @@ public class MainController implements Initializable {
             apmtCustomerIdCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("apmtCustomerId"));
             apmtUserIdCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("apmtUserId"));
             apmtContactCol.setCellValueFactory(new PropertyValueFactory<Appointments, Integer>("apmtContactId"));
-
             apmtTableView.setItems(allAppointments);
+
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
     }
+
 }
