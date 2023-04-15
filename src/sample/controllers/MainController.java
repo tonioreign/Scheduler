@@ -318,19 +318,18 @@ public class MainController implements Initializable {
             ObservableList<Appointments> allAppointmentsList = AppointmentDB.getAllAppointments();
             ObservableList<Appointments> appointmentsMonth = FXCollections.observableArrayList();
 
-            LocalDateTime currentMonthStart = LocalDateTime.now().minusMonths(1);
-            LocalDateTime currentMonthEnd = LocalDateTime.now().plusMonths(1);
+            LocalDateTime monthStart = LocalDateTime.now().minusMonths(1);
+            LocalDateTime monthEnd = LocalDateTime.now().plusMonths(1);
 
             if (allAppointmentsList != null)
-
-                allAppointmentsList.forEach(appointment -> {
-                    if (appointment.getApmtEnd().isAfter(currentMonthStart) && appointment.getApmtEnd().isBefore(currentMonthEnd)) {
+                for (Appointments appointment : allAppointmentsList) {
+                    if (appointment.getApmtStart().isAfter(monthStart) && appointment.getApmtStart().isBefore(monthEnd)) {
                         appointmentsMonth.add(appointment);
                     }
-                    apmtTableView.setItems(appointmentsMonth);
-                });
-        } catch (Exception e) {
-            e.printStackTrace();
+                }
+            apmtTableView.setItems(appointmentsMonth);
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
     }
 
@@ -345,9 +344,9 @@ public class MainController implements Initializable {
      */
     @FXML
     void appointmentWeekSelected(ActionEvent event) throws SQLException {
-        byMonthRadio.setSelected(false);
-        viewAllRadio.setSelected(false);
         try {
+            byMonthRadio.setSelected(false);
+            viewAllRadio.setSelected(false);
             ObservableList<Appointments> allAppointmentsList = AppointmentDB.getAllAppointments();
             ObservableList<Appointments> appointmentsWeek = FXCollections.observableArrayList();
 
@@ -355,16 +354,14 @@ public class MainController implements Initializable {
             LocalDateTime weekEnd = LocalDateTime.now().plusWeeks(1);
 
             if (allAppointmentsList != null)
-                //IDE converted forEach
-                allAppointmentsList.forEach(appointment -> {
-                    if (appointment.getApmtEnd().isAfter(weekStart) && appointment.getApmtEnd().isBefore(weekEnd)) {
+                for (Appointments appointment : allAppointmentsList) {
+                    if (appointment.getApmtStart().isAfter(weekStart) && appointment.getApmtStart().isBefore(weekEnd)) {
                         appointmentsWeek.add(appointment);
                     }
-                    apmtTableView.setItems(appointmentsWeek);
-                });
-            else System.out.println("Something went wrong");
-        } catch (Exception e) {
-            e.printStackTrace();
+                }
+            apmtTableView.setItems(appointmentsWeek);
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
     }
 
