@@ -22,4 +22,3 @@ For the customized report, I opted to showcase the number of appointments per co
 
 ### Executing the Program
 Upon launching the program, users will encounter a login screen, requiring a valid username and password that corresponds to information stored in a MySQL database. This program necessitates Java 11 and has not been assessed with other JVMs.
-![image](https://user-images.githubusercontent.com/102762970/232242266-c3b5d227-7a6b-419c-94b7-144cbce96d5d.png)
