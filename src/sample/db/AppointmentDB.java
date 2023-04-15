@@ -9,7 +9,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * This abstract class represents a base class for managing appointments in a database.
  * It provides common methods for performing CRUD (Create, Read, Update, Delete) operations
