@@ -193,7 +193,7 @@ private void handleSuccessfulLogin(ActionEvent event, String usernameInput, Prin
      */
     private Appointments findUpcomingAppointment() throws SQLException {
         ObservableList<Appointments> getAllAppointments = AppointmentDB.getAllAppointments();
-        LocalDateTime currentTimeMinus15Min = LocalDateTime.now().minusMinutes(15);
+        LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime currentTimePlus15Min = LocalDateTime.now().plusMinutes(15);
 
         return getAllAppointments.stream()
@@ -210,9 +210,9 @@ private void handleSuccessfulLogin(ActionEvent event, String usernameInput, Prin
      * @param currentTimePlus15Min  The time 15 minutes after the current time.
      * @return true if the appointment is within 15 minutes of the current time, false otherwise.
      */
-    private boolean isWithin15Minutes(Appointments appointment, LocalDateTime currentTimeMinus15Min, LocalDateTime currentTimePlus15Min) {
+    private boolean isWithin15Minutes(Appointments appointment, LocalDateTime currentTime, LocalDateTime currentTimePlus15Min) {
         LocalDateTime startTime = appointment.getApmtStart();
-        return (startTime.isAfter(currentTimeMinus15Min) || startTime.isEqual(currentTimeMinus15Min)) && (startTime.isBefore(currentTimePlus15Min) || startTime.isEqual(currentTimePlus15Min));
+        return (startTime.isAfter(currentTime) || startTime.isEqual(currentTime)) && (startTime.isBefore(currentTimePlus15Min) || startTime.isEqual(currentTimePlus15Min));
     }
 
 /**
