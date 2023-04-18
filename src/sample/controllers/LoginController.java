@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Optional;
@@ -193,11 +194,15 @@ private void handleSuccessfulLogin(ActionEvent event, String usernameInput, Prin
      */
     private Appointments findUpcomingAppointment() throws SQLException {
         ObservableList<Appointments> getAllAppointments = AppointmentDB.getAllAppointments();
-        LocalDateTime currentTime = LocalDateTime.now();
-        LocalDateTime currentTimePlus15Min = LocalDateTime.now().plusMinutes(15);
+
+        // Convert local time to UTC
+        ZoneId utcZone = ZoneId.of("UTC");
+        ZonedDateTime zonedNow = ZonedDateTime.now(utcZone);
+        LocalDateTime currentTimeUTC = zonedNow.toLocalDateTime();
+        LocalDateTime currentTimePlus15MinUTC = currentTimeUTC.plusMinutes(15);
 
         return getAllAppointments.stream()
-                .filter(appointment -> isWithin15Minutes(appointment, currentTime, currentTimePlus15Min))
+                .filter(appointment -> isWithin15Minutes(appointment, currentTimeUTC, currentTimePlus15MinUTC))
                 .findFirst()
                 .orElse(null);
     }
