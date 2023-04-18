@@ -192,12 +192,6 @@ public class AddAppointmentController implements Initializable {
             } else if (startDateTime.isBefore(LocalDateTime.now())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be in the future.");
                 alert.showAndWait();
-            } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, contactID)) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "This contact already has an appointment scheduled during this time.");
-                alert.showAndWait();
-            } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, userID)) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "You already have an appointment scheduled during this time.");
-                alert.showAndWait();
             } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, customerID)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "This customer already has an appointment scheduled during this time.");
                 alert.showAndWait();
