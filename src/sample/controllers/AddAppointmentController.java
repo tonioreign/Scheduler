@@ -192,7 +192,7 @@ public class AddAppointmentController implements Initializable {
             } else if (startDateTime.isBefore(LocalDateTime.now())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be in the future.");
                 alert.showAndWait();
-            } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, customerID)) {
+            } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, customerIDBox.getValue())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "This customer already has an appointment scheduled during this time.");
                 alert.showAndWait();
             } else {
@@ -218,8 +218,8 @@ public class AddAppointmentController implements Initializable {
                     ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
                     ps.setString(11, "admin");
                     ps.setInt(12, userID);
-                    ps.setInt(13, customerID);
-                    ps.setInt(14, contactID);
+                    ps.setInt(13, customerIDBox.getValue());
+                    ps.setInt(14, contactBox.getValue());
                     ps.execute();
                     ps.close();
 
