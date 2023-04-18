@@ -197,7 +197,7 @@ private void handleSuccessfulLogin(ActionEvent event, String usernameInput, Prin
         LocalDateTime currentTimePlus15Min = LocalDateTime.now().plusMinutes(15);
 
         return getAllAppointments.stream()
-                .filter(appointment -> isWithin15Minutes(appointment, currentTimeMinus15Min, currentTimePlus15Min))
+                .filter(appointment -> isWithin15Minutes(appointment, currentTime, currentTimePlus15Min))
                 .findFirst()
                 .orElse(null);
     }
@@ -206,7 +206,7 @@ private void handleSuccessfulLogin(ActionEvent event, String usernameInput, Prin
      * Checks if the given appointment is within 15 minutes of the current time.
      *
      * @param appointment         The appointment to check.
-     * @param currentTimeMinus15Min The time 15 minutes before the current time.
+     * @param currentTime The current time.
      * @param currentTimePlus15Min  The time 15 minutes after the current time.
      * @return true if the appointment is within 15 minutes of the current time, false otherwise.
      */
