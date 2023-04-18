@@ -7,6 +7,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.controllers.LoginController;
 import sample.utils.DBConnection;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /** This is the main class for the application.
  *  It is responsible for loading the login form and connecting to the database.
  *  It also closes the connection to the database when the application is closed.
@@ -32,7 +36,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("../view/login-form.fxml"));
-        primaryStage.setTitle("Scheduling Application");
+        Locale locale = Locale.getDefault();
+        ResourceBundle resources = ResourceBundle.getBundle("resources/login", locale);
+        primaryStage.setTitle(resources.getString("title"));
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }

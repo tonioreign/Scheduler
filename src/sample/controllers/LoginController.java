@@ -256,6 +256,7 @@ void onReset(ActionEvent event) {
             TimeLabel.setText(resources.getString("location"));
             ResetButton.setText(resources.getString("reset"));
 
+
         } catch (MissingResourceException e) {
             System.out.println("Resource file missing: " + e);
         } catch (Exception e) {
