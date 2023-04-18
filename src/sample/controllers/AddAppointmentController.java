@@ -139,7 +139,7 @@ public class AddAppointmentController implements Initializable {
      */
     @FXML
     void onSave(ActionEvent event) throws IOException {
-        Integer newAppointmentID = new Random().nextInt(100);
+        Integer newAppointmentID = new Random().nextInt(10000);
         if (titleField.getText().isBlank() || descField.getText().isBlank() || locationField.getText().isBlank() ||
                 typeField.getText().isBlank() || startDatePicker.getValue() == null || startTimeBox.getSelectionModel().isEmpty() ||
                 endDatePicker.getValue() == null || endTimeBox.getSelectionModel().isEmpty() || contactBox.getSelectionModel().isEmpty() ||
@@ -186,7 +186,11 @@ public class AddAppointmentController implements Initializable {
             }else if (endEST.getDayOfWeek() == DayOfWeek.SATURDAY || endEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments cannot be scheduled on weekends.");
                 alert.showAndWait();
-            } else if (startDateTime.isAfter(endDateTime)) {
+            }else if(startDateTime.isEqual(endDateTime)){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be before end date/time.");
+                alert.showAndWait();
+            }
+            else if (startDateTime.isAfter(endDateTime)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be before end date/time.");
                 alert.showAndWait();
             } else if (startDateTime.isBefore(LocalDateTime.now())) {

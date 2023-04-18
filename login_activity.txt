@@ -11,3 +11,7 @@ user: admin successfully logged in at: 2023-04-17 18:59:33.2291681
 user: admin successfully logged in at: 2023-04-17 19:01:42.1176704
 user: admin successfully logged in at: 2023-04-17 19:04:47.5457332
 user: admin successfully logged in at: 2023-04-17 19:05:18.3634356
+user: admin failed login attempt at: 2023-04-17 19:25:17.7137573
+user: admin successfully logged in at: 2023-04-17 19:25:24.4956494
+user: admin successfully logged in at: 2023-04-17 19:31:51.7718236
+user: admin successfully logged in at: 2023-04-17 19:40:56.1167728
