@@ -171,7 +171,16 @@ public class AddAppointmentController implements Initializable {
             ZonedDateTime startEST = startZonedDateTime.withZoneSameInstant(ZoneId.of("America/New_York"));
             ZonedDateTime endEST = endZonedDateTime.withZoneSameInstant(ZoneId.of("America/New_York"));
 
-            if (startEST.getDayOfWeek() == DayOfWeek.SATURDAY || startEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
+
+            // Check for appointments that are outside of business hours 8AM-10PM EST
+            if (startEST.getHour() < 8 || startEST.getHour() > 22) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8AM and 10PM EST.");
+                alert.showAndWait();
+            } else if (endEST.getHour() < 8 || endEST.getHour() > 22) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8AM and 10PM EST.");
+                alert.showAndWait();
+            }
+            else if (startEST.getDayOfWeek() == DayOfWeek.SATURDAY || startEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments cannot be scheduled on weekends.");
                 alert.showAndWait();
             }else if (endEST.getDayOfWeek() == DayOfWeek.SATURDAY || endEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
@@ -182,6 +191,9 @@ public class AddAppointmentController implements Initializable {
                 alert.showAndWait();
             } else if (startDateTime.isBefore(LocalDateTime.now())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be in the future.");
+                alert.showAndWait();
+            } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, contactID)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "This contact already has an appointment scheduled during this time.");
                 alert.showAndWait();
             } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, userID)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "You already have an appointment scheduled during this time.");
