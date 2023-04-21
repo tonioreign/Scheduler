@@ -70,10 +70,11 @@ public abstract class AppointmentDB {
      * @param startDateTime the start date and time of the appointment to be checked
      * @param endDateTime the end date and time of the appointment to be checked
      * @param customerID the ID of the customer associated with the appointment to be checked
+     * @param contactID the ID of the contact associated with the appointment to be checked
      * @return true if the appointment overlaps with another appointment, false otherwise
      */
-    public static boolean checkForAppointmentOverlap(LocalDateTime startDateTime, LocalDateTime endDateTime, int customerID) {
-        String sql = "SELECT * FROM appointments WHERE ((Start BETWEEN ? AND ?) OR (End BETWEEN ? AND ?)) AND Customer_ID = ?";
+    public static boolean checkForAppointmentOverlap(LocalDateTime startDateTime, LocalDateTime endDateTime, int customerID, int contactID) {
+        String sql = "SELECT * FROM appointments WHERE ((Start BETWEEN ? AND ?) OR (End BETWEEN ? AND ?)) AND Customer_ID = ? AND Contact_ID = ?";
 
         try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
             ps.setTimestamp(1, java.sql.Timestamp.valueOf(startDateTime));
@@ -81,6 +82,7 @@ public abstract class AppointmentDB {
             ps.setTimestamp(3, java.sql.Timestamp.valueOf(startDateTime));
             ps.setTimestamp(4, java.sql.Timestamp.valueOf(endDateTime));
             ps.setInt(5, customerID);
+            ps.setInt(6, contactID);
             ResultSet rs = ps.executeQuery();
             return rs.next();
         } catch (SQLException e) {

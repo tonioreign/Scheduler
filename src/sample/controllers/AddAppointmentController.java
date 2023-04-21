@@ -172,7 +172,7 @@ public class AddAppointmentController implements Initializable {
             ZonedDateTime endEST = endZonedDateTime.withZoneSameInstant(ZoneId.of("America/New_York"));
 
 
-            // Check for appointments that are outside of business hours 8AM-10PM EST
+
             if (startEST.getHour() < 8 || startEST.getHour() > 22) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8AM and 10PM EST.");
                 alert.showAndWait();
@@ -196,8 +196,8 @@ public class AddAppointmentController implements Initializable {
             } else if (startDateTime.isBefore(LocalDateTime.now())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be in the future.");
                 alert.showAndWait();
-            } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, customerIDBox.getValue())) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "This customer already has an appointment scheduled during this time.");
+            } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, customerIDBox.getValue(), contactBox.getValue())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "This customer already has an appointment with the same contact during this time.");
                 alert.showAndWait();
             } else {
                 ZonedDateTime utcStartZDT = startZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
