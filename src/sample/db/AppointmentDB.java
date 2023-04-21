@@ -90,4 +90,23 @@ public abstract class AppointmentDB {
         }
         return false;
     }
+
+    public static boolean checkForAppointmentOverlapping(LocalDateTime startDateTime, LocalDateTime endDateTime, int customerID) {
+        String sql = "SELECT * FROM appointments WHERE ((Start BETWEEN ? AND ?) OR (End BETWEEN ? AND ?) OR (Start <= ? AND End >= ?)) AND Customer_ID = ?";
+
+        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
+            ps.setTimestamp(1, java.sql.Timestamp.valueOf(startDateTime));
+            ps.setTimestamp(2, java.sql.Timestamp.valueOf(endDateTime));
+            ps.setTimestamp(3, java.sql.Timestamp.valueOf(startDateTime));
+            ps.setTimestamp(4, java.sql.Timestamp.valueOf(endDateTime));
+            ps.setTimestamp(5, java.sql.Timestamp.valueOf(startDateTime));
+            ps.setTimestamp(6, java.sql.Timestamp.valueOf(endDateTime));
+            ps.setInt(7, customerID);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

@@ -199,6 +199,9 @@ public class AddAppointmentController implements Initializable {
             } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, customerIDBox.getValue(), contactBox.getValue())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "This customer already has an appointment with the same contact during this time.");
                 alert.showAndWait();
+            } else if (AppointmentDB.checkForAppointmentOverlapping(startDateTime, endDateTime, customerIDBox.getValue())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "This customer already has an appointment during this time.");
+                alert.showAndWait();
             } else {
                 ZonedDateTime utcStartZDT = startZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
                 ZonedDateTime utcEndZDT = endZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
