@@ -5,10 +5,7 @@ import javafx.collections.ObservableList;
 import sample.models.Appointments;
 import sample.utils.DBConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -66,42 +63,16 @@ public abstract class AppointmentDB {
         }
     }
 
-    /** Checks if an appointment overlaps with another appointment.
-     * @param startDateTime the start date and time of the appointment to be checked
-     * @param endDateTime the end date and time of the appointment to be checked
-     * @param customerID the ID of the customer associated with the appointment to be checked
-     * @param contactID the ID of the contact associated with the appointment to be checked
-     * @return true if the appointment overlaps with another appointment, false otherwise
-     */
-    public static boolean checkForAppointmentOverlap(LocalDateTime startDateTime, LocalDateTime endDateTime, int customerID, int contactID) {
-        String sql = "SELECT * FROM appointments WHERE ((Start BETWEEN ? AND ?) OR (End BETWEEN ? AND ?)) AND Customer_ID = ? AND Contact_ID = ?";
-
+    public static boolean checkForAppointmentOverlapping(Timestamp startDateTime, Timestamp endDateTime, int customerID) {
+        String sql = "SELECT * FROM appointments WHERE Customer_ID = ? AND ((Start <= ? AND End > ?) OR (Start < ? AND End >= ?) OR (Start >= ? AND End <= ?))";
         try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
-            ps.setTimestamp(1, java.sql.Timestamp.valueOf(startDateTime));
-            ps.setTimestamp(2, java.sql.Timestamp.valueOf(endDateTime));
-            ps.setTimestamp(3, java.sql.Timestamp.valueOf(startDateTime));
-            ps.setTimestamp(4, java.sql.Timestamp.valueOf(endDateTime));
-            ps.setInt(5, customerID);
-            ps.setInt(6, contactID);
-            ResultSet rs = ps.executeQuery();
-            return rs.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public static boolean checkForAppointmentOverlapping(LocalDateTime startDateTime, LocalDateTime endDateTime, int customerID) {
-        String sql = "SELECT * FROM appointments WHERE (Start < ? AND End > ?) OR (Start < ? AND End > ?) OR (Start >= ? AND End <= ?) AND Customer_ID = ?";
-
-        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
-            ps.setTimestamp(1, java.sql.Timestamp.valueOf(endDateTime));
-            ps.setTimestamp(2, java.sql.Timestamp.valueOf(startDateTime));
-            ps.setTimestamp(3, java.sql.Timestamp.valueOf(startDateTime));
-            ps.setTimestamp(4, java.sql.Timestamp.valueOf(endDateTime));
-            ps.setTimestamp(5, java.sql.Timestamp.valueOf(startDateTime));
-            ps.setTimestamp(6, java.sql.Timestamp.valueOf(endDateTime));
-            ps.setInt(7, customerID);
+            ps.setInt(1, customerID);
+            ps.setTimestamp(2, startDateTime);
+            ps.setTimestamp(3, startDateTime);
+            ps.setTimestamp(4, endDateTime);
+            ps.setTimestamp(5, endDateTime);
+            ps.setTimestamp(6, startDateTime);
+            ps.setTimestamp(7, endDateTime);
             ResultSet rs = ps.executeQuery();
             return rs.next();
         } catch (SQLException e) {

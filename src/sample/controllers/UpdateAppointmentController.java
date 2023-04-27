@@ -135,7 +135,7 @@ public class UpdateAppointmentController implements Initializable {
      */
     @FXML
     void onSave(ActionEvent event) throws IOException {
-        Integer newAppointmentID = new Random().nextInt(100);
+        Integer newAppointmentID = new Random().nextInt(10000);
         if (titleField.getText().isBlank() || descField.getText().isBlank() || locationField.getText().isBlank() ||
                 typeField.getText().isBlank() || startDatePicker.getValue() == null || startTimeBox.getSelectionModel().isEmpty() ||
                 endDatePicker.getValue() == null || endTimeBox.getSelectionModel().isEmpty() || contactBox.getSelectionModel().isEmpty() ||
@@ -166,12 +166,29 @@ public class UpdateAppointmentController implements Initializable {
             ZonedDateTime endZonedDateTime = endDateTime.atZone(zoneId);
             ZonedDateTime startEST = startZonedDateTime.withZoneSameInstant(ZoneId.of("America/New_York"));
             ZonedDateTime endEST = endZonedDateTime.withZoneSameInstant(ZoneId.of("America/New_York"));
+            ZonedDateTime utcStartZDT = startZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+            ZonedDateTime utcEndZDT = endZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+            LocalDateTime utcStartDateTime = utcStartZDT.toLocalDateTime();
+            LocalDateTime utcEndDateTime = utcEndZDT.toLocalDateTime();
+            Timestamp startTimestamp = Timestamp.valueOf(utcStartDateTime);
+            Timestamp endTimestamp = Timestamp.valueOf(utcEndDateTime);
 
-            if (startEST.getDayOfWeek() == DayOfWeek.SATURDAY || startEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
+
+
+            if (startEST.getHour() < 8 || startEST.getHour() > 22) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8AM and 10PM EST.");
+                alert.showAndWait();
+            } else if (endEST.getHour() < 8 || endEST.getHour() > 22) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments must be scheduled between 8AM and 10PM EST.");
+                alert.showAndWait();
+            } else if (startEST.getDayOfWeek() == DayOfWeek.SATURDAY || startEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments cannot be scheduled on weekends.");
                 alert.showAndWait();
-            }else if (endEST.getDayOfWeek() == DayOfWeek.SATURDAY || endEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            } else if (endEST.getDayOfWeek() == DayOfWeek.SATURDAY || endEST.getDayOfWeek() == DayOfWeek.SUNDAY) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Appointments cannot be scheduled on weekends.");
+                alert.showAndWait();
+            } else if(startDateTime.isEqual(endDateTime)){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be before end date/time.");
                 alert.showAndWait();
             } else if (startDateTime.isAfter(endDateTime)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be before end date/time.");
@@ -179,42 +196,32 @@ public class UpdateAppointmentController implements Initializable {
             } else if (startDateTime.isBefore(LocalDateTime.now())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Start date/time must be in the future.");
                 alert.showAndWait();
-            } else if (AppointmentDB.checkForAppointmentOverlap(startDateTime, endDateTime, customerIDBox.getValue(), contactBox.getValue())) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "This customer already has an appointment with the same contact during this time.");
-                alert.showAndWait();
-            } else if (AppointmentDB.checkForAppointmentOverlapping(startDateTime, endDateTime, customerIDBox.getValue())) {
+            } else if (AppointmentDB.checkForAppointmentOverlapping(startTimestamp, endTimestamp, customerIDBox.getValue())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "This customer already has an appointment during this time.");
                 alert.showAndWait();
             } else {
-                ZonedDateTime utcStartZDT = startZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
-                ZonedDateTime utcEndZDT = endZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
-                LocalDateTime utcStartDateTime = utcStartZDT.toLocalDateTime();
-                LocalDateTime utcEndDateTime = utcEndZDT.toLocalDateTime();
-                Timestamp startTimestamp = Timestamp.valueOf(utcStartDateTime);
-                Timestamp endTimestamp = Timestamp.valueOf(utcEndDateTime);
 
-                try {
-                    Connection connection = DBConnection.openConnection();
-                    String sql = "UPDATE appointments SET Appointment_ID = ?, Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
-                    Connection conn = DBConnection.openConnection();
+                try (Connection conn = DBConnection.openConnection()) {
+                    String sql = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, User_ID, Customer_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                     PreparedStatement ps = conn.prepareStatement(sql);
-                    ps.setInt(1, selectedAppointment.getApmtId());
+                    ps.setInt(1, newAppointmentID);
                     ps.setString(2, title);
                     ps.setString(3, description);
                     ps.setString(4, location);
                     ps.setString(5, type);
-                    ps.setTimestamp(6, Timestamp.valueOf(startTimestamp.toLocalDateTime()));
-                    ps.setTimestamp(7, Timestamp.valueOf(endTimestamp.toLocalDateTime()));
+                    ps.setTimestamp(6, startTimestamp);
+                    ps.setTimestamp(7, endTimestamp);
                     ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                     ps.setString(9, "admin");
-                    ps.setInt(10, customerID);
-                    ps.setInt(11, userID);
-                    ps.setInt(12, contactID);
-                    ps.setInt(13, selectedAppointment.getApmtId());
+                    ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
+                    ps.setString(11, "admin");
+                    ps.setInt(12, userID);
+                    ps.setInt(13, customerIDBox.getValue());
+                    ps.setInt(14, contactBox.getValue());
                     ps.execute();
                     ps.close();
-                    connection.close();
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Appointment successfully updated.");
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Appointment successfully added.");
                     alert.showAndWait();
                     AccessMethod.changeScreen(event, "MainMenu.fxml", "Main Menu");
                 } catch (SQLException e) {
